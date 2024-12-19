@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -22,10 +24,46 @@ public final class Constants {
   public static class ModuleConstants{
     public static final double kDriveMotorCurrentLimit = 40.0;
     public static final double kTurnMotorCurrentLimit = 40.0;
-    public static final double kWheelDiameterIn = 0.0;
-    public static final double kDriveMotorReduction = 0.0; //placeholder
+    public static final double kWheelDiameterIn = 4.0;
+    public static final double kDriveMotorReduction = 6.12; //placeholder
     public static final double kDriveEncoderPositionFactor = (Math.PI*Units.inchesToMeters(kWheelDiameterIn)/kDriveMotorReduction);
     public static final double kDriveEncoderVelocityFactor = (Math.PI*Units.inchesToMeters(kWheelDiameterIn)/kDriveMotorReduction);
-    public static final double kSteerMotorReduction = 0.0; //placeholder
+    public static final double kSteerMotorReduction = 150.0/7.0; //placeholder
+
+    public static final double kDrivingS = 0.0;
+    public static final double kDrivingV = 0.0;
+     public static final double kDrivingA = 0.0;
+    public static final double kDrivingP = 0.0;
+    public static final double kDrivingI = 0.0;
+    public static final double kDrivingD = 0.0;
+    public static final double kDrivingFF = 0.0;
+
+    public static final double kSteerS = 0.2;
+    public static final double kSteerV = 0.0;
+    public static final double kSteerA = 0.0;
+    public static final double kSteerP = 135.0;
+    public static final double kSteerI = 0.0;
+    public static final double kSteerD = 7.0;
+    public static final double kSteerFF = 0.0;
+
+
+  }
+
+  public static class DriveConstants{
+    public static final double trackWidth = 2.0;
+    public static final double wheelBase = 2.0;
+    public static final Translation2d[] swerveModuleLocations = {
+      new Translation2d(wheelBase/2, trackWidth/2), 
+      new Translation2d(wheelBase/2, -trackWidth/2),
+      new Translation2d(-wheelBase/2, trackWidth/2),
+      new Translation2d(-wheelBase/2, -trackWidth/2)
+    };
+
+    public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
+      swerveModuleLocations[0],
+      swerveModuleLocations[1],
+      swerveModuleLocations[2],
+      swerveModuleLocations[3]
+      );
   }
 }

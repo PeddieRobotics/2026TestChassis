@@ -9,12 +9,18 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
+import com.fasterxml.jackson.databind.Module;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ModuleConstants;
 import frc.robot.utils.Kraken;
 
 public class SwerveModule extends SubsystemBase {
@@ -40,6 +46,9 @@ public class SwerveModule extends SubsystemBase {
     steeringMotor.setBrake();
     drivingMotor.setEncoder(0);
     steeringMotor.setEncoder(0);
+    drivingMotor.setClosedLoopRampRate(0.1);
+    steeringMotor.setClosedLoopRampRate(0.1);
+
 
     turnEncoder = new CANcoder(CANcodeID, CANbusName);
     configureCANcoder();
@@ -49,6 +58,11 @@ public class SwerveModule extends SubsystemBase {
     drivingMotor.setVelocityConversionFactor(Constants.ModuleConstants.kDriveEncoderVelocityFactor);
     steeringMotor.setRotorToSensorRatio(Constants.ModuleConstants.kSteerMotorReduction);
     steeringMotor.setSensorToMechanismRatio(1.0);
+
+    drivingMotor.setVelocityPIDValues(ModuleConstants.kDrivingS, ModuleConstants.kDrivingV, ModuleConstants.kDrivingA, 
+                                      ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD, ModuleConstants.kDrivingFF);
+    steeringMotor.setVelocityPIDValues(ModuleConstants.kSteerS, ModuleConstants.kSteerV, ModuleConstants.kSteerA, 
+                                      ModuleConstants.kSteerP, ModuleConstants.kSteerI, ModuleConstants.kSteerD, ModuleConstants.kSteerFF, StaticFeedforwardSignValue.UseClosedLoopSign);
   }
 
   public void configureCANcoder(){
@@ -68,17 +82,28 @@ public class SwerveModule extends SubsystemBase {
     return new SwerveModuleState(drivingMotor.getMPS(), new Rotation2d(getCANcoderReading()));
   }
 
+  public SwerveModulePosition getPosition(){
+    return new SwerveModulePosition(drivingMotor.getPosition() * Constants.ModuleConstants.kDriveEncoderPositionFactor, new Rotation2d(getCANcoderReading()));
+  }
+
   public void setDesiredState(SwerveModuleState desiredState){
     this.desiredState = desiredState;
     SwerveModuleState optimized = SwerveModuleState.optimize(desiredState, new Rotation2d(getCANcoderReading()));
-    double steerAngle = optimized.angle.getRadians()/(2*Math.PI);
     
+    double desiredVelocity = optimized.speedMetersPerSecond;
+    double desiredAngle = optimized.angle.getRadians()/(2*Math.PI);
+    SmartDashboard.putNumber(drivingCANID + " desired velocity", desiredVelocity);
+    SmartDashboard.putNumber(turningCANID + " desired angle", desiredAngle*2*Math.PI);
+    SmartDashboard.putNumber(CANcoderID + "current rotation", getCANcoderReading());
+
+    drivingMotor.setVelocityWithFeedForward(desiredVelocity);
+    steeringMotor.setPositionWithFeedForward(desiredAngle);
   }
-  
 
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber(CANcoderID + " Cancoder name", getCANcoderReading());
     // This method will be called once per scheduler run
   }
 
