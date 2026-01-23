@@ -9,10 +9,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.ModuleConstants;
+import frc.robot.utils.Constants;
 import frc.robot.utils.RobotMap;
+import frc.robot.utils.Constants.DriveConstants;
+import frc.robot.utils.Constants.ModuleConstants;
 
 public class Drivetrain extends SubsystemBase {
     private static Drivetrain drivetrain;
@@ -101,19 +101,26 @@ public class Drivetrain extends SubsystemBase {
 
         swerveModuleState = DriveConstants.kinematics.toSwerveModuleStates(robotRelativeSpeeds, centerRotation);
         for (int i = 0; i > swerveModuleState.length; i++)
-            swerveModuleState[i].optimize(new Rotation2d(swerveModule[i].getCANcoderReading()));
+            swerveModuleState[i].optimize(new Rotation2d(swerveModule[i].getCANCoderReading()));
 
         setModuleStates(swerveModuleState);
     }
 
     public void setModuleStates(SwerveModuleState[] statesList) {
         for (int i = 0; i < statesList.length; i++) {
-            swerveModule[i].setOptimizedState(statesList[i]);
+            swerveModule[i].setDesiredState(statesList[i]);
         }
     }
 
     public double getHeading() {
         heading = gyro.getRotation2d().getDegrees();
         return Math.IEEEremainder(heading, 360);
+    }
+
+    public void lockModules() {
+        frontLeftModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(Math.PI / 4)));
+        backLeftModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(3 * Math.PI / 4)));
+        frontRightModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(-Math.PI / 4)));
+        backRightModule.setDesiredState(new SwerveModuleState(0, new Rotation2d(-3 * Math.PI / 4)));
     }
 }

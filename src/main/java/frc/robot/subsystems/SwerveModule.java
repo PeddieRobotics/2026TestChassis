@@ -16,102 +16,157 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import frc.robot.Constants;
-import frc.robot.Constants.ModuleConstants;
+import frc.robot.utils.Constants.ModuleConstants;
 import frc.robot.utils.Kraken;
 
 public class SwerveModule extends SubsystemBase {
-    private final CANcoder turnEncoder;
-    private final int drivingCANID, turningCANID, CANcoderID;
-    private Kraken drivingMotor, steeringMotor;
-    private SwerveModuleState optimizedState;
-    private double moduleOffset;
+    
+    private final CANcoder canCoder;
 
-    /** Creates a new ExampleSubsystem. */
-    public SwerveModule(CANBus canbus, int driveID, int turnID, int CANCoderID, double moduleOffset) {
-        CANcoderID = CANCoderID;
-        drivingCANID = driveID;
-        turningCANID = turnID;
-        this.moduleOffset = moduleOffset;
+    private final int drivingCANId;
+    private final int steerCANId;
+    private final int CANCoderId;
 
-        drivingMotor = new Kraken(driveID, canbus);
-        steeringMotor = new Kraken(turnID, canbus);
-        drivingMotor.setInverted(true);
-        steeringMotor.setInverted(true);
-        drivingMotor.setSupplyCurrentLimit(Constants.ModuleConstants.kDriveMotorCurrentLimit);
-        steeringMotor.setSupplyCurrentLimit(Constants.ModuleConstants.kTurnMotorCurrentLimit);
-        drivingMotor.setBrake();
-        steeringMotor.setBrake();
-        drivingMotor.setEncoder(0);
-        steeringMotor.setEncoder(0);
-        drivingMotor.setClosedLoopRampRate(0.1);
-        steeringMotor.setClosedLoopRampRate(0.1);
+    private final Kraken driveMotor;
+    private final Kraken steerMotor;
 
-        turnEncoder = new CANcoder(CANCoderID, canbus);
-        configureCANcoder();
-        steeringMotor.setContinuousOutput(); // keeps cancoder consisten by wrapping -5,5
-        steeringMotor.setFeedbackDevice(CANCoderID, FeedbackSensorSourceValue.FusedCANcoder);// what it listens to
+    private SwerveModuleState desiredState;
+    private double moduleAngularOffset;
+    
+    public SwerveModule(CANBus canbus, int drivingCANId, int steerCANId, int CANCoderId, double moduleAngularOffset) {
+        this.drivingCANId = drivingCANId;
+        this.steerCANId = steerCANId;
+        this.CANCoderId = CANCoderId;
+        this.moduleAngularOffset = moduleAngularOffset;
 
-        drivingMotor.setVelocityConversionFactor(Constants.ModuleConstants.kDriveEncoderVelocityFactor);
-        steeringMotor.setRotorToSensorRatio(Constants.ModuleConstants.kSteerMotorReduction);
-        steeringMotor.setSensorToMechanismRatio(1.0);
+        driveMotor = new Kraken(this.drivingCANId, canbus);
+        steerMotor = new Kraken(this.steerCANId, canbus);
 
-        drivingMotor.setPIDValues(
-            ModuleConstants.kDrivingS, ModuleConstants.kDrivingV, ModuleConstants.kDrivingA,
-            ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD,
-            ModuleConstants.kDrivingFF
-        );
-        steeringMotor.setPIDValues(
-            ModuleConstants.kSteerS, ModuleConstants.kSteerV, ModuleConstants.kSteerA,
-            ModuleConstants.kSteerP, ModuleConstants.kSteerI, ModuleConstants.kSteerD,
-            ModuleConstants.kSteerFF, StaticFeedforwardSignValue.UseClosedLoopSign
-        );
-    }
+        driveMotor.setInverted(true);
+        steerMotor.setInverted(true);
 
-    public void configureCANcoder() {
-        CANcoderConfiguration config = new CANcoderConfiguration();
-        config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
-        config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        config.MagnetSensor.MagnetOffset = -moduleOffset;
+        driveMotor.setSupplyCurrentLimit(ModuleConstants.kDriveMotorSupplyCurrentLimit);
+        steerMotor.setSupplyCurrentLimit(ModuleConstants.kSteerMotorSupplyCurrentLimit);
 
-        turnEncoder.getConfigurator().apply(config);
-    }
+        driveMotor.setBrake();
+        steerMotor.setCoast();
 
-    public double getCANcoderReading() {
-        return turnEncoder.getAbsolutePosition().getValueAsDouble() * 2 * Math.PI; // convert from rev to radians
-    }
+        //TODO: find these values
+        //driveMotor.setStatorCurrentLimit(ModuleConstants.kDriveMotorStatorCurrentLimit);
+        //steerMotor.setStatorCurrentLimit(ModuleConstants.kSteerMotorStatorCurrentLimit);
 
-    public SwerveModuleState getState() {
-        return new SwerveModuleState(drivingMotor.getMPS(), new Rotation2d(getCANcoderReading()));
-    }
+        driveMotor.setClosedLoopRampRate(0.1);
+        steerMotor.setClosedLoopRampRate(0.1);
 
-    public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(
-            drivingMotor.getPosition() * Constants.ModuleConstants.kDriveEncoderVelocityFactor,
-            new Rotation2d(getCANcoderReading())
-        );
-    }
+        driveMotor.setEncoder(0);
+        steerMotor.setEncoder(0);
 
-    public void setOptimizedState(SwerveModuleState desiredState) {
-        this.optimizedState = desiredState;
+        canCoder = new CANcoder(CANCoderId, canbus);
+        configureCANCoder();
+
+        steerMotor.setContinuousOutput();
+        steerMotor.setFeedbackDevice(CANCoderId, FeedbackSensorSourceValue.FusedCANcoder);
         
-        optimizedState.optimize(new Rotation2d(getCANcoderReading()));
+        driveMotor.setVelocityConversionFactor(ModuleConstants.kDriveEncoderVelocityFactor);
 
-        double desiredVelocity = optimizedState.speedMetersPerSecond;
-        double desiredAngle = optimizedState.angle.getRadians() / (2 * Math.PI);
-        SmartDashboard.putNumber(drivingCANID + " desired velocity", desiredVelocity);
-        SmartDashboard.putNumber(turningCANID + " desired angle", desiredAngle * 2 * Math.PI);
-        SmartDashboard.putNumber(CANcoderID + "current rotation", getCANcoderReading());
+        steerMotor.setRotorToSensorRatio(ModuleConstants.kSteerMotorReduction);
+        steerMotor.setSensorToMechanismRatio(1.0);
 
-        drivingMotor.setVelocityVoltageWithFeedForward(desiredVelocity);
-        steeringMotor.setPositionVoltageWithFeedForward(desiredAngle);
+        driveMotor.setPIDValues(ModuleConstants.kDriveS, ModuleConstants.kDriveV, ModuleConstants.kDriveA, 
+                                                                        ModuleConstants.kDriveP, ModuleConstants.kDriveI, ModuleConstants.kDriveD, ModuleConstants.kDriveFF);
+        steerMotor.setPIDValues(ModuleConstants.kSteerS, ModuleConstants.kSteerV, ModuleConstants.kSteerA, 
+                                                                        ModuleConstants.kSteerP, ModuleConstants.kSteerI, ModuleConstants.kSteerD, ModuleConstants.kSteerFF, StaticFeedforwardSignValue.UseClosedLoopSign);
+    }
+
+    /**
+     * configures cancoder to all our settings
+     */
+    public void configureCANCoder(){
+        CANcoderConfiguration config = new CANcoderConfiguration();
+
+        // Setting this to 1 makes the absolute position unsigned [0, 1)
+        // Setting this to 0.5 makes the absolute position signed [-0.5, 0.5)
+        // Setting this to 0 makes the absolute position always negative [-1, 0)
+        config.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
+
+        config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        config.MagnetSensor.MagnetOffset = moduleAngularOffset;
+        canCoder.getConfigurator().apply(config);
+    }
+
+    /**
+     * @return returns current cancoder reading from number of rotations to radians
+     */
+    public double getCANCoderReading(){
+        return 2 * Math.PI * canCoder.getAbsolutePosition().getValueAsDouble();
+    }
+
+    /**
+     * @return returns state of swervemodule
+     */
+    public SwerveModuleState getState(){
+        return new SwerveModuleState(driveMotor.getMPS(), new Rotation2d(getCANCoderReading()));
+    }
+
+    /**
+     * @return returns angle from cancoder reading in radians
+     */
+    public double getAngle() {
+        return getCANCoderReading();
+    }
+
+    /**
+     * @return returns velocity from driveMotor encoder in meters per second
+     */
+    public double getVelocity() {
+        return driveMotor.getMPS();
+    }
+
+    /**
+     * @return returns position of swerve module
+     */
+    public SwerveModulePosition getPosition(){
+        return new SwerveModulePosition(driveMotor.getPosition() * ModuleConstants.kDriveEncoderPositionFactor, new Rotation2d(getCANCoderReading()));
+    }
+
+    public double getPositionRadians(){
+        return driveMotor.getPosition() / ModuleConstants.kDriveMotorReduction * 2 * Math.PI;
+    }
+
+    /**
+     * sets desired state for the swervemodule state, optimizes it, and sets desired velocity and angle
+     * @param desiredModuleState
+     */
+    public void setDesiredState(SwerveModuleState desiredModuleState){
+        desiredState = desiredModuleState;
+        desiredState.optimize(new Rotation2d(getCANCoderReading()));
+
+        double desiredVelocity = desiredState.speedMetersPerSecond;
+        double desiredAngle = desiredState.angle.getRadians() / (2 * Math.PI);
+
+        SmartDashboard.putNumber(drivingCANId + " optimized desired velocity", desiredVelocity);
+        SmartDashboard.putNumber(steerCANId + " optimized desired angle", desiredAngle);
+        SmartDashboard.putNumber(CANCoderId + " cancoder position", getCANCoderReading());
+
+        driveMotor.setVelocityVoltageWithFeedForward(desiredVelocity);
+        steerMotor.setPositionVoltageWithFeedForward(desiredAngle);
+    }
+
+    public double getDriveMotorTemperature(){
+        return driveMotor.getMotorTemperature();
+    }
+
+    public double getSteerMotorTemperature(){
+        return steerMotor.getMotorTemperature();
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber(CANcoderID + " Cancoder name", getCANcoderReading());
         // This method will be called once per scheduler run
+        SmartDashboard.putNumber(CANCoderId + " CANCoder Reading", getCANCoderReading());
+        SmartDashboard.putNumber(CANCoderId + "Swerve Drive Motor Current", driveMotor.getSupplyCurrent()); 
+        SmartDashboard.putNumber(CANCoderId + "Swerve Steer Motor Current", steerMotor.getSupplyCurrent());
+
     }
 
     @Override

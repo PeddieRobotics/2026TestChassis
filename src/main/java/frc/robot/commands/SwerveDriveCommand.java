@@ -4,50 +4,90 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.utils.OI;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.utils.OI;
+import frc.robot.utils.OI.DPadDirection;;
 
-/** An example command that uses an example subsystem. */
+
+
 public class SwerveDriveCommand extends Command {
+
     private Drivetrain drivetrain;
     private OI oi;
 
     public SwerveDriveCommand() {
         drivetrain = Drivetrain.getInstance();
-        oi = OI.getInstance();
 
         addRequirements(drivetrain);
-        
-        SmartDashboard.putNumber("Swerve COR x", 0);
-        SmartDashboard.putNumber("Swerve COR y", 0);
     }
 
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize() {}
+    public double getRotationControl(double target, double gyro){
+        double delta = target-gyro;
+        double rotSpeed;
+        if (delta > 180) {
+            rotSpeed = (delta-360)/180;
+        }
+        else if (Math.abs(delta) <= 180) {
+            rotSpeed = delta/180;
+        }
+        else {
+            rotSpeed = (delta+360)/180;
+        }
 
-    // Called every time the scheduler runs while the command is scheduled.
+        if (Math.abs(rotSpeed) < 0.05){
+            return 0;
+        }
+
+        rotSpeed *= 4;
+        if (Math.abs(rotSpeed) > 1) {
+            return 1.0 * Math.signum(rotSpeed);
+        }
+        return rotSpeed;
+    }
+
+    @Override
+    public void initialize() {
+        oi = OI.getInstance();
+    }
+
     @Override
     public void execute() {
-        Translation2d translation = oi.getSwerveTranslation();
-        double rotation = oi.getRotation();
+        SmartDashboard.putNumber("Joystick Angle", oi.getJoystickAngle());
+        SmartDashboard.putNumber("Heading", drivetrain.getHeading());
         
-        Translation2d cor = new Translation2d(
-            SmartDashboard.getNumber("Swerve COR x", 0),
-            SmartDashboard.getNumber("Swerve COR y", 0)
-        );
+        if (DriverStation.isAutonomous())
+            return;
+            
+        Translation2d translation = oi.getSwerveTranslation();
+        double rotation;
+        
+        if (oi.getRotation() == 0 && oi.getJoystickAngle() != 0){ //bumpers are not being pressed, snake is onned
+            rotation = getRotationControl(oi.getJoystickAngle(), drivetrain.getHeading());
+            SmartDashboard.putNumber("Rotation", rotation);
+        }
+        else {
+            rotation = oi.getRotation();
+        }
+        boolean isFieldOriented = true;
 
-        drivetrain.drive(translation, rotation, true, cor);
+        if (oi.getDriverDPadInput() != DPadDirection.NONE) {
+            translation = oi.getCardinalDirection();
+            // if (Superstructure.getInstance().isClimbState()) {
+            //     translation = translation.times(-1);
+            //     isFieldOriented = false;
+            // }
+        }
+
+        drivetrain.drive(translation, rotation, isFieldOriented, new Translation2d(0, 0));
     }
 
-    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {}
 
-    // Returns true when the command should end.
     @Override
     public boolean isFinished() {
         return false;
