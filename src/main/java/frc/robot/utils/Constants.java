@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot;
+package frc.robot.utils;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -35,13 +35,13 @@ public final class Constants {
                 / kDriveMotorReduction);
         public static final double kSteerMotorReduction = 18.75;
 
-        public static final double kDrivingS = 0.28;
-        public static final double kDrivingV = 0.1;
-        public static final double kDrivingA = 0.0;
-        public static final double kDrivingP = 0.3;
-        public static final double kDrivingI = 0.0;
-        public static final double kDrivingD = 0.0;
-        public static final double kDrivingFF = 0.0;
+        public static final double kDriveS = 0.28;
+        public static final double kDriveV = 0.1;
+        public static final double kDriveA = 0.0;
+        public static final double kDriveP = 0.3;
+        public static final double kDriveI = 0.0;
+        public static final double kDriveD = 0.0;
+        public static final double kDriveFF = 0.0;
 
         public static final double kSteerS = 0.2;
         public static final double kSteerV = 0.0;
@@ -51,10 +51,10 @@ public final class Constants {
         public static final double kSteerD = 7.0;
         public static final double kSteerFF = 0.0;
 
-        public static final double kFrontLeftModuleOffset = -0.651367 ;
-        public static final double kFrontRightModuleOffset = 0.145996 ;
+        public static final double kFrontLeftModuleOffset = -0.651367;
+        public static final double kFrontRightModuleOffset = 0.145996;
         public static final double kBackLeftModuleOffset = 0.020508;
-        public static final double kBackRightModuleOffset = -0.222900 ;
+        public static final double kBackRightModuleOffset = -0.222900;
     }
 
     public static class DriveConstants {

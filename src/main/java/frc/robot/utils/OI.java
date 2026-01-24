@@ -10,20 +10,22 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.LockDrivetrain;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.utils.Constants.DriveConstants;
 
 public class OI {
     private static OI oi;
     private PS4Controller controller;
 
-    public OI(){
+    public OI() {
         controller = new PS4Controller(0);
-        Trigger R1Bumper = new JoystickButton(controller, PS4Controller.Button.kR1.value);
+
         Trigger psButton = new JoystickButton(controller, PS4Controller.Button.kPS.value);
-        psButton.onTrue(new InstantCommand(() -> {
-            Drivetrain.getInstance().setGyro(0);
-        }));
+        psButton.onTrue(new InstantCommand(() -> Drivetrain.getInstance().setGyro(0)));
+
+        Trigger R1Bumper = new JoystickButton(controller, PS4Controller.Button.kR1.value);
         R1Bumper.whileTrue(new LockDrivetrain());
+
+        SmartDashboard.putNumber("Drive: cardinal scale", 0.5);
     }
 
     public enum DPadDirection {
@@ -31,9 +33,8 @@ public class OI {
     };
 
     public static OI getInstance(){
-        if(oi == null){
+        if (oi == null)
             oi = new OI();
-        }
         return oi;
     }
 

@@ -9,10 +9,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.ModuleConstants;
+import frc.robot.utils.Constants;
 import frc.robot.utils.RobotMap;
+import frc.robot.utils.Constants.DriveConstants;
+import frc.robot.utils.Constants.ModuleConstants;
 
 public class Drivetrain extends SubsystemBase {
     private static Drivetrain drivetrain;
