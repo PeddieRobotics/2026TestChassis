@@ -25,6 +25,20 @@ public final class Constants {
         public static final int kDriverControllerPort = 0;
     }
 
+    public static class TurretConstants {
+        public static final int kTurretMotorDeviceId = 0;
+        public static final int kEncoderId1 = 0;
+        public static final int kEncoderId2 = 0;
+
+        //cancoder displacement
+        public static final int kCancoderOffset = 209;
+
+        // CRT constants, draft using k congrunt to am2n2 + bm1n1 (%n1*n2)
+        public static final int kTeethPerTurretCircle = 200;
+        public static final int kTeethPerEncoderCircle1 = 20; // n1
+        public static final int kTeethPerEncoderCircle2 = 21; // n2
+    }
+
     public static class ModuleConstants {
         public static final double kDriveMotorCurrentLimit = 40.0;
         public static final double kTurnMotorCurrentLimit = 40.0;
