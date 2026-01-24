@@ -99,7 +99,11 @@ public class Drivetrain extends SubsystemBase {
         else
             robotRelativeSpeeds = fieldRelativeSpeeds;
 
-        swerveModuleState = DriveConstants.kinematics.toSwerveModuleStates(robotRelativeSpeeds, centerRotation);
+        if (centerRotation == null)
+            swerveModuleState = DriveConstants.kinematics.toSwerveModuleStates(robotRelativeSpeeds);
+        else
+            swerveModuleState = DriveConstants.kinematics.toSwerveModuleStates(robotRelativeSpeeds, centerRotation);
+
         for (int i = 0; i > swerveModuleState.length; i++)
             swerveModuleState[i].optimize(new Rotation2d(swerveModule[i].getCANCoderReading()));
 

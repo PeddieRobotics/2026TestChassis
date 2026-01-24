@@ -22,25 +22,21 @@ public class SwerveDriveCommand extends Command {
     }
 
     public double getRotationControl(double target, double gyro){
-        double delta = target - gyro;
-        double rotSpeed;
+        // places rotError between -180 and 180, then normalize between -1 and 1
+        double rotError = Math.IEEEremainder(target - gyro, 360) / 180;
 
-        if (delta > 180)
-            rotSpeed = (delta - 360) / 180;
-        else if (Math.abs(delta) <= 180)
-            rotSpeed = delta / 180;
-        else
-            rotSpeed = (delta + 360) / 180;
-
-        if (Math.abs(rotSpeed) < 0.05)
+        // for small errors, do nothing
+        if (Math.abs(rotError) < 0.05)
             return 0;
 
-        rotSpeed *= 4;
+        // 4 is a PID factor
+        double rotVelocity = rotError * 4;
 
-        if (Math.abs(rotSpeed) > 1)
-            return 1.0 * Math.signum(rotSpeed);
+        // cap velocity at 1
+        if (Math.abs(rotVelocity) > 1)
+            return 1.0 * Math.signum(rotVelocity);
 
-        return rotSpeed;
+        return rotVelocity;
     }
 
     @Override
@@ -50,25 +46,28 @@ public class SwerveDriveCommand extends Command {
 
     @Override
     public void execute() {
-        SmartDashboard.putNumber("Joystick Angle", oi.getJoystickAngle());
-        SmartDashboard.putNumber("Heading", drivetrain.getHeading());
-        
-        if (DriverStation.isAutonomous())
-            return;
-            
+
         Translation2d translation = oi.getSwerveTranslation();
-        double rotation;
+        double rotation = oi.getRotation();
         
-        // bumpers are not being pressed, snake is onned
+        drivetrain.drive(translation, rotation, true, null);
+
+        // if (DriverStation.isAutonomous())
+        //     return;
+            
+        // Translation2d translation = oi.getSwerveTranslation();
+        // double rotation;
+        
+        // // bumpers are not being pressed, snake is onned
         // if (oi.getRotation() == 0 && oi.getJoystickAngle() != 0)
         //     rotation = getRotationControl(oi.getJoystickAngle(), drivetrain.getHeading());
         // else
-            rotation = oi.getRotation();
+        //     rotation = oi.getRotation();
 
-        if (oi.getDriverDPadInput() != DPadDirection.NONE)
-            translation = oi.getCardinalDirection();
+        // if (oi.getDriverDPadInput() != DPadDirection.NONE)
+        //     translation = oi.getCardinalDirection();
 
-        drivetrain.drive(translation, rotation, true, new Translation2d(0, 0));
+        // drivetrain.drive(translation, rotation, true, null);
     }
 
     @Override
