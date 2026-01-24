@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.LockDrivetrain;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.utils.Constants.DriveConstants;
+import frc.robot.Constants.DriveConstants;
 
 public class OI {
     private static OI oi;
