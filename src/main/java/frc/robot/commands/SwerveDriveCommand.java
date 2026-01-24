@@ -12,40 +12,34 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.OI;
 import frc.robot.utils.OI.DPadDirection;;
 
-
-
 public class SwerveDriveCommand extends Command {
-
     private Drivetrain drivetrain;
     private OI oi;
 
     public SwerveDriveCommand() {
         drivetrain = Drivetrain.getInstance();
-
         addRequirements(drivetrain);
     }
 
     public double getRotationControl(double target, double gyro){
-        double delta = target-gyro;
+        double delta = target - gyro;
         double rotSpeed;
-        if (delta > 180) {
-            rotSpeed = (delta-360)/180;
-        }
-        else if (Math.abs(delta) <= 180) {
-            rotSpeed = delta/180;
-        }
-        else {
-            rotSpeed = (delta+360)/180;
-        }
 
-        if (Math.abs(rotSpeed) < 0.05){
+        if (delta > 180)
+            rotSpeed = (delta - 360) / 180;
+        else if (Math.abs(delta) <= 180)
+            rotSpeed = delta / 180;
+        else
+            rotSpeed = (delta + 360) / 180;
+
+        if (Math.abs(rotSpeed) < 0.05)
             return 0;
-        }
 
         rotSpeed *= 4;
-        if (Math.abs(rotSpeed) > 1) {
+
+        if (Math.abs(rotSpeed) > 1)
             return 1.0 * Math.signum(rotSpeed);
-        }
+
         return rotSpeed;
     }
 
@@ -65,24 +59,16 @@ public class SwerveDriveCommand extends Command {
         Translation2d translation = oi.getSwerveTranslation();
         double rotation;
         
-        if (oi.getRotation() == 0 && oi.getJoystickAngle() != 0){ //bumpers are not being pressed, snake is onned
-            rotation = getRotationControl(oi.getJoystickAngle(), drivetrain.getHeading());
-            SmartDashboard.putNumber("Rotation", rotation);
-        }
-        else {
+        // bumpers are not being pressed, snake is onned
+        // if (oi.getRotation() == 0 && oi.getJoystickAngle() != 0)
+        //     rotation = getRotationControl(oi.getJoystickAngle(), drivetrain.getHeading());
+        // else
             rotation = oi.getRotation();
-        }
-        boolean isFieldOriented = true;
 
-        if (oi.getDriverDPadInput() != DPadDirection.NONE) {
+        if (oi.getDriverDPadInput() != DPadDirection.NONE)
             translation = oi.getCardinalDirection();
-            // if (Superstructure.getInstance().isClimbState()) {
-            //     translation = translation.times(-1);
-            //     isFieldOriented = false;
-            // }
-        }
 
-        drivetrain.drive(translation, rotation, isFieldOriented, new Translation2d(0, 0));
+        drivetrain.drive(translation, rotation, true, new Translation2d(0, 0));
     }
 
     @Override
