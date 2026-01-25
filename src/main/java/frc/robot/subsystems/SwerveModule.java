@@ -16,10 +16,9 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import frc.robot.Constants;
-import frc.robot.Constants.ModuleConstants;
+import frc.robot.utils.Constants;
 import frc.robot.utils.Kraken;
+import frc.robot.utils.Constants.ModuleConstants;
 
 public class SwerveModule extends SubsystemBase {
     private final CANcoder turnEncoder;
@@ -58,9 +57,9 @@ public class SwerveModule extends SubsystemBase {
         steeringMotor.setSensorToMechanismRatio(1.0);
 
         drivingMotor.setPIDValues(
-            ModuleConstants.kDrivingS, ModuleConstants.kDrivingV, ModuleConstants.kDrivingA,
-            ModuleConstants.kDrivingP, ModuleConstants.kDrivingI, ModuleConstants.kDrivingD,
-            ModuleConstants.kDrivingFF
+            ModuleConstants.kDriveS, ModuleConstants.kDriveV, ModuleConstants.kDriveA,
+            ModuleConstants.kDriveP, ModuleConstants.kDriveI, ModuleConstants.kDriveD,
+            ModuleConstants.kDriveFF
         );
         steeringMotor.setPIDValues(
             ModuleConstants.kSteerS, ModuleConstants.kSteerV, ModuleConstants.kSteerA,

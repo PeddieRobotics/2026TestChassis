@@ -4,50 +4,72 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.utils.OI;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.utils.OI;
+import frc.robot.utils.OI.DPadDirection;;
 
-/** An example command that uses an example subsystem. */
 public class SwerveDriveCommand extends Command {
     private Drivetrain drivetrain;
     private OI oi;
 
     public SwerveDriveCommand() {
         drivetrain = Drivetrain.getInstance();
-        oi = OI.getInstance();
-
+        SmartDashboard.putBoolean("Teleop snake drive?", false);
         addRequirements(drivetrain);
-        
-        SmartDashboard.putNumber("Swerve COR x", 0);
-        SmartDashboard.putNumber("Swerve COR y", 0);
     }
 
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize() {}
+    public double getRotationControl(double target){
+        // places rotError between -180 and 180, then normalize between -1 and 1
+        double gyro = drivetrain.getHeading();
+        double rotError = Math.IEEEremainder(target - gyro, 360) / 180;
 
-    // Called every time the scheduler runs while the command is scheduled.
+        // for small errors, do nothing
+        if (Math.abs(rotError) < 0.05)
+            return 0;
+
+        // 4 is kP
+        double rotVelocity = rotError * 4;
+
+        // cap velocity at 1
+        if (Math.abs(rotVelocity) > 1)
+            return 1.0 * Math.signum(rotVelocity);
+
+        return rotVelocity;
+    }
+
+    @Override
+    public void initialize() {
+        oi = OI.getInstance();
+    }
+
     @Override
     public void execute() {
         Translation2d translation = oi.getSwerveTranslation();
-        double rotation = oi.getRotation();
-        
-        Translation2d cor = new Translation2d(
-            SmartDashboard.getNumber("Swerve COR x", 0),
-            SmartDashboard.getNumber("Swerve COR y", 0)
-        );
 
-        drivetrain.drive(translation, rotation, true, cor);
+        double rotation;
+        if (SmartDashboard.getBoolean("Teleop snake drive?", false)) {
+            // bumpers are not being pressed, snake is onned
+            if (oi.getRotation() == 0 && oi.getJoystickAngle() != 0)
+                rotation = getRotationControl(oi.getJoystickAngle());
+            else
+                rotation = oi.getRotation();
+        }
+        else
+            rotation = oi.getRotation();
+
+        if (oi.getDriverDPadInput() != DPadDirection.NONE)
+            translation = oi.getCardinalDirection();
+
+        drivetrain.drive(translation, rotation, true, null);
     }
 
-    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {}
 
-    // Returns true when the command should end.
     @Override
     public boolean isFinished() {
         return false;
