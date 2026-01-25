@@ -29,14 +29,42 @@ public final class Constants {
         public static final int kTurretMotorDeviceId = 0;
         public static final int kEncoderId1 = 0;
         public static final int kEncoderId2 = 0;
+        
+        // valid range to not destroy turret is [-kTurretRange, kTurretRange]
+        public static final double kTurretRange = 270;
 
-        //cancoder displacement
-        public static final int kCancoderOffset = 209;
+        public static final int kTurretGearTeeth = 200;
+        public static final int kEncoderGear1Teeth = 20; // n1
+        public static final int kEncoderGear2Teeth = 21; // n2
 
-        // CRT constants, draft using k congrunt to am2n2 + bm1n1 (%n1*n2)
-        public static final int kTeethPerTurretCircle = 200;
-        public static final int kTeethPerEncoderCircle1 = 20; // n1
-        public static final int kTeethPerEncoderCircle2 = 21; // n2
+        // this is the "number of gears moved" (found by CRT)
+        // where the turret's position is 0 degrees, aka forward
+        // 210
+        public static final int kZeroPositionTeeth = kEncoderGear1Teeth * kEncoderGear2Teeth / 2;
+
+        // 1 degree = (kTurretGearTeeth / 360) teeth
+        public static double positionDegreeToTeeth(double degree) {
+            return degree * kTurretGearTeeth / 360;
+        }
+
+        // 1 tooth = (360 / kTurretGearTeeth) degrees
+        public static double positionTeethToDegree(double teeth) {
+            return teeth * 360 / kTurretGearTeeth;
+        }
+        
+        // these are always positive, see Turret.java for explanation
+        public static final double kMinPositionTeethRaw = positionDegreeToTeeth(-kTurretRange) + kZeroPositionTeeth;
+        public static final double kMaxPositionTeethRaw = positionDegreeToTeeth(kTurretRange) + kZeroPositionTeeth;
+        
+        public static class CRTConstants {
+            public static final int y_1 = 1; 
+            public static final int y_2 = -1; 
+            
+            // by definition from CRT: y_1 is such that y_1 * m_1 ≡ 1 (mod n_1)
+            // from the CRT: m_1 = n_2 = 21, m_2 = n_1 = 20
+            // y_1 * m_1 = 1 * 21 = 21 ≡ 1 (mod 20)
+            // y_2 * m_2 = -1 * 20 = -20 ≡ 1 (mod 21)
+        }
     }
 
     public static class ModuleConstants {
