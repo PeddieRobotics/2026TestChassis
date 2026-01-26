@@ -51,6 +51,11 @@ public final class Constants {
         public static double positionTeethToDegree(double teeth) {
             return teeth * 360 / kTurretGearTeeth;
         }
+
+        public static final double kTurretP = 0.0;
+        public static final double kTurretI = 0.0;
+        public static final double kTurretD = 0.0;
+        public static final double kTurretFF = 0.0;
         
         // these are always positive, see Turret.java for explanation
         public static final double kMinPositionTeethRaw = positionDegreeToTeeth(-kTurretRange) + kZeroPositionTeeth;

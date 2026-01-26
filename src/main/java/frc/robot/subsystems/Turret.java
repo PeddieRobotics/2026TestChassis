@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.CANcoder;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,6 +15,7 @@ public class Turret extends SubsystemBase {
     private Kraken turretMotor;
     private CANcoder encoder1, encoder2;
     private CANBus canbus;
+    private PIDController PIDController;
     private static Turret turret;
     private static OI controller;
 
@@ -22,8 +24,10 @@ public class Turret extends SubsystemBase {
         turretMotor = new Kraken(TurretConstants.kTurretMotorDeviceId, canbus);
         encoder1 = new CANcoder(TurretConstants.kEncoderId1);
         encoder2 = new CANcoder(TurretConstants.kEncoderId2);
+
         // for convenient visual
         SmartDashboard.putBoolean("Open loop control", false);
+        PIDController = new PIDController(TurretConstants.kTurretP, TurretConstants.kTurretI, TurretConstants.kTurretD);
     }
 
     public static Turret getInstance() {
@@ -140,10 +144,12 @@ public class Turret extends SubsystemBase {
         // the setpoint is the optimizedDesiredPositionTeethRaw
         // the input is the getCurrentPositionTeethRaw
         // this part is left as an exercise to the reader
+
+        turretMotor.setPercentOutput(PIDController.calculate(getCurrentPositionTeethRaw(), optimizedDesiredPositionTeethRaw));
     }
 
     public void setPercentOutput(double percentAngle) {
-        turretMotor.setPercentOutput(percentAngle);
+        turretMotor.setVoltage(percentAngle);
     }
 
     @Override
