@@ -23,7 +23,7 @@ public class Drivetrain extends SubsystemBase {
     private final Pigeon2 gyro;
     private double heading;
 
-    public Drivetrain() {
+    private Drivetrain() {
         // CANBus defaultCANBus = new CANBus(RobotMap.CANIVORE_NAME);
         CANBus defaultCANBus = new CANBus("rio");
 
