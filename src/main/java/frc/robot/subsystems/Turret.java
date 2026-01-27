@@ -19,6 +19,8 @@ public class Turret extends SubsystemBase {
 
     public Turret() {
         canbus = new CANBus();
+        controller = OI.getInstance();
+
         turretMotor = new Kraken(TurretConstants.kTurretMotorDeviceId, canbus);
         encoder1 = new CANcoder(TurretConstants.kEncoderId1);
         encoder2 = new CANcoder(TurretConstants.kEncoderId2);
