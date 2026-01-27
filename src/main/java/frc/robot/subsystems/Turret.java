@@ -145,11 +145,11 @@ public class Turret extends SubsystemBase {
         // the input is the getCurrentPositionTeethRaw
         // this part is left as an exercise to the reader
 
-        turretMotor.setPercentOutput(PIDController.calculate(getCurrentPositionTeethRaw(), optimizedDesiredPositionTeethRaw));
+        turretMotor.setVoltage(PIDController.calculate(getCurrentPositionTeethRaw(), optimizedDesiredPositionTeethRaw));
     }
 
     public void setPercentOutput(double percentAngle) {
-        turretMotor.setVoltage(percentAngle);
+        turretMotor.setPercentOutput(percentAngle);
     }
 
     @Override
