@@ -11,6 +11,7 @@ import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -514,6 +515,11 @@ public class Kraken {
     public void setPositionVoltage(double position) {
         final PositionVoltage request = new PositionVoltage(0).withSlot(0);
         talon.setControl(request.withPosition(position).withEnableFOC(true));
+    }
+
+    public void setVoltage(double voltage) {
+        final VoltageOut request = new VoltageOut(voltage);
+        talon.setControl(request);
     }
 
     /**
