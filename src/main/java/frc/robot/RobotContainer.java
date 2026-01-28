@@ -34,7 +34,11 @@ public class RobotContainer {
         // flywheel = Flywheel.getInstance();
     }
     
-    public Command getAutonomousCommand() {
-        return new InstantCommand();
-    }
+    // flywheel = Flywheel.getInstance();
+    hopper = Hopper.getInstance();
+  }
+  
+  public Command getAutonomousCommand() {
+    return new InstantCommand();
+  }
 }
