@@ -9,16 +9,19 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Hopper;
 
 public class RobotContainer {
   private Drivetrain drivetrain;
-  private Flywheel flywheel;
+  // private Flywheel flywheel;
+  private Hopper hopper;
 
   public RobotContainer() {
     drivetrain = Drivetrain.getInstance();
     drivetrain.setDefaultCommand(new SwerveDriveCommand());
     
-    flywheel = Flywheel.getInstance();
+    // flywheel = Flywheel.getInstance();
+    hopper = Hopper.getInstance();
   }
   
   public Command getAutonomousCommand() {
