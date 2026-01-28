@@ -8,9 +8,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants;
 import frc.robot.utils.RobotMap;
+import frc.robot.utils.ShotMap;
+import frc.robot.utils.ShotMap.ShotMapValue;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.ModuleConstants;
 
@@ -126,5 +129,16 @@ public class Drivetrain extends SubsystemBase {
         backLeftModule.setOptimizedState(new SwerveModuleState(0, new Rotation2d(3 * Math.PI / 4)));
         frontRightModule.setOptimizedState(new SwerveModuleState(0, new Rotation2d(-Math.PI / 4)));
         backRightModule.setOptimizedState(new SwerveModuleState(0, new Rotation2d(-3 * Math.PI / 4)));
+    }
+    
+    @Override
+    public void periodic() {
+        if (SmartDashboard.getBoolean("Test Map?", false)) {
+            double distance = SmartDashboard.getNumber("Test Distance", 0);
+            ShotMapValue value = ShotMap.queryShotMap(distance, 0);
+
+            SmartDashboard.putNumber("Test Output: Speed", value.exit_v());
+            SmartDashboard.putNumber("Test Output: Pitch", value.theta());
+        }
     }
 }
