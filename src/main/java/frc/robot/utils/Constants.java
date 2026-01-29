@@ -165,4 +165,73 @@ public final class Constants {
             public static final double topRightCornerX = 15; 
             public static final double topRightCornerY = 7;
         }
+        public static class HopperConstants{
+
+        public static final double kGroundIntakeHopperSpeed = 0;
+        public static final double kShootHopperSpeed = 0;
+        public static final double kOuttakeHopperSpeed = 0;
+        public static final int kHPIntakeHopperSpeed = 0;
+        public static final double kFeedFlywheelLayupSpeed = 0;
+        public static final double kFeedFlywheel = 0;
+        public static final double kFeedFlywheelPassSpeed = 0;
+
+    }
+    public static class IntakeConstants{
+
+        public static final double kIntakeSpeed = 0.0;
+        public static final double kIntakeFeedSpeed = 0.0;
+        public static double kHopperCurrentLimit;
+    }
+    public static class HoodConstants {
+        public static final double kHoodTolerance = 0.0;
+        public static final double kHoodCPR = 4096;
+        public static final double kHoodMaxAngle = 85.0;
+        public static final double kHoodMinAngle = 30.0;
+        public static final double kHoodPositionKp = 0;
+        public static final double kHoodPositionKd = 0;
+        public static final double kHoodPassingAngle = 0;
+    }
+    public static class ShooterConstants{
+        // constant velocity and position for passing
+        public static final double kPassSpeed = 0.0;
+        /*Physics polynomial coefficients
+        example ax^3+bx^2y+cxy^2+dy^3
+        */
+        //this is for the polynomial for velocity
+        public static final double aVelocity = 0; // the first coefficient for the physics polynomial for shooter velocity
+        public static final double bVelocity = 0;
+        public static final double cVelocity = 0;
+        public static final double dVelocity = 0;
+
+        // this is for the polynomial for pitch angle
+        public static final double aPitch = 0; // the first coefficient for the physics polynomial for pitch angle
+        public static final double bPitch = 0;
+        public static final double cPitch = 0;
+        public static final double dPitch = 0;
+        
+        // coefficients for func to calculate time in air--> integral of distance travelled as time increases (by dx ~ 0.001, from t=0)
+        public static final double aTimeInAir = 0;
+        public static final double bTimeInAir = 0;
+        public static final double cTimeInAir = 0;
+        public static final double dTimeInAir = 0;
+        
+        public static final double kShooterSpeedS = 0;
+        public static final double kShooterSpeedV = 0; 
+        public static final double kShooterSpeedA = 0; 
+        public static final double kShooterSpeedP = 0; //overcome static friction
+        public static final double kShooterSpeedI = 0; 
+        public static final double kShooterSpeedD = 0; 
+        public static final double kShooterSpeedF = 0;
+    }
+    public static final class ScoreConstants {
+        // TODO: make
+    }
+    public static final class ClimberConstants {
+
+        public static final int kClimberRetractedPosition = 0;
+        public static final int kClimberDeployedPercentOutput =0;
+        public static final double kClimberDeployedPosition = 0;
+    }
+    public static final class CameraConstants {
+    }
 }
