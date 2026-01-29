@@ -135,7 +135,8 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         if (SmartDashboard.getBoolean("Test Map?", false)) {
             double distance = SmartDashboard.getNumber("Test Distance", 0);
-            ShotMapValue value = ShotMap.queryShotMap(distance, 0);
+            double v_r = SmartDashboard.getNumber("Test Rad. Vel.", 0);
+            ShotMapValue value = ShotMap.queryShotMap(distance, v_r);
 
             SmartDashboard.putNumber("Test Output: Speed", value.exit_v());
             SmartDashboard.putNumber("Test Output: Pitch", value.theta());

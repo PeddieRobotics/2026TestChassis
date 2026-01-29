@@ -17,28 +17,28 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Hopper;
 import frc.robot.utils.ShotMap;
 
 public class RobotContainer {
     private Drivetrain drivetrain;
     private Flywheel flywheel;
+    private Hopper hopper;
 
     public RobotContainer() throws IOException {
         ShotMap.initShotMap("shotdata.txt");
         SmartDashboard.putBoolean("Test Map?", false);
         SmartDashboard.putNumber("Test Distance", 0);
+        SmartDashboard.putNumber("Test Rad. Vel.", 0);
 
         drivetrain = Drivetrain.getInstance();
         drivetrain.setDefaultCommand(new SwerveDriveCommand());
-        
+
         // flywheel = Flywheel.getInstance();
+        hopper = Hopper.getInstance();
     }
-    
-    // flywheel = Flywheel.getInstance();
-    hopper = Hopper.getInstance();
-  }
-  
-  public Command getAutonomousCommand() {
-    return new InstantCommand();
-  }
+
+    public Command getAutonomousCommand() {
+        return new InstantCommand();
+    }
 }
