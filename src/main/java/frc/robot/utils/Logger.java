@@ -16,9 +16,6 @@ import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.ShooterStructure;
 import frc.robot.subsystems.SwerveModule;
 
 // @SuppressWarnings("unused")
