@@ -26,6 +26,19 @@ public final class Constants {
     }
 
     public static class TurretConstants {
+        public static final double kTurretToHubHeight = 0.0;
+        public static final double kTurretDisplacementX = 0.0;
+        public static final double kTurretDisplacementY = 0.0;
+        // PID values for the turret pitch
+        public static final double kTurretPositionS = 0;
+        public static final double kTurretPositionV = 0; 
+        public static final double kTurretPositionA = 0; 
+        public static final double kTurretPositionP = 0; //overcome static friction
+        public static final double kTurretPositionI = 0; 
+        public static final double kTurretPositionD = 0; 
+        public static final double kTurretPositionF = 0; 
+        public static final double kTurretMinAngle = -360.0;
+        public static final double kTurretMaxAngle = 360.0;
         public static final int kTurretMotorDeviceId = 0;
         public static final int kEncoderId1 = 0;
         public static final int kEncoderId2 = 0;
@@ -124,4 +137,32 @@ public final class Constants {
         public static final double kMaxRotationSpeed = 0.5 * Math.PI;
         public static final double kMaxFloorSpeed = 4;
     }
+    public static final class FieldConstants {
+            
+            public static final double blueHubPositionX = 4.63;
+            public static final double blueHubPositionY = 8.07;
+            public static final double redHubPositionX = 11.57;
+            public static final double redHubPositionY = 8.07; //Jayden said the field was 17mx8m but the field dimensions say 16x8?
+            
+            public static final double bluePassPositionX = 0;
+            public static final double bluePassPositionY = 0;
+            public static final double redPassPositionX = 0;
+            public static final double redPassPositionY = 0;
+
+            public static final double kTransitionShiftEnd = 10;       
+            public static final double kShift1End = 35;
+            public static final double kShift2End = 60;
+            public static final double kShift3End = 85;
+            public static final double kShift4End = 110;
+            public static final double kHoldThreshold = 7;
+
+            public static final double bottomLeftCornerX = 1; //can tune this later
+            public static final double bottomLeftCornerY = 1;
+            public static final double bottomRightCornerX = 15; 
+            public static final double bottomRightCornerY = 1;
+            public static final double topLeftCornerX = 1; 
+            public static final double topLeftCornerY = 7;
+            public static final double topRightCornerX = 15; 
+            public static final double topRightCornerY = 7;
+        }
 }
