@@ -13,6 +13,7 @@ import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModule.DriveRequestType;
 import com.fasterxml.jackson.databind.deser.impl.CreatorCandidate.Param;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.datalog.DataLog;
@@ -44,7 +45,7 @@ public class ShooterStructure extends SubsystemBase {
     private ShooterStructureState shooterState;
     private boolean isOperatorOverride;
     private Drivetrain drivetrain;
-    private Shooter shooter;
+    private Flywheel shooter;
     private Hopper hopper;
     private Timer timer;
     private ShootingParameters params;
@@ -61,7 +62,7 @@ public class ShooterStructure extends SubsystemBase {
 
     public ShooterStructure() {
         shooterState = ShooterStructureState.HOLD;
-        shooter = Shooter.getInstance();
+        shooter = Flywheel.getInstance();
         hopper = Hopper.getInstance();
         params = new ShootingParameters(); // constructing nulls for now
         hood = Hood.getInstance();
@@ -152,8 +153,8 @@ public class ShooterStructure extends SubsystemBase {
                 Math.pow(TurretConstants.kTurretToHubHeight,3);
                 setParams(robotVector,robotToHubDist,timeOfRot);
                 hood.setHoodAngle(params.pitch);
-                shooter.setShooterVelocity(params.shotVelocity);
-                turret.setTurretAngle(params.yaw);
+                shooter.setShooterVelocityLeft(params.shotVelocity); //currently only for the left motor(add right one later)
+                turret.setAngle(new Rotation2d(params.yaw));
                 hopper.runHopperShoot();
                 break;
 
@@ -162,8 +163,8 @@ public class ShooterStructure extends SubsystemBase {
                 // depending on red/blue alliance
                 Translation2d robotToPassPos = ShooterUtil.getPassingLocation(robotVector);
                 hood.setHoodAngle(HoodConstants.kHoodPassingAngle);
-                shooter.setShooterVelocity(ShooterConstants.kPassSpeed);
-                turret.setTurretAngle(robotToPassPos.getAngle().getDegrees());
+                shooter.setShooterVelocityLeft(ShooterConstants.kPassSpeed);
+                turret.setAngle(robotToPassPos.getAngle());
                 hopper.runHopperShoot();
                 break;
         }

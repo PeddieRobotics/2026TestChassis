@@ -25,7 +25,7 @@ public class Hood extends SubsystemBase {
   private Kraken hoodMotor;
 
   public Hood(){
-        hoodMotor = new Kraken(RobotMap.HOOD_MOTOR_ID, new CANBus(RobotMap.CANIVORE_BUS));
+        hoodMotor = new Kraken(RobotMap.HOOD_MOTOR_ID, new CANBus(RobotMap.CANIVORE_NAME));
         
     }
 

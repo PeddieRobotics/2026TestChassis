@@ -31,7 +31,7 @@ public class SwerveModule extends SubsystemBase {
     public SwerveModule(CANBus canbus, int driveID, int turnID, int CANCoderID, double moduleOffset) {
         CANcoderID = CANCoderID;
         drivingCANID = driveID;
-        turningCANID = turnID;
+        turningCANID = turnID   ;
         this.moduleOffset = moduleOffset;
 
         drivingMotor = new Kraken(driveID, canbus);
@@ -116,5 +116,20 @@ public class SwerveModule extends SubsystemBase {
     @Override
     public void simulationPeriodic() {
         // This method will be called once per scheduler run during simulation
+    }
+    public double getPositionRadians(){
+        return drivingMotor.getPosition() / ModuleConstants.kDriveMotorReduction * 2 * Math.PI;
+    }
+    /**
+     * @return returns angle from cancoder reading in radians
+     */
+    public double getAngle() {
+        return getCANcoderReading();
+    }
+    /**
+     * @return returns velocity from driveMotor encoder in meters per second
+     */
+    public double getVelocity() {
+        return drivingMotor.getMPS();
     }
 }

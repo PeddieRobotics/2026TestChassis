@@ -55,7 +55,7 @@ public class Logger {
     }
 
     public void updateLogs() {
-        Drivetrain.getInstance().updateDrivetrainLogs();
+        //Drivetrain.getInstance().updateDrivetrainLogs(); //figure out how to make this work later
         Superstructure.getInstance().updateSuperstructureLogs();
         ShooterStructure.getInstance().updateShooterStructureLogs();
     }
