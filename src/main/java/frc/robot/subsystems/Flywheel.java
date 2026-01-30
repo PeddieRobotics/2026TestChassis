@@ -37,6 +37,12 @@ public class Flywheel extends SubsystemBase {
         // SmartDashboard.putNumber("Flywheel V", 0);
 
         SmartDashboard.putNumber("Flywheel RPM", rpm = 0);
+
+        SmartDashboard.putNumber("Current Motor 1 Temperature", motor1.getMotorTemperature());
+        SmartDashboard.putNumber("Current Motor 2 Temperature", motor2.getMotorTemperature());
+        SmartDashboard.putNumber("RPM Override Multiplier", 1.0);
+        SmartDashboard.putBoolean("use RPM override", false);
+        SmartDashboard.putNumber("RPM Override Value", 0.0);
     }
     
     public static Flywheel getInstance() {
