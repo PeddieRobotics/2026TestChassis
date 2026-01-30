@@ -18,6 +18,8 @@ public class Turret extends SubsystemBase {
     private PIDController PIDController;
     private static Turret turret;
     private static OI controller;
+    
+    private double optimizedDesiredPositionTeethRaw;
 
     public Turret() {
         canbus = new CANBus();
@@ -29,7 +31,12 @@ public class Turret extends SubsystemBase {
 
         // for convenient visual
         SmartDashboard.putBoolean("Open loop control", false);
-        PIDController = new PIDController(TurretConstants.kTurretP, TurretConstants.kTurretI, TurretConstants.kTurretD);
+        PIDController = new PIDController(
+            TurretConstants.kP, TurretConstants.kI, TurretConstants.kD
+        );
+        
+        SmartDashboard.putNumber("Turret target angle", 0);
+        optimizedDesiredPositionTeethRaw = TurretConstants.kZeroPositionTeethRaw;
     }
 
     public static Turret getInstance() {
@@ -79,7 +86,7 @@ public class Turret extends SubsystemBase {
     // get the current angle of the turret in degrees
     public double getAngle() {
         // offset to avoid wrapping problem as discussed with Adam; on [-N/2, N/2)
-        final double positionTeeth = getCurrentPositionTeethRaw() - TurretConstants.kZeroPositionTeeth;
+        final double positionTeeth = getCurrentPositionTeethRaw() - TurretConstants.kZeroPositionTeethRaw;
         
         // ok, now we know how many gears left/right the turret is from the "forward" position
         // now we need to convert this to degrees
@@ -111,7 +118,7 @@ public class Turret extends SubsystemBase {
         // this is always positive, because
         // kZeroPositionTeeth = n_1 * n_2 / 2 > kTurretGearTeeth / 2 (if the turret is well designed!)
         // (in our case: kZeroPositionTeeth = 20 * 21 / 2 = 210 > 100 = 200 / 2 = kTurretGearTeeth / 2)
-        final double desiredPositionTeethRaw = desiredPositionTeeth + TurretConstants.kZeroPositionTeeth;
+        final double desiredPositionTeethRaw = desiredPositionTeeth + TurretConstants.kZeroPositionTeethRaw;
         
         final double currentPositionTeethRaw = getCurrentPositionTeethRaw();
         
@@ -142,12 +149,12 @@ public class Turret extends SubsystemBase {
             bestDiff = diff;
         }
         
+        this.optimizedDesiredPositionTeethRaw = optimizedDesiredPositionTeethRaw;
+        
         // OK, now you can run a PID loop
         // the setpoint is the optimizedDesiredPositionTeethRaw
         // the input is the getCurrentPositionTeethRaw
         // this part is left as an exercise to the reader
-
-        turretMotor.setVoltage(PIDController.calculate(getCurrentPositionTeethRaw(), optimizedDesiredPositionTeethRaw));
     }
 
     public void setPercentOutput(double percentAngle) {
@@ -156,10 +163,24 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // do someting
-        if (SmartDashboard.getBoolean("Open loop control", false))
+        SmartDashboard.putNumber("Turret angle", getAngle());
+
+        if (SmartDashboard.getBoolean("Open loop control", false)) {
             setPercentOutput(controller.getStrafe());
+            return;
+        }
         
-        SmartDashboard.putNumber("turret angle", getAngle());
+        double angle = SmartDashboard.getNumber("Turret target angle", 0);
+        setAngle(Rotation2d.fromDegrees(angle));
+
+        double error = optimizedDesiredPositionTeethRaw - getCurrentPositionTeethRaw() ;
+        
+        double voltageOut = PIDController.calculate(error);
+        voltageOut += Math.signum(error) * (TurretConstants.kFF + TurretConstants.kS);
+
+        turretMotor.setVoltage(voltageOut);
+
+        SmartDashboard.putNumber("Turret error", error);
+        SmartDashboard.putNumber("Turret voltage out", voltageOut);
     }
 }
