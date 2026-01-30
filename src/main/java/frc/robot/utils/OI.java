@@ -20,7 +20,7 @@ public class OI {
         controller = new PS4Controller(0);
 
         Trigger psButton = new JoystickButton(controller, PS4Controller.Button.kPS.value);
-        psButton.onTrue(new InstantCommand(() -> Drivetrain.getInstance().resetGyro())); //setting to 0 = resetting
+        psButton.onTrue(new InstantCommand(() -> Drivetrain.getInstance().setGyro(0)));
 
         Trigger R1Bumper = new JoystickButton(controller, PS4Controller.Button.kR1.value);
         R1Bumper.whileTrue(new LockDrivetrain());

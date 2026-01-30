@@ -22,7 +22,7 @@ import frc.robot.utils.ShotMap;
 
 public class RobotContainer {
     private Drivetrain drivetrain;
-    private Flywheel flywheel;
+    // private Flywheel flywheel;
     // private Hopper hopper;
 
     public RobotContainer() throws IOException {
@@ -34,7 +34,7 @@ public class RobotContainer {
         drivetrain = Drivetrain.getInstance();
         drivetrain.setDefaultCommand(new SwerveDriveCommand());
 
-        flywheel = Flywheel.getInstance();
+        // flywheel = Flywheel.getInstance();
         // hopper = Hopper.getInstance();
     }
 
