@@ -39,6 +39,8 @@ import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.LiveData;
 import frc.robot.utils.Logger;
 import frc.robot.utils.RobotMap;
+import frc.robot.utils.ShotMap;
+import frc.robot.utils.ShotMap.ShotMapValue;
 
 public class Drivetrain extends SubsystemBase {
     private static Drivetrain instance;
@@ -530,6 +532,14 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("DriveTrain Pose X Translation ", getPose().getX());
         SmartDashboard.putNumber("DriveTrain Pose Y Translation", getPose().getY());
 
+        if (SmartDashboard.getBoolean("Test Map?", false)) {
+            double distance = SmartDashboard.getNumber("Test Distance", 0);
+            double v_r = SmartDashboard.getNumber("Test Rad. Vel.", 0);
+            ShotMapValue value = ShotMap.queryShotMap(distance, v_r);
+
+            SmartDashboard.putNumber("Test Output: Speed", value.exit_v());
+            SmartDashboard.putNumber("Test Output: Pitch", value.theta());
+        }
 
         // SmartDashboard.putBoolean("skid", isSkidding());
         updateModulePositions();

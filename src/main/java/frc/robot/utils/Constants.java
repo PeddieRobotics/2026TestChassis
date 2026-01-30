@@ -53,7 +53,7 @@ public final class Constants {
         // this is the "number of gears moved" (found by CRT)
         // where the turret's position is 0 degrees, aka forward
         // 210
-        public static final int kZeroPositionTeeth = kEncoderGear1Teeth * kEncoderGear2Teeth / 2;
+        public static final int kZeroPositionTeethRaw = kEncoderGear1Teeth * kEncoderGear2Teeth / 2;
 
         // 1 degree = (kTurretGearTeeth / 360) teeth
         public static double positionDegreeToTeeth(double degree) {
@@ -65,14 +65,15 @@ public final class Constants {
             return teeth * 360 / kTurretGearTeeth;
         }
 
-        public static final double kTurretP = 0.0;
-        public static final double kTurretI = 0.0;
-        public static final double kTurretD = 0.0;
-        public static final double kTurretFF = 0.0;
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kS = 0.0;
+        public static final double kFF = 0.0;
         
         // these are always positive, see Turret.java for explanation
-        public static final double kMinPositionTeethRaw = positionDegreeToTeeth(-kTurretRange) + kZeroPositionTeeth;
-        public static final double kMaxPositionTeethRaw = positionDegreeToTeeth(kTurretRange) + kZeroPositionTeeth;
+        public static final double kMinPositionTeethRaw = positionDegreeToTeeth(-kTurretRange) + kZeroPositionTeethRaw;
+        public static final double kMaxPositionTeethRaw = positionDegreeToTeeth(kTurretRange) + kZeroPositionTeethRaw;
         
         public static class CRTConstants {
             public static final int y_1 = 1; 
