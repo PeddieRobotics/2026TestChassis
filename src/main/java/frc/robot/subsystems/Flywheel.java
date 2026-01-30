@@ -45,34 +45,24 @@ public class Flywheel extends SubsystemBase {
         return flywheel;
     }
     
-    // @Override
-    // public void periodic() {
-    //     // double P = SmartDashboard.getNumber("Flywheel P", 0);
-    //     // double I = SmartDashboard.getNumber("Flywheel I", 0);
-    //     // double D = SmartDashboard.getNumber("Flywheel D", 0);
-    //     // double S = SmartDashboard.getNumber("Flywheel S", 0);
-    //     // double V = SmartDashboard.getNumber("Flywheel V", 0);
-    //     // motor1.setPIDValues(S, V, 0, P, I, D, 0);
+    @Override
+    public void periodic() {
+        // double P = SmartDashboard.getNumber("Flywheel P", 0);
+        // double I = SmartDashboard.getNumber("Flywheel I", 0);
+        // double D = SmartDashboard.getNumber("Flywheel D", 0);
+        // double S = SmartDashboard.getNumber("Flywheel S", 0);
+        // double V = SmartDashboard.getNumber("Flywheel V", 0);
+        // motor1.setPIDValues(S, V, 0, P, I, D, 0);
 
-    //     double newRPM = SmartDashboard.getNumber("Flywheel RPM", rpm) / 60;
-    //     if (newRPM != rpm)
-    //         motor1.setVelocityVoltage(rpm = newRPM);
+        double newRPM = SmartDashboard.getNumber("Flywheel RPM", rpm) / 60;
+        if (newRPM != rpm)
+            motor1.setVelocityVoltage(rpm = newRPM);
         
-    //     SmartDashboard.putNumber("Flywheel 1 RPM", motor1.getRPM());
-    //     SmartDashboard.putNumber("Flywheel 2 RPM", motor2.getRPM());
+        SmartDashboard.putNumber("Flywheel 1 RPM", motor1.getRPM());
+        SmartDashboard.putNumber("Flywheel 2 RPM", motor2.getRPM());
         
-    //     SmartDashboard.putNumber("Flywheel 1 Output", motor1.getPercentOutput());
-    //     SmartDashboard.putNumber("Flywheel 2 Output", motor2.getPercentOutput());
-    // }
-
-    /*
-     * I assume this was for helping the engineers test
-     */
-    public void setShooterVelocityLeft(double velocity){ //for the left turret
-    motor1.setVelocityVoltage(velocity);
-  }
-  public void setShooterVelocityRight(double velocity){ //for the right turret
-    motor2.setVelocityVoltage(velocity);
-  }
+        SmartDashboard.putNumber("Flywheel 1 Output", motor1.getPercentOutput());
+        SmartDashboard.putNumber("Flywheel 2 Output", motor2.getPercentOutput());
+    }
 }
 
