@@ -11,6 +11,7 @@ public class Flywheel extends SubsystemBase {
     private static Flywheel flywheel;
     private Kraken motor1, motor2;
     
+    private double kP = 0.4;
     private double rpm = 0;
 
     private Flywheel() {
@@ -28,10 +29,11 @@ public class Flywheel extends SubsystemBase {
         motor2.setFollower(58, MotorAlignmentValue.Opposed);
         motor2.setInverted(true);
 
-        motor1.setPIDValues(0.19, 0.11, 0, 0.25, 0, 0, 0);
+        motor1.setPIDValues(0.19, 0.11, 0, kP, 0, 0, 0);
         // motor1.setPIDValues(0, 0, 0, 0, 0, 0, 0);
         
-        // SmartDashboard.putNumber("Flywheel P", 0);
+        SmartDashboard.putNumber("Flywheel P", kP);
+
         // SmartDashboard.putNumber("Flywheel I", 0);
         // SmartDashboard.putNumber("Flywheel D", 0);
         // SmartDashboard.putNumber("Flywheel S", 0);
@@ -54,6 +56,11 @@ public class Flywheel extends SubsystemBase {
         // double S = SmartDashboard.getNumber("Flywheel S", 0);
         // double V = SmartDashboard.getNumber("Flywheel V", 0);
         // motor1.setPIDValues(S, V, 0, P, I, D, 0);
+        
+        
+        double kPnew = SmartDashboard.getNumber("Flywheel P", kP);
+        if (kPnew != kP)
+            motor1.setPIDValues(0.19, 0.11, 0, kP = kPnew, 0, 0, 0);
 
         double newRPM = SmartDashboard.getNumber("Flywheel RPM", rpm) / 60;
         if (newRPM != rpm)
