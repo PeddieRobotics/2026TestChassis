@@ -3,11 +3,14 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants;
@@ -25,6 +28,7 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveModulePosition[] swerveModulePosition;
     private final Pigeon2 gyro;
     private double heading;
+    private SwerveDrivePoseEstimator odometry;
 
     private Drivetrain() {
         // CANBus defaultCANBus = new CANBus(RobotMap.CANIVORE_NAME);
@@ -72,6 +76,7 @@ public class Drivetrain extends SubsystemBase {
 
         gyro = new Pigeon2(RobotMap.GYRO_ID, defaultCANBus);
         setGyro(0);
+        odometry = new SwerveDrivePoseEstimator(DriveConstants.kKinematics, getHeadingRotation2d(), swerveModulePosition, new Pose2d());
     }
     
     public static Drivetrain getInstance() {
@@ -124,13 +129,42 @@ public class Drivetrain extends SubsystemBase {
         return Math.IEEEremainder(heading, 360);
     }
 
+    public double getHeadingBlue(){
+        if(DriverStation.getAlliance().isEmpty()||DriverStation.getAlliance().get()==DriverStation.Alliance.Blue)
+            return getHeading();
+        return Math.IEEEremainder(gyro.getYaw().getValueAsDouble()+180,360);
+
+    }
+
     public void lockModules() {
         frontLeftModule.setOptimizedState(new SwerveModuleState(0, new Rotation2d(Math.PI / 4)));
         backLeftModule.setOptimizedState(new SwerveModuleState(0, new Rotation2d(3 * Math.PI / 4)));
         frontRightModule.setOptimizedState(new SwerveModuleState(0, new Rotation2d(-Math.PI / 4)));
         backRightModule.setOptimizedState(new SwerveModuleState(0, new Rotation2d(-3 * Math.PI / 4)));
     }
+
+    public void updateOdometry(){
+        odometry.update(new Rotation2d(getHeadingBlue()), swerveModulePosition);
+    }
     
+    public Pose2d getPose(){
+        return odometry.getEstimatedPosition();
+    }
+
+    public void setPose(Pose2d pose){
+        gyro.reset();
+        odometry.resetPosition(new Rotation2d(Math.toRadians(getHeadingBlue())),swerveModulePosition,pose);
+    }
+
+    public void setStartingPose(Pose2d pose){
+        gyro.setYaw(pose.getRotation().getDegrees());
+
+        if(DriverStation.getAlliance().isEmpty()||DriverStation.getAlliance().get()==DriverStation.Alliance.Red)
+        pose = new Pose2d(16.54-pose.getX(),8.07-pose.getY(),pose.getRotation());
+
+        odometry.resetPosition(pose.getRotation(),swerveModulePosition,pose);
+    }
+
     @Override
     public void periodic() {
         if (SmartDashboard.getBoolean("Test Map?", false)) {
@@ -141,5 +175,6 @@ public class Drivetrain extends SubsystemBase {
             SmartDashboard.putNumber("Test Output: Speed", value.exit_v());
             SmartDashboard.putNumber("Test Output: Pitch", value.theta());
         }
+        updateOdometry();
     }
 }
