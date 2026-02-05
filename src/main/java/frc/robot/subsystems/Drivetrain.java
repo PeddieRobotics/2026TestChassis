@@ -17,6 +17,7 @@ import frc.robot.utils.Constants;
 import frc.robot.utils.RobotMap;
 import frc.robot.utils.ShotMap;
 import frc.robot.utils.ShotMap.ShotMapValue;
+import frc.robot.utils.Constants.CameraConstants;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.ModuleConstants;
 
@@ -27,12 +28,22 @@ public class Drivetrain extends SubsystemBase {
     private SwerveModuleState[] swerveModuleState;
     private final SwerveModulePosition[] swerveModulePosition;
     private final Pigeon2 gyro;
+    private final Limelight[] limelights = new Limelight[CameraConstants.kNumberLimelights];
+    private final LimelightFront frontLimelight; 
+    private final LimelightBack backLimelight; 
+    private final LimelightLeft lefLimelight;
+    private final LimelightRight rightLimelight;
     private double heading;
     private SwerveDrivePoseEstimator odometry;
 
     private Drivetrain() {
         // CANBus defaultCANBus = new CANBus(RobotMap.CANIVORE_NAME);
         CANBus defaultCANBus = new CANBus("rio");
+        
+        frontLimelight = LimelightFront.getInstance();
+        backLimelight = LimelightBack.getInstance();
+        lefLimelight = LimelightLeft.getInstance();
+        rightLimelight = LimelightRight.getInstance();
 
         frontLeftModule = new SwerveModule(
             defaultCANBus,
@@ -145,6 +156,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void updateOdometry(){
         odometry.update(new Rotation2d(getHeadingBlue()), swerveModulePosition);
+
     }
     
     public Pose2d getPose(){

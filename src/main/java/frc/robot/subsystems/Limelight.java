@@ -89,7 +89,7 @@ public abstract class Limelight extends SubsystemBase {
         Pose2d tagPose = Limelight.getAprilTagPose(getTargetID());
         double tagAngle = tagPose.getRotation().getRadians();
 
-        Optional<Pose2d> estimatedPose = getEstimatedPoseMT2();
+        Optional<Pose2d> estimatedPose = getPoseMT2();
         if (estimatedPose.isEmpty())
             return;
 
@@ -119,7 +119,7 @@ public abstract class Limelight extends SubsystemBase {
             0, 0, 0, 0, 0
         );
 
-        Optional<Pose2d> estimatedPoseMT2 = getEstimatedPoseMT2();
+        Optional<Pose2d> estimatedPoseMT2 = getPoseMT2();
         if (estimatedPoseMT2.isPresent()) {
             fieldMT2.setRobotPose(estimatedPoseMT2.get());
             // publisherMT2.set(estimatedPoseMT2.get());
@@ -166,7 +166,7 @@ public abstract class Limelight extends SubsystemBase {
         return poseEstimate == null ? Optional.empty() : Optional.of(poseEstimate);
     }
 
-    public Optional<Pose2d> getEstimatedPoseMT2() {
+    public Optional<Pose2d> getPoseMT2() {
         PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
         return poseEstimate == null ? Optional.empty() : Optional.of(poseEstimate.pose);
     }
@@ -182,25 +182,25 @@ public abstract class Limelight extends SubsystemBase {
         // if (Math.abs(estimatedPose.getZ()) > 0.4)
         // return;
 
-        int numTagsSeen = getNumberOfTagsSeen();
-        double distance = getDistanceEstimatedPose();
+        // int numTagsSeen = getNumberOfTagsSeen();
+        // double distance = getDistanceEstimatedPose();
 
-        if (numTagsSeen == 1 && distance > 1.3)
-            return;
+        // if (numTagsSeen == 1 && distance > 1.3)
+        //     return;
 
-        // this may not even be necessary
-        if (numTagsSeen >= 2 && distance > 3.3)
-            return;
+        // // this may not even be necessary
+        // if (numTagsSeen >= 2 && distance > 3.3)
+        //     return;
 
-        Pose2d odoCurrent = odometry.getEstimatedPosition();
+        // Pose2d odoCurrent = odometry.getEstimatedPosition();
 
-        double distX = estimatedPose.getX() - odoCurrent.getX();
-        double distY = estimatedPose.getY() - odoCurrent.getY();
-        if (Math.sqrt((distX * distX) + (distY * distY)) > 3)
-            return;
+        // double distX = estimatedPose.getX() - odoCurrent.getX();
+        // double distY = estimatedPose.getY() - odoCurrent.getY();
+        // if (Math.sqrt((distX * distX) + (distY * distY)) > 3)
+        //     return;
 
-        double deviation;
-        if (numTagsSeen == 1)
+        // double deviation;
+        // if (numTagsSeen == 1)
             //deviation = CameraConstants.k1TagStdDevs.get(distance);
         //else !TODO: do
             //deviation = CameraConstants.k2TagStdDevs.get(distance);
