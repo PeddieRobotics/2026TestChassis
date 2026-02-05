@@ -271,11 +271,6 @@ public final class Constants {
         public static final String kLeftCamName = "limelight-left";
         public static final String kRightCamName = "limelight-right";
 
-        public static final int kFrontCamID = 0;
-        public static final int kBackCamID = 0;
-        public static final int kLeftCamID = 0;
-        public static final int kRightCamID = 0;
-
         public static final int kNumberLimelights = 4;
     }
 }

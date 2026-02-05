@@ -22,6 +22,7 @@ import frc.robot.utils.ShotMap.ShotMapValue;
 import frc.robot.utils.Constants.CameraConstants;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.ModuleConstants;
+import frc.robot.utils.LimelightHelpers.LimelightTarget_Barcode;
 
 public class Drivetrain extends SubsystemBase {
     private static Drivetrain drivetrain;
@@ -31,10 +32,10 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveModulePosition[] swerveModulePosition;
     private final Pigeon2 gyro;
     private final Limelight[] limelights = new Limelight[CameraConstants.kNumberLimelights];
-    private final LimelightFront frontLimelight; 
-    private final LimelightBack backLimelight; 
-    private final LimelightLeft leftLimelight;
-    private final LimelightRight rightLimelight;
+    // private final LimelightFront frontLimelight; 
+    // private final LimelightBack backLimelight; 
+    // private final LimelightLeft leftLimelight;
+    // private final LimelightRight rightLimelight;
     private double heading;
     private boolean usingMegaTag;
     private SwerveDrivePoseEstimator odometry;
@@ -43,11 +44,11 @@ public class Drivetrain extends SubsystemBase {
         // CANBus defaultCANBus = new CANBus(RobotMap.CANIVORE_NAME);
         CANBus defaultCANBus = new CANBus("rio");
         usingMegaTag = SmartDashboard.putBoolean("using mega tag",false);
-        
-        frontLimelight = LimelightFront.getInstance();
-        backLimelight = LimelightBack.getInstance();
-        leftLimelight = LimelightLeft.getInstance();
-        rightLimelight = LimelightRight.getInstance();
+
+        limelights[0] = LimelightFront.getInstance();
+        limelights[1] = LimelightBack.getInstance();
+        limelights[2] = LimelightLeft.getInstance();
+        limelights[3] = LimelightRight.getInstance();
 
         frontLeftModule = new SwerveModule(
             defaultCANBus,
@@ -161,10 +162,8 @@ public class Drivetrain extends SubsystemBase {
     public void updateOdometry(){
         odometry.update(new Rotation2d(getHeadingBlue()), swerveModulePosition);
         if(!DriverStation.isAutonomous() && usingMegaTag) {
-            frontLimelight.fuseEstimatedPose(odometry);
-            backLimelight.fuseEstimatedPose(odometry);
-            leftLimelight.fuseEstimatedPose(odometry);
-            rightLimelight.fuseEstimatedPose(odometry);
+            for(int i = 0; i < limelights.length; i++)
+                limelights[i].fuseEstimatedPose(odometry);
         }
     }
     
