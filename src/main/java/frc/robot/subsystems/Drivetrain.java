@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.ejml.sparse.csc.linsol.qr.LinearSolverQrLeftLooking_DSCC;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
@@ -31,18 +33,20 @@ public class Drivetrain extends SubsystemBase {
     private final Limelight[] limelights = new Limelight[CameraConstants.kNumberLimelights];
     private final LimelightFront frontLimelight; 
     private final LimelightBack backLimelight; 
-    private final LimelightLeft lefLimelight;
+    private final LimelightLeft leftLimelight;
     private final LimelightRight rightLimelight;
     private double heading;
+    private boolean usingMegaTag;
     private SwerveDrivePoseEstimator odometry;
 
     private Drivetrain() {
         // CANBus defaultCANBus = new CANBus(RobotMap.CANIVORE_NAME);
         CANBus defaultCANBus = new CANBus("rio");
+        usingMegaTag = SmartDashboard.putBoolean("using mega tag",false);
         
         frontLimelight = LimelightFront.getInstance();
         backLimelight = LimelightBack.getInstance();
-        lefLimelight = LimelightLeft.getInstance();
+        leftLimelight = LimelightLeft.getInstance();
         rightLimelight = LimelightRight.getInstance();
 
         frontLeftModule = new SwerveModule(
@@ -156,7 +160,12 @@ public class Drivetrain extends SubsystemBase {
 
     public void updateOdometry(){
         odometry.update(new Rotation2d(getHeadingBlue()), swerveModulePosition);
-
+        if(!DriverStation.isAutonomous() && usingMegaTag) {
+            frontLimelight.fuseEstimatedPose(odometry);
+            backLimelight.fuseEstimatedPose(odometry);
+            leftLimelight.fuseEstimatedPose(odometry);
+            rightLimelight.fuseEstimatedPose(odometry);
+        }
     }
     
     public Pose2d getPose(){
@@ -179,6 +188,7 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+        usingMegaTag = SmartDashboard.getBoolean("using mega tag", false);
         if (SmartDashboard.getBoolean("Test Map?", false)) {
             double distance = SmartDashboard.getNumber("Test Distance", 0);
             double v_r = SmartDashboard.getNumber("Test Rad. Vel.", 0);
