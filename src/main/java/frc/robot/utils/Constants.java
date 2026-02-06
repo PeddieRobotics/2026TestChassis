@@ -51,9 +51,11 @@ public final class Constants {
         public static final int kEncoderId1 = 61;
         public static final int kEncoderId2 = 62;
         
-        // WHEN SETTING THE MAGNET OFFSET, DO NOT ONLY MAKE THESE ZERO AND THINK YOU ARE DONE
-        // YOU MUST GO TO TURRET.JAVA AND SET THE ACTUAL CONFIGURATOR TO ZERO
-        // IN ORDER TO REMOVE THE MODULUS THING
+        // set to true when zeroing turret
+        public static final boolean ZEROING_MODE = false;
+        
+        // WHEN SETTING THE MAGNET OFFSET, DO NOT MAKE THESE ZERO
+        // SET ZEROING_MODE TO TRUE, VALUES HERE DON'T MATTER
         // negative of "raw absolute position", don't add mod amount offset
         public static final double kEncoder1MagnetOffset = -0.940918 ;
         public static final double kEncoder2MagnetOffset = -0.768066 ;
