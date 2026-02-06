@@ -13,7 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-// import frc.robot.utils.Constants.LimelightConstants;
+import frc.robot.utils.Constants.CameraConstants;
 import frc.robot.utils.Constants.TurretConstants;
 import frc.robot.utils.Kraken;
 // import frc.robot.utils.LimelightHelpers;
@@ -89,6 +89,7 @@ public class Turret extends SubsystemBase {
 
         SmartDashboard.putBoolean("Turret open loop control", false);
         SmartDashboard.putNumber("Turret voltage output", 0);
+        SmartDashboard.putBoolean("Turret angle field relative ?!",false);
 
         PIDController = new PIDController(kP, kI, kD);
 
@@ -172,6 +173,10 @@ public class Turret extends SubsystemBase {
         final double positionDegrees = TurretConstants.positionTeethToDegree(positionTeeth);
             
         return positionDegrees;
+    }
+
+    public void setAngleFieldRelative(Rotation2d desiredRotation) {
+        setAngle(desiredRotation.minus(Drivetrain.getInstance().getHeadingRotation2d()));
     }
 
     public void setAngle(Rotation2d desiredRotation) {
@@ -314,7 +319,10 @@ public class Turret extends SubsystemBase {
         }
         
         double targetAngle = SmartDashboard.getNumber("Turret target angle", 0);
-        setAngle(Rotation2d.fromDegrees(targetAngle));
+        if(SmartDashboard.getBoolean("Turret angle field relative ?!",false))
+            setAngleFieldRelative(Rotation2d.fromDegrees(targetAngle)); 
+        else
+            setAngle(Rotation2d.fromDegrees(targetAngle));
 
         SmartDashboard.putNumber("Turret optimized target position", optimizedDesiredPositionTeethRaw);
 
