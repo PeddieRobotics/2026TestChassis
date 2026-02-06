@@ -210,6 +210,9 @@ public class Turret extends SubsystemBase {
         double direction = Math.signum(currentPositionTeethRaw - optimizedDesiredPositionTeethRaw);
         double bestDiff = Math.abs(currentPositionTeethRaw - optimizedDesiredPositionTeethRaw);
 
+        if (direction == 0)
+            return;
+
         for (
             double proposed = optimizedDesiredPositionTeethRaw + direction * TurretConstants.kTurretGearTeeth;
 
