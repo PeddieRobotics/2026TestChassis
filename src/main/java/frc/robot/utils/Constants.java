@@ -39,9 +39,6 @@ public final class Constants {
         public static final double kTurretPositionF = 0; 
         public static final double kTurretMinAngle = -360.0;
         public static final double kTurretMaxAngle = 360.0;
-        public static final int kTurretMotorDeviceId = 0;
-        public static final int kEncoderId1 = 0;
-        public static final int kEncoderId2 = 0;
         
         // valid range to not destroy turret is [-kTurretRange, kTurretRange]
         public static final double kTurretRange = 270;
@@ -49,6 +46,17 @@ public final class Constants {
         public static final int kTurretGearTeeth = 200;
         public static final int kEncoderGear1Teeth = 20; // n1
         public static final int kEncoderGear2Teeth = 21; // n2
+
+        public static final int kTurretMotorDeviceId = 60;
+        public static final int kEncoderId1 = 61;
+        public static final int kEncoderId2 = 62;
+        
+        // WHEN SETTING THE MAGNET OFFSET, DO NOT ONLY MAKE THESE ZERO AND THINK YOU ARE DONE
+        // YOU MUST GO TO TURRET.JAVA AND SET THE ACTUAL CONFIGURATOR TO ZERO
+        // IN ORDER TO REMOVE THE MODULUS THING
+        // negative of "raw absolute position", don't add mod amount offset
+        public static final double kEncoder1MagnetOffset = -0.940918 ;
+        public static final double kEncoder2MagnetOffset = -0.768066 ;
 
         // this is the "number of gears moved" (found by CRT)
         // where the turret's position is 0 degrees, aka forward
@@ -70,6 +78,9 @@ public final class Constants {
         public static final double kD = 0.0;
         public static final double kS = 0.0;
         public static final double kFF = 0.0;
+
+        public static final double kEpsilon = 1.0;
+        public static final double kVoltageMax = 2;
         
         // these are always positive, see Turret.java for explanation
         public static final double kMinPositionTeethRaw = positionDegreeToTeeth(-kTurretRange) + kZeroPositionTeethRaw;
