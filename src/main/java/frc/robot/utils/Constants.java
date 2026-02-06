@@ -57,8 +57,8 @@ public final class Constants {
         // WHEN SETTING THE MAGNET OFFSET, DO NOT MAKE THESE ZERO
         // SET ZEROING_MODE TO TRUE, VALUES HERE DON'T MATTER
         // negative of "raw absolute position", don't add mod amount offset
-        public static final double kEncoder1MagnetOffset = -0.940918 ;
-        public static final double kEncoder2MagnetOffset = -0.768066 ;
+        public static final double kEncoder1MagnetOffset = -0.014160;
+        public static final double kEncoder2MagnetOffset = -0.064453;
 
         // this is the "number of gears moved" (found by CRT)
         // where the turret's position is 0 degrees, aka forward
