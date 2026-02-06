@@ -279,5 +279,11 @@ public final class Constants {
         public static final double kClimberDeployedPosition = 0;
     }
     public static final class CameraConstants {
+        public static final String kFrontCamName = "limelight-front";
+        public static final String kBackCamName = "limelight-back";
+        public static final String kLeftCamName = "limelight-left";
+        public static final String kRightCamName = "limelight-right";
+
+        public static final int kNumberLimelights = 4;
     }
 }
