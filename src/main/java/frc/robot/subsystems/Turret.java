@@ -274,7 +274,7 @@ public class Turret extends SubsystemBase {
         }
         turretMotor.setVoltage(voltageCWPlusForKraken);
     }
-    public void setTorque(double torqueCCWPlus, double currentPositionTeethRaw) {
+    public void setTorque(double currentPositionTeethRaw, double torqueCCWPlus) {
         double torqueCWPlusForKraken = -torqueCCWPlus;
         
         // if above the "soft limit" only allow movement in direction to unwind turret
@@ -372,10 +372,11 @@ public class Turret extends SubsystemBase {
             torqueOut = Math.min(Math.abs(torqueOut),kTorqueMax*Math.signum(torqueOut));
         }
 
-        setVoltage(currentPositionTeethRaw, voltageOut);
+        setTorque(currentPositionTeethRaw, torqueOut);
 
         SmartDashboard.putNumber("Turret error", error);
-        SmartDashboard.putNumber("Turret voltage out", voltageOut);        
+        SmartDashboard.putNumber("Turret voltage out", voltageOut); 
+        SmartDashboard.putNumber("Turret torque current",torqueOut);       
         // handleLimelight(currentAngle);
     }
 }
