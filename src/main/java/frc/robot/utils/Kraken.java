@@ -2,6 +2,7 @@ package frc.robot.utils;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
@@ -9,6 +10,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -522,6 +524,10 @@ public class Kraken {
         talon.setControl(request);
     }
 
+    public void setTorqueCurrentFOC(double torque){
+        final TorqueCurrentFOC request = new TorqueCurrentFOC(torque);
+        talon.setControl(request);
+    }
     /**
      * Request PID to target velocity with VelocityVoltage control mode
      * @param velocity - motor target velocity setpoint (rot/s)(post velocity conversion factor)

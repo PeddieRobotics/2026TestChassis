@@ -31,14 +31,22 @@ public class Turret extends SubsystemBase {
     
     private double optimizedDesiredPositionTeethRaw;
     
-    private double kP = TurretConstants.kP;
-    private double kI = TurretConstants.kI;
-    private double kD = TurretConstants.kD;
-    private double kS = TurretConstants.kS;
-    private double kFF = TurretConstants.kFF;
+    private double kPV = TurretConstants.kPV;
+    private double kIV = TurretConstants.kIV;
+    private double kDV = TurretConstants.kDV;
+    private double kSV = TurretConstants.kSV;
+    private double kFFV = TurretConstants.kFFV;
+    private double kPT = TurretConstants.kPT;
+    private double kIT = TurretConstants.kIT;
+    private double kDT = TurretConstants.kDT;
+    private double kST = TurretConstants.kST;
+    private double kFFT = TurretConstants.kFFT;
     private double kEpsilon = TurretConstants.kEpsilon;
     private double kVoltageMax = TurretConstants.kVoltageMax;
+    private double kTorqueMax = TurretConstants.kTorqueMax; // tune this
     
+    
+
     private Field2d fieldMT2;
 
     public Turret() {
@@ -89,17 +97,20 @@ public class Turret extends SubsystemBase {
 
         SmartDashboard.putBoolean("Turret open loop control", false);
         SmartDashboard.putNumber("Turret voltage output", 0);
+        SmartDashboard.putNumber("Turret torque current",0);
         SmartDashboard.putBoolean("Turret angle field relative ?!",false);
 
-        PIDController = new PIDController(kP, kI, kD);
+        PIDController = new PIDController(kPT, kIT, kDT); // set with torque for now
 
-        SmartDashboard.putNumber("Turret P", kP);
-        SmartDashboard.putNumber("Turret I", kI);
-        SmartDashboard.putNumber("Turret D", kD);
-        SmartDashboard.putNumber("Turret S", kS);
-        SmartDashboard.putNumber("Turret FF", kFF);
+        SmartDashboard.putNumber("Turret P Torque", kPT);
+        SmartDashboard.putNumber("Turret I Torque", kIT);
+        SmartDashboard.putNumber("Turret D Torque", kDT);
+        SmartDashboard.putNumber("Turret S Torque", kST);
+        SmartDashboard.putNumber("Turret FF Torque", kFFT);
         SmartDashboard.putNumber("Turret Epsilon", kEpsilon);
         SmartDashboard.putNumber("Turret VoltageMax", kVoltageMax);
+        SmartDashboard.putNumber("Turret TorqueMax",kTorqueMax);
+
         
         SmartDashboard.putNumber("Turret target angle", 0);
         optimizedDesiredPositionTeethRaw = TurretConstants.kZeroPositionTeethRaw;
@@ -261,8 +272,24 @@ public class Turret extends SubsystemBase {
             turretMotor.setVoltage(voltageCCWPlus <= 0 ? voltageCWPlusForKraken : 0);
             return;
         }
-
         turretMotor.setVoltage(voltageCWPlusForKraken);
+    }
+    public void setTorque(double torqueCCWPlus, double currentPositionTeethRaw) {
+        double torqueCWPlusForKraken = -torqueCCWPlus;
+        
+        // if above the "soft limit" only allow movement in direction to unwind turret
+        
+        // below min position = gone all the way clockwise, only counterclockwise allowed
+        if (currentPositionTeethRaw <= TurretConstants.kMinPositionTeethRaw) {
+            turretMotor.setTorqueCurrentFOC(torqueCCWPlus >= 0 ? torqueCWPlusForKraken : 0);
+            return;
+        }
+        // above max position = gone all the way counterclockwise, only clockwise allowed
+        if (currentPositionTeethRaw >= TurretConstants.kMaxPositionTeethRaw) {
+            turretMotor.setTorqueCurrentFOC(torqueCCWPlus <= 0 ? torqueCWPlusForKraken : 0);
+            return;
+        }
+        turretMotor.setTorqueCurrentFOC(torqueCWPlusForKraken);
     }
     
     // private void handleLimelight(double currentAngle) {
@@ -296,15 +323,16 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void periodic() {
-        kP = SmartDashboard.getNumber("Turret P", 0);
-        kI = SmartDashboard.getNumber("Turret I", 0);
-        kD = SmartDashboard.getNumber("Turret D", 0);
-        kS = SmartDashboard.getNumber("Turret S", 0);
-        kFF = SmartDashboard.getNumber("Turret FF", 0);
+        kPT = SmartDashboard.getNumber("Turret P Torque", 0);
+        kIT = SmartDashboard.getNumber("Turret I Torque", 0);
+        kDT = SmartDashboard.getNumber("Turret D Torque", 0);
+        kST = SmartDashboard.getNumber("Turret S Torque", 0);
+        kFFT = SmartDashboard.getNumber("Turret FF Torque", 0);
         kEpsilon = SmartDashboard.getNumber("Turret Epsilon", 0);
         kVoltageMax = SmartDashboard.getNumber("Turret VoltageMax", 0);
+        kTorqueMax = SmartDashboard.getNumber("Turret TorqueMax", 0);
         
-        PIDController.setPID(kP, kI, kD);
+        PIDController.setPID(kPT, kIT, kDT);
 
         SmartDashboard.putNumber("Turret encoder 1", encoder1.getAbsolutePosition().getValueAsDouble());
         SmartDashboard.putNumber("Turret encoder 2", encoder2.getAbsolutePosition().getValueAsDouble());
@@ -317,7 +345,8 @@ public class Turret extends SubsystemBase {
 
         if (SmartDashboard.getBoolean("Turret open loop control", false)) {
             // setPercentOutput(0.1 * oi.getForward());
-            setVoltage(currentPositionTeethRaw, SmartDashboard.getNumber("Turret voltage output", 0));
+            //setVoltage(currentPositionTeethRaw, SmartDashboard.getNumber("Turret voltage output", 0));
+            setTorque(currentPositionTeethRaw, SmartDashboard.getNumber("Turret torque current", 0));
             return;
         }
         
@@ -332,17 +361,20 @@ public class Turret extends SubsystemBase {
         double error = optimizedDesiredPositionTeethRaw - currentPositionTeethRaw;
         
         double voltageOut = 0;
+        double torqueOut = 0;
         if (Math.abs(error) > kEpsilon) {
-            voltageOut = PIDController.calculate(currentPositionTeethRaw, optimizedDesiredPositionTeethRaw);
-            voltageOut += Math.signum(error) * (kFF + kS);
-            voltageOut = Math.min(Math.abs(voltageOut), kVoltageMax) * Math.signum(voltageOut);
+            // voltageOut = PIDController.calculate(currentPositionTeethRaw, optimizedDesiredPositionTeethRaw);
+            // voltageOut += Math.signum(error) * (kFF + kS);
+            // voltageOut = Math.min(Math.abs(voltageOut), kVoltageMax) * Math.signum(voltageOut);
+            torqueOut = PIDController.calculate(currentPositionTeethRaw, optimizedDesiredPositionTeethRaw);
+            torqueOut += Math.signum(error)*(kFFT+kST);
+            torqueOut = Math.min(Math.abs(torqueOut),kTorqueMax*Math.signum(torqueOut));
         }
 
         setVoltage(currentPositionTeethRaw, voltageOut);
 
         SmartDashboard.putNumber("Turret error", error);
-        SmartDashboard.putNumber("Turret voltage out", voltageOut);
-        
+        SmartDashboard.putNumber("Turret voltage out", voltageOut);        
         // handleLimelight(currentAngle);
     }
 }

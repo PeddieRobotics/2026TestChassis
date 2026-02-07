@@ -75,14 +75,21 @@ public final class Constants {
             return teeth * 360 / kTurretGearTeeth;
         }
 
-        public static final double kP = 0.0567;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
-        public static final double kS = 0.24;
-        public static final double kFF = 0.0;
+        public static final double kPV = 0.0567;
+        public static final double kIV = 0.0;
+        public static final double kDV = 0.0;
+        public static final double kSV = 0.24;
+        public static final double kFFV = 0.0; //these are all for voltage
+
+        public static final double kPT= 0.0567;
+        public static final double kIT = 0.0;
+        public static final double kDT = 0.0;
+        public static final double kST = 0.24;
+        public static final double kFFT = 0.0; //these are all for torque
 
         public static final double kEpsilon = 1.0;
         public static final double kVoltageMax = 2;
+        public static final double kTorqueMax = 0;
         
         // these are always positive, see Turret.java for explanation
         public static final double kMinPositionTeethRaw = positionDegreeToTeeth(-kTurretRange) + kZeroPositionTeethRaw;
