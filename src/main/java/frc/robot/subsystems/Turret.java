@@ -110,6 +110,7 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Turret Epsilon", kEpsilon);
         SmartDashboard.putNumber("Turret VoltageMax", kVoltageMax);
         SmartDashboard.putNumber("Turret TorqueMax",kTorqueMax);
+        SmartDashboard.putNumber("Turret OmegaMax", kOmegaMax);
 
         
         SmartDashboard.putNumber("Turret target angle", 0);
@@ -330,9 +331,13 @@ public class Turret extends SubsystemBase {
         kFFT = SmartDashboard.getNumber("Turret FF Torque", 0);
         kEpsilon = SmartDashboard.getNumber("Turret Epsilon", 0);
         kVoltageMax = SmartDashboard.getNumber("Turret VoltageMax", 0);
-        kTorqueMax = SmartDashboard.getNumber("Turret TorqueMax", 0);
+        double kTorqueMaxNew = SmartDashboard.getNumber("Turret TorqueMax", 0);
+        double kOmegaMaxNew = SmartDashboard.getNumber("Turret OmegaMax", 0);
         
         ProfiledPIDController.setPID(kPT, kIT, kDT);
+        // so that we do not constantly make new objects in memory
+        if (kTorqueMaxNew != kTorqueMax || kOmegaMaxNew != kOmegaMax)
+            ProfiledPIDController.setConstraints(new TrapezoidProfile.Constraints(kOmegaMax = kOmegaMaxNew, kTorqueMax = kTorqueMaxNew));
 
         SmartDashboard.putNumber("Turret encoder 1", encoder1.getAbsolutePosition().getValueAsDouble());
         SmartDashboard.putNumber("Turret encoder 2", encoder2.getAbsolutePosition().getValueAsDouble());
@@ -368,8 +373,8 @@ public class Turret extends SubsystemBase {
             // voltageOut += Math.signum(error) * (kFF + kS);
             // voltageOut = Math.min(Math.abs(voltageOut), kVoltageMax) * Math.signum(voltageOut);
             torqueOut = ProfiledPIDController.calculate(currentPositionTeethRaw, optimizedDesiredPositionTeethRaw);
-            torqueOut += Math.signum(error)*(kFFT+kST);
-            torqueOut = Math.min(Math.abs(torqueOut),kTorqueMax*Math.signum(torqueOut));
+            torqueOut += Math.signum(error) * (kFFT + kST);
+            torqueOut = Math.min(Math.abs(torqueOut), kTorqueMax) * Math.signum(torqueOut);
         }
 
         setTorque(currentPositionTeethRaw, torqueOut);
