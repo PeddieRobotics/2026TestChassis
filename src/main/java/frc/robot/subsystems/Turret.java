@@ -7,9 +7,10 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,7 +28,7 @@ public class Turret extends SubsystemBase {
 
     private Kraken turretMotor;
     private CANcoder encoder1, encoder2;
-    private PIDController PIDController;
+    private ProfiledPIDController ProfiledPIDController;
     
     private double optimizedDesiredPositionTeethRaw;
     
@@ -44,8 +45,7 @@ public class Turret extends SubsystemBase {
     private double kEpsilon = TurretConstants.kEpsilon;
     private double kVoltageMax = TurretConstants.kVoltageMax;
     private double kTorqueMax = TurretConstants.kTorqueMax; // tune this
-    
-    
+    private double kOmegaMax = TurretConstants.kOmegaMax;
 
     private Field2d fieldMT2;
 
@@ -100,7 +100,7 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Turret torque current",0);
         SmartDashboard.putBoolean("Turret angle field relative ?!",false);
 
-        PIDController = new PIDController(kPT, kIT, kDT); // set with torque for now
+        ProfiledPIDController = new ProfiledPIDController(kPT,kIT,kDT,new TrapezoidProfile.Constraints(kOmegaMax,kTorqueMax));
 
         SmartDashboard.putNumber("Turret P Torque", kPT);
         SmartDashboard.putNumber("Turret I Torque", kIT);
@@ -332,7 +332,7 @@ public class Turret extends SubsystemBase {
         kVoltageMax = SmartDashboard.getNumber("Turret VoltageMax", 0);
         kTorqueMax = SmartDashboard.getNumber("Turret TorqueMax", 0);
         
-        PIDController.setPID(kPT, kIT, kDT);
+        ProfiledPIDController.setPID(kPT, kIT, kDT);
 
         SmartDashboard.putNumber("Turret encoder 1", encoder1.getAbsolutePosition().getValueAsDouble());
         SmartDashboard.putNumber("Turret encoder 2", encoder2.getAbsolutePosition().getValueAsDouble());
@@ -351,6 +351,7 @@ public class Turret extends SubsystemBase {
         }
         
         double targetAngle = SmartDashboard.getNumber("Turret target angle", 0);
+        
         if(SmartDashboard.getBoolean("Turret angle field relative ?!",false))
             setAngleFieldRelative(Rotation2d.fromDegrees(targetAngle)); 
         else
@@ -366,7 +367,7 @@ public class Turret extends SubsystemBase {
             // voltageOut = PIDController.calculate(currentPositionTeethRaw, optimizedDesiredPositionTeethRaw);
             // voltageOut += Math.signum(error) * (kFF + kS);
             // voltageOut = Math.min(Math.abs(voltageOut), kVoltageMax) * Math.signum(voltageOut);
-            torqueOut = PIDController.calculate(currentPositionTeethRaw, optimizedDesiredPositionTeethRaw);
+            torqueOut = ProfiledPIDController.calculate(currentPositionTeethRaw, optimizedDesiredPositionTeethRaw);
             torqueOut += Math.signum(error)*(kFFT+kST);
             torqueOut = Math.min(Math.abs(torqueOut),kTorqueMax*Math.signum(torqueOut));
         }
