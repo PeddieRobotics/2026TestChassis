@@ -5,9 +5,11 @@ import java.util.Optional;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.PIDOutput_PIDOutputModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -27,16 +29,16 @@ public class Turret extends SubsystemBase {
 
     private Kraken turretMotor;
     private CANcoder encoder1, encoder2;
-    private PIDController PIDController;
+    private ProfiledPIDController controller;
     
     private double optimizedDesiredPositionTeethRaw;
     
-    private double kP = TurretConstants.kP;
+    private double kP = TurretConstants.kP, kPl = TurretConstants.kP;
     private double kI = TurretConstants.kI;
     private double kD = TurretConstants.kD;
-    private double kS = TurretConstants.kS;
+    private double kS = TurretConstants.kS, kSl = TurretConstants.kS;
     private double kFF = TurretConstants.kFF;
-    private double kEpsilon = TurretConstants.kEpsilon;
+    private double kEpsilon = TurretConstants.kEpsilon, kEpsilonLow = 0;
     private double kVoltageMax = TurretConstants.kVoltageMax;
     
     private Field2d fieldMT2;
@@ -91,14 +93,17 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Turret voltage output", 0);
         SmartDashboard.putBoolean("Turret angle field relative ?!",false);
 
-        PIDController = new PIDController(kP, kI, kD);
+        PIDController = new ProfiledPIDController(kP, kI, kD);
 
         SmartDashboard.putNumber("Turret P", kP);
+        SmartDashboard.putNumber("Turret P low", kPl);
         SmartDashboard.putNumber("Turret I", kI);
         SmartDashboard.putNumber("Turret D", kD);
         SmartDashboard.putNumber("Turret S", kS);
+        SmartDashboard.putNumber("Turret S low", kSl);
         SmartDashboard.putNumber("Turret FF", kFF);
         SmartDashboard.putNumber("Turret Epsilon", kEpsilon);
+        SmartDashboard.putNumber("Turret Epsilon low", kEpsilonLow);
         SmartDashboard.putNumber("Turret VoltageMax", kVoltageMax);
         
         SmartDashboard.putNumber("Turret target angle", 0);
@@ -210,6 +215,9 @@ public class Turret extends SubsystemBase {
         double direction = Math.signum(currentPositionTeethRaw - optimizedDesiredPositionTeethRaw);
         double bestDiff = Math.abs(currentPositionTeethRaw - optimizedDesiredPositionTeethRaw);
 
+        if (direction == 0)
+            return;
+
         for (
             double proposed = optimizedDesiredPositionTeethRaw + direction * TurretConstants.kTurretGearTeeth;
 
@@ -237,8 +245,21 @@ public class Turret extends SubsystemBase {
         // this part is left as an exercise to the reader
     }
 
-    public void setPercentOutput(double output) {
-        turretMotor.setPercentOutput(output);
+    public void setPercentOutput(double currentPositionTeethRaw, double percentOutputCCWPlus) {
+        double percentOutputCWPlusForKraken = -percentOutputCCWPlus;
+        
+        if (currentPositionTeethRaw <= TurretConstants.kMinPositionTeethRaw) {
+            turretMotor.setPercentOutput(percentOutputCCWPlus >= 0 ? percentOutputCWPlusForKraken : 0);
+            return;
+        }
+
+        // above max position = gone all the way counterclockwise, only clockwise allowed
+        if (currentPositionTeethRaw >= TurretConstants.kMaxPositionTeethRaw) {
+            turretMotor.setPercentOutput(percentOutputCCWPlus <= 0 ? percentOutputCWPlusForKraken : 0);
+            return;
+        }
+
+        turretMotor.setPercentOutput(percentOutputCWPlusForKraken);
     }
 
     public void setVoltage(double currentPositionTeethRaw, double voltageCCWPlus) {
@@ -293,12 +314,21 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if (TurretConstants.ZEROING_MODE) {
+            double position1 = encoder1.getAbsolutePosition().getValueAsDouble();
+            double position2 = encoder2.getAbsolutePosition().getValueAsDouble();
+            System.out.println("COPY TO (1, 2): " + -position1 + ", " + -position2);
+            return;
+        }
         kP = SmartDashboard.getNumber("Turret P", 0);
+        kPl = SmartDashboard.getNumber("Turret P low", 0);
         kI = SmartDashboard.getNumber("Turret I", 0);
         kD = SmartDashboard.getNumber("Turret D", 0);
         kS = SmartDashboard.getNumber("Turret S", 0);
+        kSl = SmartDashboard.getNumber("Turret S low", 0);
         kFF = SmartDashboard.getNumber("Turret FF", 0);
         kEpsilon = SmartDashboard.getNumber("Turret Epsilon", 0);
+        kEpsilonLow = SmartDashboard.getNumber("Turret Epsilon low", 0);
         kVoltageMax = SmartDashboard.getNumber("Turret VoltageMax", 0);
         
         PIDController.setPID(kP, kI, kD);
@@ -327,6 +357,11 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Turret optimized target position", optimizedDesiredPositionTeethRaw);
 
         double error = optimizedDesiredPositionTeethRaw - currentPositionTeethRaw;
+
+        if (Math.abs(error) <= kEpsilonLow) {
+            PIDController.setP(kPl);
+            kS = kSl;
+        }
         
         double voltageOut = 0;
         if (Math.abs(error) > kEpsilon) {
@@ -335,10 +370,10 @@ public class Turret extends SubsystemBase {
             voltageOut = Math.min(Math.abs(voltageOut), kVoltageMax) * Math.signum(voltageOut);
         }
 
-        setVoltage(currentPositionTeethRaw, voltageOut);
+        setPercentOutput(currentPositionTeethRaw, voltageOut);
 
         SmartDashboard.putNumber("Turret error", error);
-        SmartDashboard.putNumber("Turret voltage out", voltageOut);
+        SmartDashboard.putNumber("Turret percent out", voltageOut);
         
         // handleLimelight(currentAngle);
     }
