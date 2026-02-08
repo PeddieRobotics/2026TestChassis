@@ -39,9 +39,6 @@ public final class Constants {
         public static final double kTurretPositionD = 0; 
         public static final double kTurretPositionF = 0; 
 
-        public static final double kTurretMinAngle = -360.0;
-        public static final double kTurretMaxAngle = 360.0;
-        
         // valid range to not destroy turret is [-kTurretRange, kTurretRange]
         public static final double kTurretRange = 270;
 
@@ -50,7 +47,7 @@ public final class Constants {
         public static final int kEncoderGear1Teeth = 20; // n1
         public static final int kEncoderGear2Teeth = 21; // n2
 
-        public static final double kKrakenToTurretRatio = 1.0 * kTurretGearTeeth / kKrakenGearTeeth;
+        public static final double kKrakenToTurretRatio = ???;
 
         public static final int kTurretMotorDeviceId = 60;
         public static final int kEncoderId1 = 61;
@@ -90,8 +87,8 @@ public final class Constants {
         public static final double kVoltageMax = 2;
         
         // these are always positive, see Turret.java for explanation
-        public static final double kMinPositionRotations = -kTurretRange / 360;
-        public static final double kMaxPositionRotations = kTurretRange / 360;
+        public static final double kMinPositionRotations = ???;
+        public static final double kMaxPositionRotations = ???;
         
         public static class CRTConstants {
             public static final int y_1 = 1; 
