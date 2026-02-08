@@ -4,9 +4,11 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
@@ -30,7 +32,6 @@ public class Kraken {
     private CANBus canbus;
 
     // Open Loop Control
-    private double feedForward = 0.0;
     private double velocityConversionFactor = 1.0;
 
     public Kraken(int deviceID, CANBus canbus) {
@@ -50,7 +51,7 @@ public class Kraken {
     }
 
     /** 
-     * set kraken encoder to a given position
+     * set mechanism position
      * 
      * @param position - position in motor encoder units (may vary)
      */ 
@@ -319,9 +320,7 @@ public class Kraken {
      * @param kD - derivative gain (units vary)
      * @param kF - constant feedforward to apply (volts)
      */
-    public void setPIDValues(double kP, double kI, double kD, double kF) {
-
-        feedForward = kF;
+    public void setPIDValues(double kP, double kI, double kD) {
         config.Slot0.kP = kP;
         config.Slot0.kI = kI;
         config.Slot0.kD = kD;
@@ -336,10 +335,8 @@ public class Kraken {
      * @param kP - proportional gain (units vary)
      * @param kI - integral gain (units vary)
      * @param kD - derivative gain (units vary)
-     * @param kF - constant feedforward to apply (volts)
      */
-    public void setPIDValues(double kS, double kV, double kA, double kP, double kI, double kD, double kF) {
-        feedForward = kF;
+    public void setPIDValues(double kS, double kV, double kA, double kP, double kI, double kD) {
         config.Slot0.kS = kS;
         config.Slot0.kV = kV;
         config.Slot0.kA = kA;
@@ -357,16 +354,14 @@ public class Kraken {
      * @param kP - proportional gain (units vary)
      * @param kI - integral gain (units vary)
      * @param kD - derivative gain (units vary)
-     * @param kF - constant feedforward to apply (volts)
      * @param kG - gravity feedforward/feedback gain (units vary). This is added to the closed loop output. The sign is determined by GravityType. The unit for this constant is dependent on the control mode, typically fractional duty cycle, voltage, or torque current.
      * @param gravityType - This determines the type of the gravity feedforward/feedback. 
      *                      <p> Choose Elevator_Static for systems where the gravity feedforward is constant, such as an elevator. The gravity feedforward output will always have the same sign.
      *                      <p> Choose Arm_Cosine for systems where the gravity feedback is dependent on the angular position of the mechanism, such as an arm. The gravity feedback output will vary depending on the mechanism angular position. Note that the sensor offset and ratios must be configured so that the sensor reports a position of 0 when the mechanism is horizonal (parallel to the ground), and the reported sensor position is 1:1 with the mechanism.
      */
-    public void setPIDValues(double kS, double kV, double kA, double kP, double kI, double kD, double kF, double kG, GravityTypeValue gravityType) {
+    public void setPIDValues(double kS, double kV, double kA, double kP, double kI, double kD, double kG, GravityTypeValue gravityType) {
         config.Slot0.GravityType = gravityType;
 
-        feedForward = kF;
         config.Slot0.kS = kS;
         config.Slot0.kV = kV;
         config.Slot0.kA = kA;
@@ -401,10 +396,9 @@ public class Kraken {
      *                          otherwise the motor output may dither when closed loop error is
      *                          near zero.
      */
-    public void setPIDValues(double kS, double kV, double kA, double kP, double kI, double kD, double kF, StaticFeedforwardSignValue feedforwardSign) {
+    public void setPIDValues(double kS, double kV, double kA, double kP, double kI, double kD, StaticFeedforwardSignValue feedforwardSign) {
         config.Slot0.StaticFeedforwardSign = feedforwardSign;
 
-        feedForward = kF;
         config.Slot0.kS = kS;
         config.Slot0.kV = kV;
         config.Slot0.kA = kA;
@@ -414,11 +408,10 @@ public class Kraken {
         talon.getConfigurator().apply(config);
     }
 
-    public void setPIDValues(double kS, double kV, double kA, double kP, double kI, double kD, double kF, double kG, GravityTypeValue gravityType, StaticFeedforwardSignValue feedforwardSign) {
+    public void setPIDValues(double kS, double kV, double kA, double kP, double kI, double kD, double kG, GravityTypeValue gravityType, StaticFeedforwardSignValue feedforwardSign) {
         config.Slot0.StaticFeedforwardSign = feedforwardSign;
         config.Slot0.GravityType = gravityType;
 
-        feedForward = kF;
         config.Slot0.kS = kS;
         config.Slot0.kV = kV;
         config.Slot0.kA = kA;
@@ -429,11 +422,10 @@ public class Kraken {
         talon.getConfigurator().apply(config);
     }
 
-    public void setPIDValuesSlot1(double kS, double kV, double kA, double kP, double kI, double kD, double kF, double kG, GravityTypeValue gravityType, StaticFeedforwardSignValue feedforwardSign) {
+    public void setPIDValuesSlot1(double kS, double kV, double kA, double kP, double kI, double kD, double kG, GravityTypeValue gravityType, StaticFeedforwardSignValue feedforwardSign) {
         config.Slot1.StaticFeedforwardSign = feedforwardSign;
         config.Slot1.GravityType = gravityType;
 
-        feedForward = kF;
         config.Slot1.kS = kS;
         config.Slot1.kV = kV;
         config.Slot1.kA = kA;
@@ -535,18 +527,18 @@ public class Kraken {
      * Request PID to target position with PositionVoltage control mode and constant voltage feedforward
      * @param position - motor/mechanism target position setpoint (post conversion factors)
      */
-    public void setPositionVoltageWithFeedForward(double position) {
+    public void setPositionVoltage(double position, double feedforward) {
         final PositionVoltage request = new PositionVoltage(0).withSlot(0);
-        talon.setControl(request.withPosition(position).withFeedForward(feedForward).withEnableFOC(true));
+        talon.setControl(request.withPosition(position).withFeedForward(feedforward).withEnableFOC(true));
     }
 
     /**
      * Request PID to target velocity with VelocityVoltage control mode and constant voltage feedforward
      * @param velocity - motor target velocity setpoint (rot/s)(post velocity conversion factor)
      */
-    public void setVelocityVoltageWithFeedForward(double velocity) {
+    public void setVelocityVoltage(double velocity, double feedforward) {
         final VelocityVoltage request = new VelocityVoltage(0).withSlot(0);
-        talon.setControl(request.withVelocity(velocity / velocityConversionFactor).withFeedForward(feedForward)
+        talon.setControl(request.withVelocity(velocity / velocityConversionFactor).withFeedForward(feedforward)
                 .withEnableFOC(true));
     }
 
@@ -562,27 +554,37 @@ public class Kraken {
      * Request PID to target position with PositionTorqueCurrentFOC control mode
      * @param position - motor/mechanism target position setpoint (post conversion factors)
      */
-    public void setPositionTorqueCurrentFOC(double setpoint) {
+    public void setPositionTorqueCurrentFOC(double setpoint, double feedforward) {
         final PositionTorqueCurrentFOC request = new PositionTorqueCurrentFOC(0).withSlot(0);
-        talon.setControl(request.withPosition(setpoint).withFeedForward(feedForward));
+        talon.setControl(request.withPosition(setpoint).withFeedForward(feedforward));
+    }
+
+    public void setPositionDutyCycle(double setpoint, double feedforward) {
+        final PositionDutyCycle request = new PositionDutyCycle(0).withSlot(0);
+        talon.setControl(request.withPosition(setpoint).withFeedForward(feedforward));
+    }
+
+    public void setPositionMotionMagicDutyCycle(double position, double feedforward, int slot) {
+        final MotionMagicDutyCycle request = new MotionMagicDutyCycle(0).withSlot(slot);
+        talon.setControl(request.withPosition(position).withFeedForward(feedforward).withEnableFOC(true));
     }
 
     /**
      * Request MotionMagic motion profile to target position with MotionMagicVoltage control mode
      * @param position - motor/mechanism target position setpoint (post conversion factors)
      */
-    public void setPositionMotionMagicVoltage(double position, int slot) {
+    public void setPositionMotionMagicVoltage(double position, double feedforward, int slot) {
         final MotionMagicVoltage request = new MotionMagicVoltage(0).withSlot(slot);
-        talon.setControl(request.withPosition(position).withFeedForward(feedForward).withEnableFOC(true));
+        talon.setControl(request.withPosition(position).withFeedForward(feedforward).withEnableFOC(true));
     }
 
     /**
      * Request MotionMagic motion profile to target position with MotionMagicTorqueCurrentFOC control mode
      * @param position - motor/mechanism target position setpoint (post conversion factors)
      */
-    public void setPositionMotionMagicTorqueCurrentFOC(double position){
+    public void setPositionMotionMagicTorqueCurrentFOC(double position, double feedforward) {
         final MotionMagicTorqueCurrentFOC request = new MotionMagicTorqueCurrentFOC(0).withSlot(0);
-        talon.setControl(request.withPosition(position).withFeedForward(feedForward));
+        talon.setControl(request.withPosition(position).withFeedForward(feedforward));
     }
 
     /**

@@ -184,6 +184,10 @@ public class Drivetrain extends SubsystemBase {
 
         odometry.resetPosition(pose.getRotation(),swerveModulePosition,pose);
     }
+    
+    public double getYawRate() {
+        return gyro.getAngularVelocityZWorld().getValueAsDouble();
+    }
 
     @Override
     public void periodic() {

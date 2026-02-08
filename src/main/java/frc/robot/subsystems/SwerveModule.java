@@ -58,13 +58,12 @@ public class SwerveModule extends SubsystemBase {
 
         drivingMotor.setPIDValues(
             ModuleConstants.kDriveS, ModuleConstants.kDriveV, ModuleConstants.kDriveA,
-            ModuleConstants.kDriveP, ModuleConstants.kDriveI, ModuleConstants.kDriveD,
-            ModuleConstants.kDriveFF
+            ModuleConstants.kDriveP, ModuleConstants.kDriveI, ModuleConstants.kDriveD
         );
         steeringMotor.setPIDValues(
             ModuleConstants.kSteerS, ModuleConstants.kSteerV, ModuleConstants.kSteerA,
             ModuleConstants.kSteerP, ModuleConstants.kSteerI, ModuleConstants.kSteerD,
-            ModuleConstants.kSteerFF, StaticFeedforwardSignValue.UseClosedLoopSign
+            StaticFeedforwardSignValue.UseClosedLoopSign
         );
     }
 
@@ -103,8 +102,8 @@ public class SwerveModule extends SubsystemBase {
         SmartDashboard.putNumber(turningCANID + " desired angle", desiredAngle * 2 * Math.PI);
         SmartDashboard.putNumber(CANcoderID + "current rotation", getCANcoderReading());
 
-        drivingMotor.setVelocityVoltageWithFeedForward(desiredVelocity);
-        steeringMotor.setPositionVoltageWithFeedForward(desiredAngle);
+        drivingMotor.setVelocityVoltage(desiredVelocity, ModuleConstants.kDriveFF);
+        steeringMotor.setPositionVoltage(desiredAngle, ModuleConstants.kSteerFF);
     }
 
     @Override

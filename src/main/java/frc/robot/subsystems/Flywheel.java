@@ -28,7 +28,7 @@ public class Flywheel extends SubsystemBase {
         motor2.setFollower(58, MotorAlignmentValue.Opposed);
         motor2.setInverted(true);
 
-        motor1.setPIDValues(0.47, 0.09, 0, 0.7, 0, 0, 0);
+        motor1.setPIDValues(0.47, 0.09, 0, 0.7, 0, 0);
         
         // SmartDashboard.putNumber("Flywheel P", 0);
         // SmartDashboard.putNumber("Flywheel I", 0);
