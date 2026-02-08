@@ -23,7 +23,8 @@ public class Turret extends SubsystemBase {
     private CANcoder encoder1, encoder2;
     
     // rotation adjustment feedforward
-    private double kR = 0;
+    private double kRs = 0.05;
+    private double kRv = 0.20;
     
     public Turret() {
         // oi = OI.getInstance();
@@ -71,12 +72,15 @@ public class Turret extends SubsystemBase {
         turretMotor.setSensorToMechanismRatio(TurretConstants.kKrakenToTurretRatio);
         turretMotor.setSoftLimits(true, TurretConstants.kMaxPositionRotations, TurretConstants.kMinPositionRotations);
         turretMotor.setInverted(true);
-        turretMotor.setPIDValues(0, 0, 0, 0, 0, 0);
+        turretMotor.setPIDValues(280, 0, 12);
+        // turretMotor.setPIDValues(0, 0, 0);
+        turretMotor.setMotionMagicParameters(2.0, 8.0, 0);
         turretMotor.setCoast();
         
         setMotorEncoder();
-        
-        SmartDashboard.putNumber("Turret kR", kR);
+
+        SmartDashboard.putNumber("Turret kRs", kRs);
+        SmartDashboard.putNumber("Turret kRv", kRv);
         SmartDashboard.putNumber("Turret target angle", 0);
     }
     
@@ -131,8 +135,10 @@ public class Turret extends SubsystemBase {
         return positionTeethRaw < 0 ? positionTeethRaw + N : positionTeethRaw;
     }
 
-    public void setAngleFieldRelative(Rotation2d desiredRotation) {
-        setAngle(desiredRotation.minus(Drivetrain.getInstance().getHeadingRotation2d()));
+    public double setAngleFieldRelative(Rotation2d desiredRotation) {
+        Rotation2d r = desiredRotation.minus(Drivetrain.getInstance().getHeadingRotation2d());
+        setAngle(r);
+        return r.getDegrees();
     }
 
     public void setAngle(Rotation2d desiredRotation) {
@@ -173,9 +179,14 @@ public class Turret extends SubsystemBase {
         
         SmartDashboard.putNumber("Turret desired position", optimizedDesiredPositionRotations);
 
-        kR = SmartDashboard.getNumber("Turret kR", kR);
-        double ff = kR * Drivetrain.getInstance().getYawRate();
-        turretMotor.setPositionDutyCycle(optimizedDesiredPositionRotations, ff);
+        kRv = SmartDashboard.getNumber("Turret kRv", kRv);
+        kRs = SmartDashboard.getNumber("Turret kRs", kRs);
+        
+        double yawRate = Drivetrain.getInstance().getYawRate();
+        double ff = -kRv * yawRate * 180 / Math.PI - kRs * Math.signum(yawRate);
+
+        // turretMotor.setPIDValues(0, 0, 0);
+        turretMotor.setPositionMotionMagicTorqueCurrentFOC(optimizedDesiredPositionRotations, ff);
     }
 
     @Override
@@ -183,15 +194,20 @@ public class Turret extends SubsystemBase {
         if (TurretConstants.ZEROING_MODE) {
             double position1 = encoder1.getAbsolutePosition().getValueAsDouble();
             double position2 = encoder2.getAbsolutePosition().getValueAsDouble();
+            System.out.println("public static final double ZEROING_MODE = false;");
             System.out.println("public static final double kEncoder1MagnetOffset = " + -position1 + ";");
             System.out.println("public static final double kEncoder2MagnetOffset = " + -position2 + ";");
             System.out.println("-");
             return;
         }
-
-        SmartDashboard.putNumber("Turret current position", turretMotor.getPosition());
         
         double target = SmartDashboard.getNumber("Turret target angle", 0);
-        setAngle(Rotation2d.fromDegrees(target));
+
+        SmartDashboard.putNumber("Turret current position", turretMotor.getPosition());
+        SmartDashboard.putNumber("Turret CRT position", getCurrentPositionTeethRaw() - TurretConstants.kZeroPositionTeethRaw);
+        
+        double robotTarget = setAngleFieldRelative(Rotation2d.fromDegrees(target));
+        SmartDashboard.putNumber("Turret robot target", robotTarget);
+        SmartDashboard.putNumber("Turret error", Math.IEEEremainder(robotTarget - turretMotor.getPosition() * 360, 360));
     }
 }

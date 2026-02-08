@@ -114,7 +114,10 @@ public class Drivetrain extends SubsystemBase {
         return gyro.getRotation2d();
     }
 
+    private double rotation = 0;
     public void drive(Translation2d translation, double rotation, boolean fieldOriented, Translation2d centerRotation) {
+        this.rotation = rotation;
+
         ChassisSpeeds fieldRelativeSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
         ChassisSpeeds robotRelativeSpeeds;
 
@@ -186,11 +189,12 @@ public class Drivetrain extends SubsystemBase {
     }
     
     public double getYawRate() {
-        return gyro.getAngularVelocityZWorld().getValueAsDouble();
+        return rotation;
     }
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Yaw rate", getYawRate());
         usingMegaTag = SmartDashboard.getBoolean("using mega tag", false);
         if (SmartDashboard.getBoolean("Test Map?", false)) {
             double distance = SmartDashboard.getNumber("Test Distance", 0);

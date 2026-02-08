@@ -3,6 +3,7 @@ package frc.robot.utils;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
@@ -11,6 +12,7 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -231,6 +233,13 @@ public class Kraken {
      */
     public double getKD() {
         return config.Slot0.kD;
+    }
+
+    /** 
+     * @return target/maximum motion magic acceleration (CANcoder/mechanism rot/s^2 (depends on feedback device and conversion factors))
+     */
+    public double getMotionMagicMaxVelocity() {
+        return config.MotionMagic.MotionMagicCruiseVelocity;
     }
 
     /** 
@@ -586,6 +595,12 @@ public class Kraken {
         final MotionMagicTorqueCurrentFOC request = new MotionMagicTorqueCurrentFOC(0).withSlot(0);
         talon.setControl(request.withPosition(position).withFeedForward(feedforward));
     }
+
+    public void setPositionDynamicMotionMagicTorqueCurrentFOC(double position, double velocity, double accel, double feedforward) {
+        final DynamicMotionMagicTorqueCurrentFOC request = new DynamicMotionMagicTorqueCurrentFOC(0, velocity, accel).withSlot(0);
+        talon.setControl(request.withPosition(position).withFeedForward(feedforward));
+    }
+    
 
     /**
      * set the feedback device of motor - often for using external encoder (ie: CANcoders)

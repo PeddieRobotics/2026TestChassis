@@ -22,6 +22,7 @@ public class ShooterUtil {
     // in robot-relative coords
     public static ShootingParameters getShootingParameters(Translation2d robot_velocity,
             Translation2d turretDistanceToHub, double timeInAir) {
+
         ShootingParameters allParams = new ShootingParameters(); // to set all values
         // find turret to hub angle (in between), convert turretangle using constant
         // deviations

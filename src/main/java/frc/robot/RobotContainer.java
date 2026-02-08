@@ -22,7 +22,7 @@ import frc.robot.subsystems.Turret;
 import frc.robot.utils.ShotMap;
 
 public class RobotContainer {
-    // private Drivetrain drivetrain;
+    private Drivetrain drivetrain;
     // private Flywheel flywheel;
     private Turret turret;
     // private Hopper hopper;
@@ -33,8 +33,8 @@ public class RobotContainer {
         SmartDashboard.putNumber("Test Distance", 0);
         SmartDashboard.putNumber("Test Rad. Vel.", 0);
 
-        // drivetrain = Drivetrain.getInstance();
-        // drivetrain.setDefaultCommand(new SwerveDriveCommand());
+        drivetrain = Drivetrain.getInstance();
+        drivetrain.setDefaultCommand(new SwerveDriveCommand());
 
         turret = Turret.getInstance();
 
