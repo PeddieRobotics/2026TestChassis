@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utils.ShotMap;
+import frc.robot.utils.Constants.CameraConstants;
+import frc.robot.utils.LimelightHelpers;
 import frc.robot.utils.ShotMap.ShotMapValue;
 
 /**
@@ -58,14 +60,26 @@ public class Robot extends TimedRobot {
 
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        LimelightHelpers.SetThrottle(CameraConstants.kBackCamName, 200);
+        LimelightHelpers.SetThrottle(CameraConstants.kRightCamName, 200);
+        LimelightHelpers.SetThrottle(CameraConstants.kLeftCamName, 200);
+        LimelightHelpers.SetThrottle(CameraConstants.kFrontCamName, 200);
+    }
 
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic() {
+
+    }
 
     /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
     @Override
     public void autonomousInit() {
+        LimelightHelpers.SetThrottle(CameraConstants.kBackCamName, 0);
+        LimelightHelpers.SetThrottle(CameraConstants.kRightCamName, 0);
+        LimelightHelpers.SetThrottle(CameraConstants.kLeftCamName, 0);
+        LimelightHelpers.SetThrottle(CameraConstants.kFrontCamName, 0);
+
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
@@ -87,6 +101,11 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+
+        LimelightHelpers.SetThrottle(CameraConstants.kBackCamName, 0);
+        LimelightHelpers.SetThrottle(CameraConstants.kRightCamName, 0);
+        LimelightHelpers.SetThrottle(CameraConstants.kLeftCamName, 0);
+        LimelightHelpers.SetThrottle(CameraConstants.kFrontCamName, 0);
         
         SmartDashboard.putNumber("Test Distance", 0);
     }

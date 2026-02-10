@@ -30,6 +30,7 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveModule[] swerveModule;
     private final SwerveModule frontLeftModule, frontRightModule, backLeftModule, backRightModule;
     private SwerveModuleState[] swerveModuleState;
+    private double[] swerveModulePositionsRadians;
     private final SwerveModulePosition[] swerveModulePosition;
     private final Pigeon2 gyro;
     private final Limelight[] limelights = new Limelight[CameraConstants.kNumberLimelights];
@@ -37,6 +38,7 @@ public class Drivetrain extends SubsystemBase {
     // private final LimelightBack backLimelight; 
     // private final LimelightLeft leftLimelight;
     // private final LimelightRight rightLimelight;
+    
     private double heading;
     private boolean usingMegaTag;
     private SwerveDrivePoseEstimator odometry;
@@ -88,13 +90,20 @@ public class Drivetrain extends SubsystemBase {
             backLeftModule.getPosition(),
             backRightModule.getPosition()
         };
+        swerveModulePositionsRadians = new double[] {
+            frontLeftModule.getPositionRadians(), frontRightModule.getPositionRadians(),
+            backLeftModule.getPositionRadians(), backRightModule.getPositionRadians()
+        };
         swerveModuleState = Constants.DriveConstants.kinematics.toSwerveModuleStates(
             new ChassisSpeeds(0, 0, 0)
         );
 
         gyro = new Pigeon2(RobotMap.GYRO_ID, defaultCANBus);
         setGyro(0);
-        odometry = new SwerveDrivePoseEstimator(DriveConstants.kKinematics, getHeadingRotation2d(), swerveModulePosition, new Pose2d());
+        
+        odometry = new SwerveDrivePoseEstimator(DriveConstants.kKinematics, Rotation2d.fromDegrees(getHeadingBlue()), swerveModulePosition, new Pose2d());
+        odometry.resetPose(new Pose2d(0, 0, Rotation2d.fromDegrees(getHeadingBlue())));
+
         fusedOdometry = new Field2d();
         SmartDashboard.putData("Fused Odometry", fusedOdometry);
     }
@@ -141,9 +150,18 @@ public class Drivetrain extends SubsystemBase {
         setModuleStates(swerveModuleState);
     }
 
+    public double getYaw() {
+        return gyro.getYaw().getValueAsDouble();
+    }
+
+    public double[] getSwerveModulePositionsRadians() {
+        return swerveModulePositionsRadians;
+    }
+
     public void setModuleStates(SwerveModuleState[] statesList) {
         for (int i = 0; i < statesList.length; i++) {
             swerveModule[i].setOptimizedState(statesList[i]);
+            swerveModulePositionsRadians[i] = swerveModule[i].getPositionRadians();
         }
     }
 
@@ -156,7 +174,6 @@ public class Drivetrain extends SubsystemBase {
         if(DriverStation.getAlliance().isEmpty()||DriverStation.getAlliance().get()==DriverStation.Alliance.Blue)
             return getHeading();
         return Math.IEEEremainder(gyro.getYaw().getValueAsDouble()+180,360);
-
     }
 
     public void lockModules() {
@@ -167,11 +184,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void updateOdometry(){
-        odometry.update(new Rotation2d(getHeadingBlue()), swerveModulePosition);
-        if(!DriverStation.isAutonomous() && usingMegaTag) {
-            for(int i = 0; i < limelights.length; i++)
-                limelights[i].fuseEstimatedPose(odometry);
-        }
+        odometry.update(Rotation2d.fromDegrees(getHeadingBlue()), swerveModulePosition);
+        // if(!DriverStation.isAutonomous() && usingMegaTag) {
+        //     for(int i = 0; i < limelights.length; i++)
+        //         limelights[i].fuseEstimatedPose(odometry);
+        // }
     }
     public Pose2d getPose(){
         return odometry.getEstimatedPosition();
@@ -179,7 +196,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void setPose(Pose2d pose){
         gyro.reset();
-        odometry.resetPosition(new Rotation2d(Math.toRadians(getHeadingBlue())),swerveModulePosition,pose);
+        odometry.resetPosition(Rotation2d.fromDegrees(getHeadingBlue()),swerveModulePosition,pose);
     }
 
     public void setStartingPose(Pose2d pose){
@@ -199,6 +216,8 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         updateModulePositions();
         updateOdometry();
+
+        fusedOdometry.setRobotPose(odometry.getEstimatedPosition());
         
         SmartDashboard.putNumber("Yaw rate", getYawRate());
         usingMegaTag = SmartDashboard.getBoolean("using mega tag", false);
@@ -210,6 +229,8 @@ public class Drivetrain extends SubsystemBase {
             SmartDashboard.putNumber("Test Output: Speed", value.exit_v());
             SmartDashboard.putNumber("Test Output: Pitch", value.theta());
         }
-        fusedOdometry.setRobotPose(odometry.getEstimatedPosition());
+
+        SmartDashboard.putNumber("Odometry x", odometry.getEstimatedPosition().getX());
+        SmartDashboard.putNumber("Odometry y", odometry.getEstimatedPosition().getY());
     }
 }
