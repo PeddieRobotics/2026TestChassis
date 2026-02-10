@@ -1,5 +1,8 @@
 package frc.robot.utils;
 
+import java.util.Optional;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -10,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.LockDrivetrain;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.LimelightFront;
 import frc.robot.utils.Constants.DriveConstants;
 
 public class OI {
@@ -24,6 +28,13 @@ public class OI {
 
         Trigger R1Bumper = new JoystickButton(controller, PS4Controller.Button.kR1.value);
         R1Bumper.whileTrue(new LockDrivetrain());
+        
+        Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
+        triangleButton.onTrue(new InstantCommand(() -> {
+            Optional<Pose2d> pose = LimelightFront.getInstance().getPoseMT2();
+            if(pose.isPresent())
+                Drivetrain.getInstance().setPose(pose.get());
+        }));
 
         SmartDashboard.putNumber("Drive: cardinal scale", 0.5);
     }

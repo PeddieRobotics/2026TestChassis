@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants;
@@ -39,6 +40,7 @@ public class Drivetrain extends SubsystemBase {
     private double heading;
     private boolean usingMegaTag;
     private SwerveDrivePoseEstimator odometry;
+    private final Field2d fusedOdometry;
 
     private Drivetrain() {
         // CANBus defaultCANBus = new CANBus(RobotMap.CANIVORE_NAME);
@@ -93,6 +95,8 @@ public class Drivetrain extends SubsystemBase {
         gyro = new Pigeon2(RobotMap.GYRO_ID, defaultCANBus);
         setGyro(0);
         odometry = new SwerveDrivePoseEstimator(DriveConstants.kKinematics, getHeadingRotation2d(), swerveModulePosition, new Pose2d());
+        fusedOdometry = new Field2d();
+        SmartDashboard.putData("Fused Odometry", fusedOdometry);
     }
     
     public static Drivetrain getInstance() {
@@ -169,7 +173,6 @@ public class Drivetrain extends SubsystemBase {
                 limelights[i].fuseEstimatedPose(odometry);
         }
     }
-    
     public Pose2d getPose(){
         return odometry.getEstimatedPosition();
     }
@@ -194,6 +197,9 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+        updateModulePositions();
+        updateOdometry();
+        
         SmartDashboard.putNumber("Yaw rate", getYawRate());
         usingMegaTag = SmartDashboard.getBoolean("using mega tag", false);
         if (SmartDashboard.getBoolean("Test Map?", false)) {
@@ -204,6 +210,6 @@ public class Drivetrain extends SubsystemBase {
             SmartDashboard.putNumber("Test Output: Speed", value.exit_v());
             SmartDashboard.putNumber("Test Output: Pitch", value.theta());
         }
-        updateOdometry();
+        fusedOdometry.setRobotPose(odometry.getEstimatedPosition());
     }
 }
