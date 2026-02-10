@@ -27,7 +27,7 @@ public final class Constants {
 
     public static class TurretConstants {
         public static final double kTurretToHubHeight = 0.0;
-        public static final double kTurretDisplacementX = 0.0;
+        public static final double kTurretDisplacementX = 0.225; //m
         public static final double kTurretDisplacementY = 0.0;
 
         // PID values for the turret pitch

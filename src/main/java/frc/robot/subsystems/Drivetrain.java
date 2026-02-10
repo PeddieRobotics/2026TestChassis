@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import org.ejml.sparse.csc.linsol.qr.LinearSolverQrLeftLooking_DSCC;
+import java.util.Optional;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -8,22 +8,21 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants;
-import frc.robot.utils.RobotMap;
-import frc.robot.utils.ShotMap;
-import frc.robot.utils.ShotMap.ShotMapValue;
 import frc.robot.utils.Constants.CameraConstants;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.ModuleConstants;
-import frc.robot.utils.LimelightHelpers.LimelightTarget_Barcode;
+import frc.robot.utils.RobotMap;
+import frc.robot.utils.ShotMap;
+import frc.robot.utils.ShotMap.ShotMapValue;
 
 public class Drivetrain extends SubsystemBase {
     private static Drivetrain drivetrain;
@@ -34,6 +33,7 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveModulePosition[] swerveModulePosition;
     private final Pigeon2 gyro;
     private final Limelight[] limelights = new Limelight[CameraConstants.kNumberLimelights];
+    private final Turret turret;
     // private final LimelightFront frontLimelight; 
     // private final LimelightBack backLimelight; 
     // private final LimelightLeft leftLimelight;
@@ -52,6 +52,8 @@ public class Drivetrain extends SubsystemBase {
         limelights[1] = LimelightBack.getInstance();
         limelights[2] = LimelightLeft.getInstance();
         limelights[3] = LimelightRight.getInstance();
+
+        turret = Turret.getInstance();
 
         frontLeftModule = new SwerveModule(
             defaultCANBus,
@@ -212,6 +214,37 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+        // find closest limelight
+        Optional<Pose2d> bestPose = Optional.empty();
+
+        double bestTagCount = 0;
+        double bestDistance = 10000;
+
+        for (Limelight ll : limelights) {
+            Optional<Pose2d> pose = ll.getPoseMT2();
+            if (pose.isEmpty())
+                continue;
+
+            double tagCount = ll.getNumberOfTagsSeen();
+            double distance = ll.getDistanceEstimatedPose();
+            if (tagCount > bestTagCount || (tagCount == bestTagCount && distance < bestDistance)) {
+                bestPose = pose;
+                bestTagCount = tagCount;
+                bestDistance = distance;
+            }
+        }
+
+        if (bestPose.isEmpty())
+            retu
+
+        // translation2d of origin --> apriltag minus origin->limelight
+        Translation2d limelightToTag = bestPose.get();
+        
+        bestLimelight.getAprilTagPose().getTranslation()
+                                        .minus(bestLimelight.getPoseMT2().get().getTranslation());
+        //
+        double targetYaw = 0; 
+        
         SmartDashboard.putNumber("Yaw rate", getYawRate());
         usingMegaTag = SmartDashboard.getBoolean("using mega tag", false);
         if (SmartDashboard.getBoolean("Test Map?", false)) {

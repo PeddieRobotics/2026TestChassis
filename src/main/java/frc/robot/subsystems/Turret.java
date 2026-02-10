@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,6 +16,7 @@ import frc.robot.utils.Kraken;
 
 public class Turret extends SubsystemBase {
     private static Turret turret;
+    private Limelight[] limelights; 
 
     // private OI oi;
     // private Limelight llTurret;
@@ -29,6 +31,12 @@ public class Turret extends SubsystemBase {
     public Turret() {
         // oi = OI.getInstance();
         // llTurret = LimelightTurret.getInstance();
+
+        limelights = new Limelight[4];
+        limelights[0] = LimelightBack.getInstance();
+        limelights[1] = LimelightFront.getInstance();
+        limelights[2] = LimelightLeft.getInstance();
+        limelights[3] = LimelightRight.getInstance();
 
         CANBus canbus = new CANBus();
 
