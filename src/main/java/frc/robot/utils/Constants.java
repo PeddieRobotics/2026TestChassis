@@ -39,6 +39,17 @@ public final class Constants {
         public static final double kTurretPositionD = 0; 
         public static final double kTurretPositionF = 0; 
 
+        // PID values for the turret yaw (Motion magic torque current FOC)
+        public static final double kTurretYawS = 0;
+        public static final double kTurretYawV = 0; 
+        public static final double kTurretYawA = 0; 
+        public static final double kTurretYawP = 250; // overcome static friction
+        public static final double kTurretYawI = 0; 
+        public static final double kTurretYawD = 12; 
+        public static final double kTurretYawF = 0; 
+        public static final double kCruiseVelocity = 4;
+        public static final double kMaxAcceleration = 10; // radians/seconds^2
+
         // valid range to not destroy turret is [-kTurretRange, kTurretRange]
         public static final double kTurretRange = 270;
 
@@ -47,7 +58,7 @@ public final class Constants {
         public static final int kEncoderGear1Teeth = 20; // n1
         public static final int kEncoderGear2Teeth = 21; // n2
 
-        public static final double kKrakenToTurretRatio = ???;
+        public static final double kKrakenToTurretRatio = (double)kTurretGearTeeth/kKrakenGearTeeth;
 
         public static final int kTurretMotorDeviceId = 60;
         public static final int kEncoderId1 = 61;
@@ -87,8 +98,8 @@ public final class Constants {
         public static final double kVoltageMax = 2;
         
         // these are always positive, see Turret.java for explanation
-        public static final double kMinPositionRotations = ???;
-        public static final double kMaxPositionRotations = ???;
+        public static final double kMinPositionRotations = -0.75;
+        public static final double kMaxPositionRotations = 0.75;
         
         public static class CRTConstants {
             public static final int y_1 = 1; 
