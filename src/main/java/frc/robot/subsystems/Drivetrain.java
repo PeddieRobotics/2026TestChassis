@@ -234,7 +234,7 @@ public class Drivetrain extends SubsystemBase {
             ShotMapValue value = ShotMap.queryShotMap(distance, v_r);
 
             SmartDashboard.putNumber("Test Output: Speed", value.exit_v());
-            SmartDashboard.putNumber("Test Output: Pitch", value.theta());
+            SmartDashboard.putNumber("Test Output: Pitch", value.pitch());
         }
 
         SmartDashboard.putNumber("Odometry x", odometry.getEstimatedPosition().getX());

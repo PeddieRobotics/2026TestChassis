@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
 import edu.wpi.first.wpilibj.Filesystem;
 
 public class ShotMap {
-    public static record ShotMapValue(float exit_v, float theta) {};
+    public static record ShotMapValue(float exit_v, float pitch, float flightTime) {};
     
     private static final double MIN_DIST = 0.3;
     private static final double MAX_DIST = 7;
@@ -37,13 +37,18 @@ public class ShotMap {
 		BufferedReader br = new BufferedReader(new FileReader(propFile));
 		StringTokenizer st = new StringTokenizer(br.readLine());
         
-        shotMap = new float[NUM_DIST][NUM_VR][2];
+        shotMap = new float[NUM_DIST][NUM_VR][3];
         
         for (int i = 0; i < NUM_DIST; i++) {
             for (int j = 0; j < NUM_VR; j++) {
-                // exit_v then theta
+                // exit_v then pitch
                 shotMap[i][j][0] = Float.parseFloat(st.nextToken());
                 shotMap[i][j][1] = Float.parseFloat(st.nextToken());
+                
+                // TODO: get new shot table with time of flight
+                shotMap[i][j][2] = 0f;
+
+                // shotMap[i][j][2] = Float.parseFloat(st.nextToken());
             }
         }
 
@@ -66,6 +71,6 @@ public class ShotMap {
         int vr_index = (int) Math.round(vr_index_frac);
         
         float[] mapEntry = shotMap[dist_index][vr_index];
-        return new ShotMapValue(mapEntry[0], mapEntry[1]);
+        return new ShotMapValue(mapEntry[0], mapEntry[1], mapEntry[2]);
     }
 }
