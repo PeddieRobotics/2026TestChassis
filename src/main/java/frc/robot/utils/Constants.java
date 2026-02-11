@@ -28,8 +28,7 @@ public final class Constants {
 
     public static class TurretConstants {
         public static final double kTurretToHubHeight = 0.0;
-        public static final double kTurretDisplacementX = 0.225; //m
-        public static final double kTurretDisplacementY = 0.0;
+        public static final Translation2d kRobotCenterToTurretCenter = new Translation2d(0.18, 0.05);
 
         // PID values for the turret pitch
         public static final double kTurretPositionS = 0;
@@ -201,8 +200,9 @@ public final class Constants {
     }
     public static final class FieldConstants {
             
-            public static final double kBlueHubX = 4.63;
-            public static final double kBlueHubY = 8.07;
+            // TO DO: FIND REAL COORDINATES OF HUB, APPROXIMATING FROM PATH PLANNER FOR NOW
+            public static final double kBlueHubX = 4.625;
+            public static final double kBlueHubY = 4.03;
 
             public static final double kRedHubX = 16.54 - kBlueHubX;
             public static final double kRedHubY = 8.07 - kBlueHubY;

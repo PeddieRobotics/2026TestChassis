@@ -26,8 +26,8 @@ public class ShooterUtil {
         ShootingParameters allParams = new ShootingParameters(); // to set all values
         // find turret to hub angle (in between), convert turretangle using constant
         // deviations
-        double turretToHubAngle = Math.atan2(turretDistanceToHub.getY() + TurretConstants.kTurretDisplacementY,
-                turretDistanceToHub.getX() + TurretConstants.kTurretDisplacementY);
+        double turretToHubAngle = Math.atan2(turretDistanceToHub.getY() + TurretConstants.kRobotCenterToTurretCenter.getY(),
+                turretDistanceToHub.getX() + TurretConstants.kRobotCenterToTurretCenter.getX());
         // use projection vector of robot_velocity (vector) to find rad_vec, tan_vec
         Translation2d radial_vector = new Translation2d(Math.cos(turretToHubAngle), Math.sin(turretToHubAngle));
         Translation2d tangent_vector = new Translation2d(-1 * Math.sin(turretToHubAngle), Math.cos(turretToHubAngle));

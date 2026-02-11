@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
@@ -33,15 +34,28 @@ public class LockOnTurret extends Command {
             LimelightRight.getInstance()
         };
 
+        hub = FieldConstants.getHub();
+        teamBlue = hub.equals(FieldConstants.kBlueHub);
+
+                SmartDashboard.putNumber("best pose x", 0);
+        SmartDashboard.putNumber("best pose y", 0);
+                SmartDashboard.putNumber("gyro heading", 0);
+        SmartDashboard.putNumber("turret center x", 0);
+        SmartDashboard.putNumber("turret center y", 0);
+        SmartDashboard.putNumber("turret to hub x", 0);
+        SmartDashboard.putNumber("turret to hub y", 0);
+        SmartDashboard.putNumber("turret angle", 0);
+        SmartDashboard.putNumber("target yaw", 0);
+
         drivetrain = Drivetrain.getInstance();
         turret = Turret.getInstance();
         
-        hub = FieldConstants.getHub();
-        teamBlue = hub.equals(FieldConstants.kBlueHub);
+        addRequirements(turret);
     }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+    }
 
     @Override 
     public void execute() {
@@ -67,20 +81,33 @@ public class LockOnTurret extends Command {
                 bestTagCount = tagCount;
                 bestDistance = distance;
             }
+
         }
 
         if (bestPose.isEmpty())
             return;
 
-        final Translation2d robotCenter = bestPose.get().getTranslation(); // origin to robot center
+        Translation2d robotCenter = bestPose.get().getTranslation(); // origin to robot center
+        
+        Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue()))); // origin to turret center
 
-        final Translation2d turretCenter = robotCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue())); // origin to turret center
+        Translation2d turretToHub = hub.minus(turretCenter);
 
-        final Translation2d turretHub = turretCenter.minus(hub);
-
-        final Rotation2d targetYaw = turretHub.getAngle();
+        Rotation2d targetYaw = turretToHub.getAngle();
 
         turret.setAngleFieldRelative(targetYaw);
+
+        SmartDashboard.putNumber("best pose x", robotCenter.getX());
+
+        SmartDashboard.putNumber("best pose y", robotCenter.getY());
+        SmartDashboard.putNumber("gyro heading", drivetrain.getHeadingBlue());
+        SmartDashboard.putNumber("turret center x", turretCenter.getX());
+        SmartDashboard.putNumber("turret center y", turretCenter.getY());
+        SmartDashboard.putNumber("turret to hub x", turretToHub.getX());
+        SmartDashboard.putNumber("turret to hub y", turretToHub.getY());
+        SmartDashboard.putNumber("turret angle", turret.getAngle());
+        SmartDashboard.putNumber("target yaw", targetYaw.getDegrees());
+        
     }
     
     @Override

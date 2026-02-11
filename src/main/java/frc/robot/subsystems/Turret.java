@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants.TurretConstants;
+import frc.robot.commands.LockOnTurret;
 import frc.robot.utils.Kraken;
 // import frc.robot.utils.LimelightHelpers;
 // import frc.robot.utils.OI;
@@ -27,6 +28,8 @@ public class Turret extends SubsystemBase {
     // rotation adjustment feedforward
     private double kRs = 0;
     private double kRv = 0;
+
+    private double targetAngle;
     
     public Turret() {
         // oi = OI.getInstance();
@@ -87,6 +90,8 @@ public class Turret extends SubsystemBase {
         turretMotor.setCoast();
         
         setMotorEncoder();
+
+        targetAngle = 0.0;
 
         SmartDashboard.putNumber("Turret kRs", kRs);
         SmartDashboard.putNumber("Turret kRv", kRv);
@@ -151,6 +156,8 @@ public class Turret extends SubsystemBase {
     }
 
     public void setAngle(Rotation2d desiredRotation) {
+        targetAngle = desiredRotation.getDegrees();
+         
         // (-0.5, 0.5]
         final double desiredPositionRotations = desiredRotation.getDegrees() / 360;
 
@@ -198,6 +205,14 @@ public class Turret extends SubsystemBase {
         turretMotor.setPositionMotionMagicTorqueCurrentFOC(optimizedDesiredPositionRotations, ff);
     }
 
+    public double getAngle() {
+        return turretMotor.getPosition()*360;
+    }
+
+    public double getTargetAngle(){
+        return targetAngle;
+    }
+
     @Override
     public void periodic() {
         if (TurretConstants.ZEROING_MODE) {
@@ -209,13 +224,13 @@ public class Turret extends SubsystemBase {
             System.out.println("-");
             return;
         }
-        
-        double target = SmartDashboard.getNumber("Turret target angle", 0);
 
+        targetAngle = SmartDashboard.getNumber("Turret target angle", 0);
+        
         SmartDashboard.putNumber("Turret current position", turretMotor.getPosition());
         SmartDashboard.putNumber("Turret CRT position", getCurrentPositionTeethRaw() - TurretConstants.kZeroPositionTeethRaw);
         
-        double robotTarget = setAngleFieldRelative(Rotation2d.fromDegrees(target));
+        double robotTarget = setAngleFieldRelative(Rotation2d.fromDegrees(targetAngle));
         SmartDashboard.putNumber("Turret robot target", robotTarget);
         SmartDashboard.putNumber("Turret error", Math.IEEEremainder(robotTarget - turretMotor.getPosition() * 360, 360));
     }
