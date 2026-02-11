@@ -200,10 +200,18 @@ public final class Constants {
     }
     public static final class FieldConstants {
             
-            public static final double blueHubPositionX = 4.63;
-            public static final double blueHubPositionY = 8.07;
-            public static final double redHubPositionX = 11.57;
-            public static final double redHubPositionY = 8.07; //Jayden said the field was 17mx8m but the field dimensions say 16x8?
+            public static final double kBlueHubX = 4.63;
+            public static final double kBlueHubY = 8.07;
+
+            public static final double kRedHubX = 16.54 - kBlueHubX;
+            public static final double kRedHubY = 8.07 - kBlueHubY;
+
+            public static final Translation2d kBlueHub = new Translation2d(kBlueHubX, kBlueHubY);
+            public static final Translation2d kRedHub = new Translation2d(kRedHubX, kRedHubY);
+            
+            public static Translation2d getHub() {
+                return (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) ? kBlueHub : kRedHub;
+            }
             
             public static final double bluePassPositionX = 0;
             public static final double bluePassPositionY = 0;

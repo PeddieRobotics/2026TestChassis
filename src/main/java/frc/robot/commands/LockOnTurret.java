@@ -18,22 +18,26 @@ import frc.robot.subsystems.LimelightRight;
 import frc.robot.utils.Constants.*;
 
 public class LockOnTurret extends Command {
-    private Limelight[] limelights;
-    private Turret turret;
-    private Drivetrain drivetrain;
+    private final Limelight[] limelights;
+    private final Turret turret;
+    private final Drivetrain drivetrain;
+    
+    private final Translation2d hub;
     
     public LockOnTurret() {
         limelights = new Limelight[] {
             LimelightFront.getInstance(),
-            LimelightBack.getInstance(),
             LimelightLeft.getInstance(),
+            LimelightBack.getInstance(),
             LimelightRight.getInstance()
         };
 
         drivetrain = Drivetrain.getInstance();
-        
         turret = Turret.getInstance();
+        
+        hub = FieldConstants.getHub();
     }
+
     @Override
     public void initialize() {}
 
@@ -61,16 +65,15 @@ public class LockOnTurret extends Command {
 
         if (bestPose.isEmpty())
             return;
-        Translation2d robotCenter = bestPose.get().getTranslation(); // origin to robot center
 
-        Translation2d turretCenter = robotCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue())); // origin to turret center
+        final Translation2d robotCenter = bestPose.get().getTranslation(); // origin to robot center
 
-        Translation2d hub = DriverStation.getAlliance().get()==DriverStation.Alliance.Blue ? 
-                            new Translation2d(FieldConstants.blueHubPositionX,FieldConstants.blueHubPositionY) : 
-                            new Translation2d(FieldConstants.redHubPositionX,FieldConstants.redHubPositionY);
-        Translation2d turretHub = turretCenter.minus(hub);
+        final Translation2d turretCenter = robotCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue())); // origin to turret center
 
-        Rotation2d targetYaw = turretHub.getAngle();
+        final Translation2d turretHub = turretCenter.minus(hub);
+
+        final Rotation2d targetYaw = turretHub.getAngle();
+
         turret.setAngleFieldRelative(targetYaw);
     }
     

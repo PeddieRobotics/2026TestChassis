@@ -170,7 +170,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getHeadingBlue(){
-        if(DriverStation.getAlliance().isEmpty()||DriverStation.getAlliance().get()==DriverStation.Alliance.Blue)
+        if (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
             return getHeading();
         return Math.IEEEremainder(gyro.getYaw().getValueAsDouble()+180,360);
     }
@@ -196,16 +196,16 @@ public class Drivetrain extends SubsystemBase {
 
     public void setPose(Pose2d pose){
         gyro.reset();
-        odometry.resetPosition(Rotation2d.fromDegrees(getHeadingBlue()),swerveModulePosition,pose);
+        odometry.resetPosition(Rotation2d.fromDegrees(getHeadingBlue()), swerveModulePosition,pose);
     }
 
-    public void setStartingPose(Pose2d pose){
+    public void setStartingPose(Pose2d pose) {
         gyro.setYaw(pose.getRotation().getDegrees());
 
-        if(DriverStation.getAlliance().isEmpty()||DriverStation.getAlliance().get()==DriverStation.Alliance.Red)
-        pose = new Pose2d(16.54-pose.getX(),8.07-pose.getY(),pose.getRotation());
+        if (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+            pose = new Pose2d(16.54 - pose.getX(),8.07 - pose.getY(), pose.getRotation());
 
-        odometry.resetPosition(pose.getRotation(),swerveModulePosition,pose);
+        odometry.resetPosition(pose.getRotation(), swerveModulePosition,pose);
     }
     
     public double getYawRate() {
