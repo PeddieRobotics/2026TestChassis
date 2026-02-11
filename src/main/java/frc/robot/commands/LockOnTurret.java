@@ -16,12 +16,15 @@ import frc.robot.subsystems.LimelightFront;
 import frc.robot.subsystems.LimelightLeft;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.LimelightRight;
+import frc.robot.utils.ShooterUtil;
 import frc.robot.utils.Constants.*;
+import frc.robot.utils.ShooterUtil.ShootingParameters;
 
 public class LockOnTurret extends Command {
     private final Limelight[] limelights;
     private final Turret turret;
     private final Drivetrain drivetrain;
+    private ShootingParameters params;
     
     private final Translation2d hub;
     private final boolean teamBlue;
@@ -49,6 +52,8 @@ public class LockOnTurret extends Command {
 
         drivetrain = Drivetrain.getInstance();
         turret = Turret.getInstance();
+
+        params = new ShootingParameters();
         
         addRequirements(turret);
     }
@@ -95,12 +100,17 @@ public class LockOnTurret extends Command {
 
         Translation2d turretToHub = hub.minus(turretCenter);
 
-        Rotation2d targetYaw = turretToHub.getAngle();
+        // Rotation2d directTargetYaw = turretToHub.getAngle();
+
+        double timeInAir = 0.0;
+
+        params = ShooterUtil.getShootingParameters(robotCenter, turretToHub, timeInAir); // find time in air
+
+        final Rotation2d targetYaw = Rotation2d.fromDegrees(params.yaw);
 
         turret.setAngleFieldRelative(targetYaw);
 
         SmartDashboard.putNumber("best pose x", robotCenter.getX());
-
         SmartDashboard.putNumber("best pose y", robotCenter.getY());
         SmartDashboard.putNumber("gyro heading", drivetrain.getHeadingBlue());
         SmartDashboard.putNumber("turret center x", turretCenter.getX());
@@ -109,7 +119,7 @@ public class LockOnTurret extends Command {
         SmartDashboard.putNumber("turret to hub y", turretToHub.getY());
         SmartDashboard.putNumber("turret angle", turret.getAngle());
         SmartDashboard.putNumber("target yaw", targetYaw.getDegrees());
-        
+
     }
     
     @Override
