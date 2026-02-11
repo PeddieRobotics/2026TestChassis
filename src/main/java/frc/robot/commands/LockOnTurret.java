@@ -22,12 +22,11 @@ import frc.robot.utils.ShooterUtil.ShootingParameters;
 
 public class LockOnTurret extends Command {
     private final Limelight[] limelights;
+
     private final Turret turret;
     private final Drivetrain drivetrain;
-    private ShootingParameters params;
     
-    private final Translation2d hub;
-    private final boolean teamBlue;
+    private Translation2d hub;
     
     public LockOnTurret() {
         limelights = new Limelight[] {
@@ -37,12 +36,9 @@ public class LockOnTurret extends Command {
             LimelightRight.getInstance()
         };
 
-        hub = FieldConstants.getHub();
-        teamBlue = hub.equals(FieldConstants.kBlueHub);
-
-                SmartDashboard.putNumber("best pose x", 0);
+        SmartDashboard.putNumber("best pose x", 0);
         SmartDashboard.putNumber("best pose y", 0);
-                SmartDashboard.putNumber("gyro heading", 0);
+        SmartDashboard.putNumber("gyro heading", 0);
         SmartDashboard.putNumber("turret center x", 0);
         SmartDashboard.putNumber("turret center y", 0);
         SmartDashboard.putNumber("turret to hub x", 0);
@@ -52,14 +48,13 @@ public class LockOnTurret extends Command {
 
         drivetrain = Drivetrain.getInstance();
         turret = Turret.getInstance();
-
-        params = new ShootingParameters();
         
         addRequirements(turret);
     }
 
     @Override
     public void initialize() {
+        hub = FieldConstants.getHub();
     }
 
     @Override 
@@ -94,21 +89,15 @@ public class LockOnTurret extends Command {
 
         // Translation2d robotCenter = bestPose.get().getTranslation(); // origin to robot center
         
-        Translation2d robotCenter = drivetrain.getPose().getTranslation();
-        
-        Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue()))); // origin to turret center
+        final Translation2d robotCenter = drivetrain.getPose().getTranslation();
+    
+        final Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue()))); // origin to turret center
 
-        Translation2d turretToHub = hub.minus(turretCenter);
+        final Translation2d turretToHub = hub.minus(turretCenter);
 
-        // Rotation2d directTargetYaw = turretToHub.getAngle();
+        final ShootingParameters params = ShooterUtil.getShootingParameters(turretCenter, drivetrain.getCurrentTranslation(), turretToHub);
 
-        double timeInAir = 0.0;
-
-        params = ShooterUtil.getShootingParameters(robotCenter, turretToHub, timeInAir); // find time in air
-
-        final Rotation2d targetYaw = Rotation2d.fromDegrees(params.yaw);
-
-        turret.setAngleFieldRelative(targetYaw);
+        turret.setAngleFieldRelative(params.yaw());
 
         SmartDashboard.putNumber("best pose x", robotCenter.getX());
         SmartDashboard.putNumber("best pose y", robotCenter.getY());
@@ -118,7 +107,7 @@ public class LockOnTurret extends Command {
         SmartDashboard.putNumber("turret to hub x", turretToHub.getX());
         SmartDashboard.putNumber("turret to hub y", turretToHub.getY());
         SmartDashboard.putNumber("turret angle", turret.getAngle());
-        SmartDashboard.putNumber("target yaw", targetYaw.getDegrees());
+        SmartDashboard.putNumber("target yaw", params.yaw().getDegrees());
 
     }
     

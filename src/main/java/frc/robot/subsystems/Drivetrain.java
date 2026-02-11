@@ -41,8 +41,10 @@ public class Drivetrain extends SubsystemBase {
     // private final LimelightRight rightLimelight;
     
     private double heading;
+    private double rotation = 0;
     private boolean usingMegaTag;
     private SwerveDrivePoseEstimator odometry;
+    private static Translation2d currentTranslation;
     private final Field2d fusedOdometry;
 
     private Drivetrain() {
@@ -130,9 +132,14 @@ public class Drivetrain extends SubsystemBase {
         return gyro.getRotation2d();
     }
 
-    private double rotation = 0;
+    public Translation2d getCurrentTranslation() {
+        return currentTranslation;
+    }
+
+
     public void drive(Translation2d translation, double rotation, boolean fieldOriented, Translation2d centerRotation) {
         this.rotation = rotation;
+        currentTranslation = translation;
 
         ChassisSpeeds fieldRelativeSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
         ChassisSpeeds robotRelativeSpeeds;

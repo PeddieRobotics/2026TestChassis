@@ -7,7 +7,7 @@ import frc.robot.utils.Constants.FieldConstants;
 public class ShooterUtil {
     public static record ShootingParameters(double pitch, Rotation2d yaw, double rpm) {};
 
-    // in robot-relative coords
+    
     public static ShootingParameters getShootingParameters(
         Translation2d turretPose,
         Translation2d robotVelocity,
@@ -27,17 +27,19 @@ public class ShooterUtil {
 
         final Translation2d effectiveHub = FieldConstants.getHub().plus(distanceInAir);
         
-        final Translation2d robotToEffectiveHub = effectiveHub.minus(turretPose);
+        final Translation2d turretToEffectiveHub = effectiveHub.minus(turretPose);
+
+        final var effectiveMapVal = ShotMap.queryShotMap(turretToEffectiveHub.getNorm(), v_r);
         
         return new ShootingParameters(
-            mapVal.pitch(),
-            robotToEffectiveHub.getAngle(),
-            getRPM(mapVal.exit_v())
+            effectiveMapVal.pitch(),
+            turretToEffectiveHub.getAngle(),
+            getRPM(effectiveMapVal.exit_v())
         );
     }
     
     private static double getRPM(double exit_v) {
-        // TODO
+        // TODO 
         return exit_v * 300;
     }
 
