@@ -20,20 +20,20 @@ public class ParameterConversion {
     public static double robotDistanceToHubX(Pose2d robotPos){ //finds distance X
         double hubPositionX;
         if (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == Alliance.Blue) {
-            hubPositionX = FieldConstants.blueHubPositionX;
+            hubPositionX = FieldConstants.kBlueHubX;
         }
         else {
-            hubPositionX =  FieldConstants.redHubPositionX;
+            hubPositionX =  FieldConstants.kRedHubX;
         }
         return robotPos.getX()-hubPositionX;
     }
     public static double robotDistanceToHubY(Pose2d robotPos){ //finds distance Y
         double hubPositionY;
         if (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == Alliance.Blue) {
-            hubPositionY = FieldConstants.blueHubPositionY;
+            hubPositionY = FieldConstants.kBlueHubY;
         }
         else {
-            hubPositionY =  FieldConstants.redHubPositionY;
+            hubPositionY =  FieldConstants.kRedHubY;
         }
         return robotPos.getY()-hubPositionY;
     }

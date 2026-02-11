@@ -214,37 +214,6 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // find closest limelight
-        Optional<Pose2d> bestPose = Optional.empty();
-
-        double bestTagCount = 0;
-        double bestDistance = 10000;
-
-        for (Limelight ll : limelights) {
-            Optional<Pose2d> pose = ll.getPoseMT2();
-            if (pose.isEmpty())
-                continue;
-
-            double tagCount = ll.getNumberOfTagsSeen();
-            double distance = ll.getDistanceEstimatedPose();
-            if (tagCount > bestTagCount || (tagCount == bestTagCount && distance < bestDistance)) {
-                bestPose = pose;
-                bestTagCount = tagCount;
-                bestDistance = distance;
-            }
-        }
-
-        if (bestPose.isEmpty())
-            retu
-
-        // translation2d of origin --> apriltag minus origin->limelight
-        Translation2d limelightToTag = bestPose.get();
-        
-        bestLimelight.getAprilTagPose().getTranslation()
-                                        .minus(bestLimelight.getPoseMT2().get().getTranslation());
-        //
-        double targetYaw = 0; 
-        
         SmartDashboard.putNumber("Yaw rate", getYawRate());
         usingMegaTag = SmartDashboard.getBoolean("using mega tag", false);
         if (SmartDashboard.getBoolean("Test Map?", false)) {

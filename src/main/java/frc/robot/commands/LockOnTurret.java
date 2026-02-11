@@ -23,6 +23,7 @@ public class LockOnTurret extends Command {
     private final Drivetrain drivetrain;
     
     private final Translation2d hub;
+    private final boolean teamBlue;
     
     public LockOnTurret() {
         limelights = new Limelight[] {
@@ -36,6 +37,7 @@ public class LockOnTurret extends Command {
         turret = Turret.getInstance();
         
         hub = FieldConstants.getHub();
+        teamBlue = hub.equals(FieldConstants.kBlueHub);
     }
 
     @Override
@@ -56,7 +58,11 @@ public class LockOnTurret extends Command {
 
             double tagCount = ll.getNumberOfTagsSeen();
             double distance = ll.getDistanceEstimatedPose();
-            if (tagCount > bestTagCount || (tagCount == bestTagCount && distance < bestDistance)) {
+            
+            int lastTag = ll.getLastSeenTag();
+            boolean isHub = (teamBlue && lastTag >= 18 && lastTag <= 27) || (!teamBlue && lastTag >= 2 && lastTag <= 11);
+            
+            if (isHub && tagCount > bestTagCount || (tagCount == bestTagCount && distance < bestDistance)) {
                 bestPose = pose;
                 bestTagCount = tagCount;
                 bestDistance = distance;
