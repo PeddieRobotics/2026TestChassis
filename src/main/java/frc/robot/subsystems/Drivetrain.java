@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -48,7 +49,7 @@ public class Drivetrain extends SubsystemBase {
     private Drivetrain() {
         // CANBus defaultCANBus = new CANBus(RobotMap.CANIVORE_NAME);
         CANBus defaultCANBus = new CANBus("rio");
-        usingMegaTag = SmartDashboard.putBoolean("using mega tag",false);
+        usingMegaTag = SmartDashboard.putBoolean("using mega tag", true);
 
         limelights[0] = LimelightFront.getInstance();
         limelights[1] = LimelightBack.getInstance();
@@ -104,7 +105,12 @@ public class Drivetrain extends SubsystemBase {
         gyro = new Pigeon2(RobotMap.GYRO_ID, defaultCANBus);
         setGyro(0);
         
-        odometry = new SwerveDrivePoseEstimator(DriveConstants.kKinematics, Rotation2d.fromDegrees(getHeadingBlue()), swerveModulePosition, new Pose2d());
+        odometry = new SwerveDrivePoseEstimator(
+            DriveConstants.kKinematics, Rotation2d.fromDegrees(getHeadingBlue()), 
+            swerveModulePosition, new Pose2d(),
+            VecBuilder.fill(0.2, 0.2, 0.1),
+            VecBuilder.fill(0.8, 0.8, 99999999)
+        );
         odometry.resetPose(new Pose2d(0, 0, Rotation2d.fromDegrees(getHeadingBlue())));
 
         fusedOdometry = new Field2d();
@@ -176,7 +182,7 @@ public class Drivetrain extends SubsystemBase {
     public double getHeadingBlue(){
         if (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
             return getHeading();
-        return Math.IEEEremainder(gyro.getYaw().getValueAsDouble()+180,360);
+        return Math.IEEEremainder(gyro.getYaw().getValueAsDouble() + 180, 360);
     }
 
     public void lockModules() {
