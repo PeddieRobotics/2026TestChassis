@@ -50,7 +50,8 @@ public class Drivetrain extends SubsystemBase {
     private Drivetrain() {
         // CANBus defaultCANBus = new CANBus(RobotMap.CANIVORE_NAME);
         CANBus defaultCANBus = new CANBus("rio");
-        usingMegaTag = SmartDashboard.putBoolean("using mega tag",false);
+
+        usingMegaTag = SmartDashboard.putBoolean("using mega tag", true);
 
         limelights[0] = LimelightFront.getInstance();
         limelights[1] = LimelightBack.getInstance();
