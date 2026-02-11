@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.LockDrivetrain;
 import frc.robot.commands.LockOnTurret;
+import frc.robot.commands.TrenchAlign;
 import frc.robot.commands.WheelRadiusCharacterization;
+import frc.robot.commands.TrenchAlign.TrenchOption;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimelightFront;
 import frc.robot.utils.Constants.DriveConstants;
@@ -37,6 +39,10 @@ public class OI {
             if(pose.isPresent())
                 Drivetrain.getInstance().resetTranslation(pose.get().getTranslation());
         }));
+
+        Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
+        circleButton.whileTrue(new TrenchAlign(TrenchOption.RIGHT));
+
 
         Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);
         L1Bumper.whileTrue(new WheelRadiusCharacterization());

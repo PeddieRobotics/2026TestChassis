@@ -187,7 +187,7 @@ public abstract class Limelight extends SubsystemBase {
         int numTagsSeen = getNumberOfTagsSeen();
         double distance = getDistanceEstimatedPose();
 
-        if (numTagsSeen == 1 && distance > 1.5)
+        if (numTagsSeen == 1 && distance > 2.5)
             return;
 
         // this may not even be necessary

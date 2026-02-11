@@ -13,10 +13,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.LimelightFront;
-import frc.robot.subsystems.LimelightLeft;
-import frc.robot.subsystems.LimelightRight;
+import frc.robot.utils.OI;
 
 public class TrenchAlign extends Command {
+    private OI oi;
     private Drivetrain drivetrain;
     private Limelight llFront;
     private double yTarget, rotTarget;
@@ -24,10 +24,10 @@ public class TrenchAlign extends Command {
     private PIDController yController, rotController;
     
     private static final double kMaxSpeed = 2.0;
-    private static final double kPy = 0, kIy = 0, kDy = 0, kFFy = 0;
-    private static final double kPr = 0, kIr = 0, kDr = 0, kFFr = 0;
+    private static final double kPy = 2.0, kIy = 0, kDy = 0, kFFy = 0;
+    private static final double kPr = 0.04, kIr = 0, kDr = 0, kFFr = 0;
 
-    private enum TrenchOption {
+    public enum TrenchOption {
         LEFT, RIGHT
     };
 
@@ -44,10 +44,11 @@ public class TrenchAlign extends Command {
         else if ((alliance == Alliance.Blue && option == TrenchOption.LEFT) || (alliance == Alliance.Red && option == TrenchOption.RIGHT))
             yTarget = 8.07 - Units.inchesToMeters(50.59 - 24.97);
 
-        rotTarget = option == TrenchOption.LEFT ? -90 : 90;
+        // depends on side
+        rotTarget = 0;
         
-        yController = new PIDController(kPy, kIy, kDy, kFFy);
-        rotController = new PIDController(kPr, kIr, kDr, kFFr);
+        yController = new PIDController(kPy, kIy, kDy);
+        rotController = new PIDController(kPr, kIr, kDr);
         
         SmartDashboard.putNumber("TrenchPass Py", kPy);
         SmartDashboard.putNumber("TrenchPass Iy", kIy);
@@ -63,6 +64,7 @@ public class TrenchAlign extends Command {
     @Override
     public void initialize() {
         // TODO: MOVE HOOD DOWN
+        oi = OI.getInstance();
     }
 
     @Override
@@ -84,16 +86,16 @@ public class TrenchAlign extends Command {
         if (odoOptional.isEmpty())
             odoOptional = Optional.of(drivetrain.getPose());
 
-        double rotError = rotTarget - drivetrain.getHeading();
-        double rotVel = rotController.calculate(rotError) + Math.signum(rotError) * FFr;
+        double rotError = drivetrain.getHeading() - rotTarget;
+        double rotVel = rotController.calculate(rotError) - Math.signum(rotError) * FFr;
         
-        double yError = yTarget - odoOptional.get().getY();
-        double yVel = yController.calculate(yError) + Math.signum(yError) * FFy;
-        yVel = Math.min(yVel, kMaxSpeed);
+        double yError = odoOptional.get().getY() - yTarget;
+        double yVel = yController.calculate(yError) - Math.signum(yError) * FFy;
+        yVel = Math.min(Math.abs(yVel), kMaxSpeed) * Math.signum(yVel);
         
         // |(V_x, V_y)| = sqrt(V_x^2 + V_y^2) = V_max
         // double xVel = Math.sqrt(kMaxSpeed * kMaxSpeed - yVel * yVel);
-        double xVel = 0;
+        double xVel = oi.getSwerveTranslation().getX();
 
         Translation2d vel = new Translation2d(xVel, yVel);
         drivetrain.drive(vel, rotVel, true, new Translation2d(0, 0));
