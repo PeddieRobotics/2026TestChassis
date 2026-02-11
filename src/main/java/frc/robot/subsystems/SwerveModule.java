@@ -40,7 +40,7 @@ public class SwerveModule extends SubsystemBase {
         steeringMotor.setInverted(true);
         drivingMotor.setSupplyCurrentLimit(Constants.ModuleConstants.kDriveMotorCurrentLimit);
         steeringMotor.setSupplyCurrentLimit(Constants.ModuleConstants.kTurnMotorCurrentLimit);
-        drivingMotor.setCoast();
+        drivingMotor.setBrake();
         steeringMotor.setBrake();
         drivingMotor.setEncoder(0);
         steeringMotor.setEncoder(0);
