@@ -7,8 +7,10 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utils.Constants.FieldConstants;
 import frc.robot.utils.Constants.TurretConstants;
 import frc.robot.commands.LockOnTurret;
 import frc.robot.utils.Kraken;
@@ -17,6 +19,9 @@ import frc.robot.utils.Kraken;
 
 public class Turret extends SubsystemBase {
     private static Turret turret;
+
+    private Drivetrain drivetrain;
+
     private Limelight[] limelights; 
 
     // private OI oi;
@@ -96,6 +101,8 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Turret kRs", kRs);
         SmartDashboard.putNumber("Turret kRv", kRv);
         SmartDashboard.putNumber("Turret target angle", 0);
+
+        drivetrain = Drivetrain.getInstance();
     }
     
     public static Turret getInstance() {
@@ -211,6 +218,39 @@ public class Turret extends SubsystemBase {
 
     public double getTargetAngle(){
         return targetAngle;
+    }
+
+    public void lockOnTurret(){
+        limelights = new Limelight[] {
+            LimelightFront.getInstance(),
+            LimelightLeft.getInstance(),
+            LimelightBack.getInstance(),
+            LimelightRight.getInstance()
+        };
+
+        Translation2d hub = FieldConstants.getHub();
+        boolean teamBlue = hub.equals(FieldConstants.kBlueHub);
+
+        Translation2d robotCenter = drivetrain.getPose().getTranslation();
+        
+        Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue()))); // origin to turret center
+
+        Translation2d turretToHub = hub.minus(turretCenter);
+
+        Rotation2d targetYaw = turretToHub.getAngle();
+
+        setAngleFieldRelative(targetYaw);
+
+        SmartDashboard.putNumber("best pose x", robotCenter.getX());
+
+        SmartDashboard.putNumber("best pose y", robotCenter.getY());
+        SmartDashboard.putNumber("gyro heading", drivetrain.getHeadingBlue());
+        SmartDashboard.putNumber("turret center x", turretCenter.getX());
+        SmartDashboard.putNumber("turret center y", turretCenter.getY());
+        SmartDashboard.putNumber("turret to hub x", turretToHub.getX());
+        SmartDashboard.putNumber("turret to hub y", turretToHub.getY());
+        SmartDashboard.putNumber("turret angle", turret.getAngle());
+        SmartDashboard.putNumber("target yaw", targetYaw.getDegrees());
     }
 
     @Override

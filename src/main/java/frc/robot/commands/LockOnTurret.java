@@ -37,16 +37,6 @@ public class LockOnTurret extends Command {
         hub = FieldConstants.getHub();
         teamBlue = hub.equals(FieldConstants.kBlueHub);
 
-                SmartDashboard.putNumber("best pose x", 0);
-        SmartDashboard.putNumber("best pose y", 0);
-                SmartDashboard.putNumber("gyro heading", 0);
-        SmartDashboard.putNumber("turret center x", 0);
-        SmartDashboard.putNumber("turret center y", 0);
-        SmartDashboard.putNumber("turret to hub x", 0);
-        SmartDashboard.putNumber("turret to hub y", 0);
-        SmartDashboard.putNumber("turret angle", 0);
-        SmartDashboard.putNumber("target yaw", 0);
-
         drivetrain = Drivetrain.getInstance();
         turret = Turret.getInstance();
         

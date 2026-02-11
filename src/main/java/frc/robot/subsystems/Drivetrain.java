@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import com.ctre.phoenix6.CANBus;
@@ -35,7 +36,6 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveModulePosition[] swerveModulePosition;
     private final Pigeon2 gyro;
     private final Limelight[] limelights = new Limelight[CameraConstants.kNumberLimelights];
-    private final Turret turret;
     // private final LimelightFront frontLimelight; 
     // private final LimelightBack backLimelight; 
     // private final LimelightLeft leftLimelight;
@@ -55,8 +55,6 @@ public class Drivetrain extends SubsystemBase {
         limelights[1] = LimelightBack.getInstance();
         limelights[2] = LimelightLeft.getInstance();
         limelights[3] = LimelightRight.getInstance();
-
-        turret = Turret.getInstance();
 
         frontLeftModule = new SwerveModule(
             defaultCANBus,
@@ -224,6 +222,54 @@ public class Drivetrain extends SubsystemBase {
     public double getYawRate() {
         return rotation;
     }
+
+    /**
+     * @return returns rotational velocity in DPS
+     */
+    public double getRotationalVelocity(){
+        return -gyro.getAngularVelocityZWorld().getValueAsDouble();
+    }
+
+    public double getDrivetrainCurrentVelocity(){
+        //gets rotational velocity of the whole robot
+        double currentRotationalVelocity = -getRotationalVelocity()*2*Math.PI/360;
+
+
+        if (Math.abs(currentRotationalVelocity)<0.05){
+            currentRotationalVelocity = 0;
+        }
+
+        //gets rotational velocity of each module
+        ChassisSpeeds rotationalVelocity = new ChassisSpeeds(0,0, currentRotationalVelocity);
+        SwerveModuleState pureRotationalStates[] = DriveConstants.kKinematics.toSwerveModuleStates(rotationalVelocity);
+     
+        //gets rotational and translational velocity of each module
+        SwerveModuleState[] moduleStates = Arrays.copyOf(swerveModuleState, 4);
+
+        Translation2d[] fullModuleStates = new Translation2d[4];
+        Translation2d[] pureTranslationalStates = new Translation2d[4];
+
+
+    for (int i = 0; i<4; i++){
+            fullModuleStates[i] = new Translation2d(moduleStates[i].speedMetersPerSecond, moduleStates[i].angle);
+
+            Translation2d pureRotation = new Translation2d(pureRotationalStates[i].speedMetersPerSecond, pureRotationalStates[i].angle);
+
+            //subtracts rotational velocity from full states, leaving only translational velocity
+            pureTranslationalStates[i] = fullModuleStates[i].minus(pureRotation);
+        }
+
+        double averageModuleSpeed = 0;
+
+        for(Translation2d moduleSpeed : pureTranslationalStates){
+            double moduleSpeedMagnitude = moduleSpeed.getNorm();
+
+            averageModuleSpeed += moduleSpeedMagnitude / 4.0;
+        }
+
+        return averageModuleSpeed;
+    }
+
 
     @Override
     public void periodic() {
