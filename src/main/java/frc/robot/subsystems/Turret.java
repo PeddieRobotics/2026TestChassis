@@ -26,8 +26,8 @@ public class Turret extends SubsystemBase {
     private CANcoder encoder1, encoder2;
     
     // rotation adjustment feedforward
-    private double kRs = 0;
-    private double kRv = 0;
+    private double kRs = 0.05;
+    private double kRv = 0.20;
 
     private double targetAngle;
     

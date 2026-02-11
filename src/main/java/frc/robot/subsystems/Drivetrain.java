@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants;
@@ -187,10 +188,10 @@ public class Drivetrain extends SubsystemBase {
 
     public void updateOdometry(){
         odometry.update(Rotation2d.fromDegrees(getHeadingBlue()), swerveModulePosition);
-        // if(!DriverStation.isAutonomous() && usingMegaTag) {
-        //     for(int i = 0; i < limelights.length; i++)
-        //         limelights[i].fuseEstimatedPose(odometry);
-        // }
+        if (!DriverStation.isAutonomous() && usingMegaTag) {
+            for (Limelight ll : limelights)
+                ll.fuseEstimatedPose(odometry);
+        }
     }
     public Pose2d getPose(){
         return odometry.getEstimatedPosition();
@@ -199,6 +200,10 @@ public class Drivetrain extends SubsystemBase {
     public void setPose(Pose2d pose){
         gyro.reset();
         odometry.resetPosition(Rotation2d.fromDegrees(getHeadingBlue()), swerveModulePosition,pose);
+    }
+
+    public void resetTranslation(Translation2d translation) {
+        odometry.resetTranslation(translation);
     }
 
     public void setStartingPose(Pose2d pose) {

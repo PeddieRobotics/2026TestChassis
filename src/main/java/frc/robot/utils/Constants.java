@@ -43,12 +43,12 @@ public final class Constants {
         public static final double kTurretYawS = 0;
         public static final double kTurretYawV = 0; 
         public static final double kTurretYawA = 0; 
-        public static final double kTurretYawP = 250; // overcome static friction
+        public static final double kTurretYawP = 280; // overcome static friction
         public static final double kTurretYawI = 0; 
         public static final double kTurretYawD = 12; 
         public static final double kTurretYawF = 0; 
-        public static final double kCruiseVelocity = 4;
-        public static final double kMaxAcceleration = 10; // radians/seconds^2
+        public static final double kCruiseVelocity = 2;
+        public static final double kMaxAcceleration = 8; // radians/seconds^2
 
         // valid range to not destroy turret is [-kTurretRange, kTurretRange]
         public static final double kTurretRange = 270;

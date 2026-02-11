@@ -163,12 +163,12 @@ public abstract class Limelight extends SubsystemBase {
 
     private Optional<PoseEstimate> getPoseEstimateMT2() {
         PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
-        return poseEstimate == null ? Optional.empty() : Optional.of(poseEstimate);
+        return poseEstimate.pose.equals(new Pose2d()) ? Optional.empty() : Optional.of(poseEstimate);
     }
 
     public Optional<Pose2d> getPoseMT2() {
-        PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
-        return poseEstimate == null ? Optional.empty() : Optional.of(poseEstimate.pose);
+        var estimate = getPoseEstimateMT2();
+        return estimate.isEmpty() ? Optional.empty() : Optional.of(estimate.get().pose);
     }
 
     public void fuseEstimatedPose(SwerveDrivePoseEstimator odometry) {
@@ -187,18 +187,18 @@ public abstract class Limelight extends SubsystemBase {
         int numTagsSeen = getNumberOfTagsSeen();
         double distance = getDistanceEstimatedPose();
 
-        if (numTagsSeen == 1 && distance > 1.3)
+        if (numTagsSeen == 1 && distance > 1.5)
             return;
 
         // this may not even be necessary
-        if (numTagsSeen >= 2 && distance > 3.3)
+        if (numTagsSeen >= 2 && distance > 3.5)
             return;
 
         Pose2d odoCurrent = odometry.getEstimatedPosition();
 
         double distX = estimatedPose.getX() - odoCurrent.getX();
         double distY = estimatedPose.getY() - odoCurrent.getY();
-        if (Math.sqrt((distX * distX) + (distY * distY)) > 3)
+        if ((distX * distX) + (distY * distY) >= 3 * 3)
             return;
 
         // double deviation;

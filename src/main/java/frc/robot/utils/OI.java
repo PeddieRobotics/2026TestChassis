@@ -35,14 +35,14 @@ public class OI {
         triangleButton.onTrue(new InstantCommand(() -> {
             Optional<Pose2d> pose = LimelightFront.getInstance().getPoseMT2();
             if(pose.isPresent())
-                Drivetrain.getInstance().setPose(pose.get());
+                Drivetrain.getInstance().resetTranslation(pose.get().getTranslation());
         }));
 
         Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);
         L1Bumper.whileTrue(new WheelRadiusCharacterization());
 
-        Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
-        triangleButton.whileTrue(new LockOnTurret());
+        //Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
+        //triangleButton.whileTrue(new LockOnTurret());
 
         SmartDashboard.putNumber("Drive: cardinal scale", 0.5);
     }

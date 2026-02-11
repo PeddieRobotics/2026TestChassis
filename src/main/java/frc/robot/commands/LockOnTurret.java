@@ -60,34 +60,36 @@ public class LockOnTurret extends Command {
     @Override 
     public void execute() {
         // find closest limelight
-        Optional<Pose2d> bestPose = Optional.empty();
+        // Optional<Pose2d> bestPose = Optional.empty();
 
-        double bestTagCount = 0;
-        double bestDistance = 10000;
+        // double bestTagCount = 0;
+        // double bestDistance = 10000;
 
-        for (Limelight ll : limelights) {
-            Optional<Pose2d> pose = ll.getPoseMT2();
-            if (pose.isEmpty())
-                continue;
+        // for (Limelight ll : limelights) {
+        //     Optional<Pose2d> pose = ll.getPoseMT2();
+        //     if (pose.isEmpty())
+        //         continue;
 
-            double tagCount = ll.getNumberOfTagsSeen();
-            double distance = ll.getDistanceEstimatedPose();
+        //     double tagCount = ll.getNumberOfTagsSeen();
+        //     double distance = ll.getDistanceEstimatedPose();
             
-            int lastTag = ll.getLastSeenTag();
-            boolean isHub = (teamBlue && lastTag >= 18 && lastTag <= 27) || (!teamBlue && lastTag >= 2 && lastTag <= 11);
+        //     int lastTag = ll.getLastSeenTag();
+        //     boolean isHub = (teamBlue && lastTag >= 18 && lastTag <= 27) || (!teamBlue && lastTag >= 2 && lastTag <= 11);
             
-            if (isHub && tagCount > bestTagCount || (tagCount == bestTagCount && distance < bestDistance)) {
-                bestPose = pose;
-                bestTagCount = tagCount;
-                bestDistance = distance;
-            }
+        //     if (isHub && tagCount > bestTagCount || (tagCount == bestTagCount && distance < bestDistance)) {
+        //         bestPose = pose;
+        //         bestTagCount = tagCount;
+        //         bestDistance = distance;
+        //     }
 
-        }
+        // }
 
-        if (bestPose.isEmpty())
-            return;
+        // if (bestPose.isEmpty())
+        //     bestPose = Optional.of(drivetrain.getPose());
 
-        Translation2d robotCenter = bestPose.get().getTranslation(); // origin to robot center
+        // Translation2d robotCenter = bestPose.get().getTranslation(); // origin to robot center
+        
+        Translation2d robotCenter = drivetrain.getPose().getTranslation();
         
         Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue()))); // origin to turret center
 
