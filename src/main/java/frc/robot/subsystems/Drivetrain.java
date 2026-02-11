@@ -42,6 +42,7 @@ public class Drivetrain extends SubsystemBase {
     private double heading;
     private boolean usingMegaTag;
     private SwerveDrivePoseEstimator odometry;
+    private final Field2d fusedOdometry;
 
     private Drivetrain() {
         // CANBus defaultCANBus = new CANBus(RobotMap.CANIVORE_NAME);
@@ -102,9 +103,11 @@ public class Drivetrain extends SubsystemBase {
         gyro = new Pigeon2(RobotMap.GYRO_ID, defaultCANBus);
         setGyro(0);
         
-        // 
         odometry = new SwerveDrivePoseEstimator(DriveConstants.kKinematics, Rotation2d.fromDegrees(getHeadingBlue()), swerveModulePosition, new Pose2d());
         odometry.resetPose(new Pose2d(0, 0, Rotation2d.fromDegrees(getHeadingBlue())));
+
+        fusedOdometry = new Field2d();
+        SmartDashboard.putData("Fused Odometry", fusedOdometry);
     }
     
     public static Drivetrain getInstance() {
@@ -189,7 +192,6 @@ public class Drivetrain extends SubsystemBase {
         //         limelights[i].fuseEstimatedPose(odometry);
         // }
     }
-    
     public Pose2d getPose(){
         return odometry.getEstimatedPosition();
     }
@@ -214,6 +216,11 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+        updateModulePositions();
+        updateOdometry();
+
+        fusedOdometry.setRobotPose(odometry.getEstimatedPosition());
+        
         SmartDashboard.putNumber("Yaw rate", getYawRate());
         usingMegaTag = SmartDashboard.getBoolean("using mega tag", false);
         if (SmartDashboard.getBoolean("Test Map?", false)) {
@@ -224,8 +231,6 @@ public class Drivetrain extends SubsystemBase {
             SmartDashboard.putNumber("Test Output: Speed", value.exit_v());
             SmartDashboard.putNumber("Test Output: Pitch", value.theta());
         }
-        updateModulePositions();
-        updateOdometry();
 
         SmartDashboard.putNumber("Odometry x", odometry.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Odometry y", odometry.getEstimatedPosition().getY());
