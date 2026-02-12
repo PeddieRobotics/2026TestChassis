@@ -226,7 +226,7 @@ public final class Constants {
         public static final double kHoldThreshold = 7;
         
         public static final class PassingLocations {
-            public static final Translation2d kBlueOutpost = new Translation2d(0.5, 0.5);
+            public static final Translation2d kBlueOutpost = new Translation2d(3, 2); //TODO: tune when (if) we get robot
             public static final Translation2d kBlueDepot = new Translation2d(kBlueOutpost.getX(), 8.07 - kBlueOutpost.getY());
 
             public static final Translation2d kRedOutpost = kFieldSize.minus(kBlueOutpost);
