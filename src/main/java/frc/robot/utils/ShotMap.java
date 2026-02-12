@@ -43,15 +43,10 @@ public class ShotMap {
         
         for (int i = 0; i < NUM_DIST; i++) {
             for (int j = 0; j < NUM_VR; j++) {
-                // exit_v then pitch
+                // pitch then exit_v then air_time
                 shotMap[i][j][0] = Float.parseFloat(st.nextToken());
                 shotMap[i][j][1] = Float.parseFloat(st.nextToken());
                 shotMap[i][j][2] = Float.parseFloat(st.nextToken());
-                
-                // TODO: get new shot table with time of flight
-                // shotMap[i][j][2] = 1.0f; // jayden is just going to get it from his sim
-
-                // shotMap[i][j][2] = Float.parseFloat(st.nextToken());
             }
         }
 
