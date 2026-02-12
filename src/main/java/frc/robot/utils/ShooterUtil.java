@@ -3,9 +3,12 @@ package frc.robot.utils;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.FieldConstants;
+import frc.robot.utils.Constants.TurretConstants;
 
 public class ShooterUtil {
     public static record ShootingParameters(double pitch, Rotation2d yaw, double rpm) {};
@@ -63,23 +66,25 @@ public class ShooterUtil {
     }
 
     // sets passing location accrosing to robot pose and alliance
-    // public static Translation2d getPassingLocation(Translation2d robotPose) {
-    //     boolean topSide = (int)robotPose.getY() / 4 != 0;
-    //     if (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == Alliance.Blue) {
-    //         if (topSide) {
-    //             return (new Translation2d(FieldConstants.topLeftCornerX, FieldConstants.topLeftCornerY)).minus(robotPose);
-    //         } 
-    //         else {
-    //             return (new Translation2d(FieldConstants.bottomLeftCornerX, FieldConstants.bottomLeftCornerY)).minus(robotPose);
-    //         }
-    //     } 
-    //     else {
-    //         if (topSide) {
-    //             return (new Translation2d(FieldConstants.topRightCornerX, FieldConstants.topRightCornerY)).minus(robotPose);
-    //         } 
-    //         else {
-    //             return (new Translation2d(FieldConstants.bottomRightCornerX, FieldConstants.bottomRightCornerY)).minus(robotPose);
-    //         }
-    //     }
-    // }
+    public static Translation2d getPassingLocation() {
+        boolean topSide = Drivetrain.getInstance().getPose().getY() > 8.07/2;
+        Translation2d robotCenter = Drivetrain.getInstance().getPose().getTranslation();
+        Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(Drivetrain.getInstance().getHeadingBlue()))); // origin to turret center
+        if (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            if (topSide) {
+                return (new Translation2d(FieldConstants.topLeftCornerX, FieldConstants.topLeftCornerY)).minus(turretCenter);
+            } 
+            else {
+                return (new Translation2d(FieldConstants.bottomLeftCornerX, FieldConstants.bottomLeftCornerY)).minus(turretCenter);
+            }
+        } 
+        else {
+            if (topSide) {
+                return (new Translation2d(FieldConstants.topRightCornerX, FieldConstants.topRightCornerY)).minus(turretCenter);
+            } 
+            else {
+                return (new Translation2d(FieldConstants.bottomRightCornerX, FieldConstants.bottomRightCornerY)).minus(turretCenter);
+            }
+        }
+    }
 }

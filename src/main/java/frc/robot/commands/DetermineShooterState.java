@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.datalog.StringLogEntry;
@@ -15,11 +16,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Turret;
+import frc.robot.utils.Constants.FieldConstants;
 import frc.robot.utils.Constants.ShooterConstants;
 import frc.robot.utils.Constants.TurretConstants;
-import frc.robot.utils.ParameterConversion;
 import frc.robot.utils.Shifts;
 import frc.robot.utils.ShooterUtil;
+import frc.robot.utils.ShooterUtil.ShootingParameters;
 
 public class DetermineShooterState extends Command {
     private ShooterStructureState shooterState;
@@ -107,18 +109,19 @@ public class DetermineShooterState extends Command {
         turret.lockOnTurret();
         SmartDashboard.putString("ShooterStructure State", shooterState.toString());
         SmartDashboard.putString("Shift", Shifts.determineShift().toString());
-        Translation2d robotVector = new Translation2d(drivetrain.getDrivetrainCurrentVelocity(), drivetrain.getHeading());
-        double timeOfRot = 0.0;
+
+        Translation2d hub = FieldConstants.getHub();
+        Translation2d robotCenter = drivetrain.getPose().getTranslation();
+        Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue()))); // origin to turret center
+
         switch (shooterState) {
             case HOLD:
                 // hopper.stopHopper();
                 break;
 
             case SCORE:
-                Translation2d robotToHubDist = new Translation2d(ParameterConversion.robotDistanceToHubX(drivetrain.getPose()), 
-                ParameterConversion.robotDistanceToHubY(drivetrain.getPose()));
-
-                var params = ShooterUtil.getShootingParameters(robotVector, robotToHubDist, timeOfRot);
+                Translation2d turretToHub = hub.minus(turretCenter);
+                ShootingParameters params = ShooterUtil.getShootingParameters(turretCenter, drivetrain.getCurrentTranslation(), turretToHub);
                 // hood.setHoodAngle(params.pitch());
                 // shooter.setShooterVelocity(params.exitVelocity());
                 // turret.setTurretAngle(params.yaw());
@@ -126,9 +129,8 @@ public class DetermineShooterState extends Command {
                 break;
 
             case PASS:
-                // constant velocity and position to send to
-                // depending on red/blue alliance
-                Translation2d robotToPassPos = ShooterUtil.getPassingLocation(robotVector);
+                Translation2d turretToPassPos = ShooterUtil.getPassingLocation();
+                params = ShooterUtil.getShootingParameters(turretCenter, drivetrain.getCurrentTranslation(), turretToPassPos);
                 // hood.setHoodAngle(HoodConstants.kHoodPassingAngle);
                 // shooter.setShooterVelocity(ShooterConstants.kPassSpeed);
                 // turret.setTurretAngle(robotToPassPos.getAngle().getDegrees());
