@@ -198,45 +198,43 @@ public final class Constants {
         public static final double kMaxRotationSpeed = 0.5 * Math.PI;
         public static final double kMaxFloorSpeed = 4;
     }
+
     public static final class FieldConstants {
-            
-            // TO DO: FIND REAL COORDINATES OF HUB, APPROXIMATING FROM PATH PLANNER FOR NOW
-            public static final double kBlueHubX = 4.625;
-            public static final double kBlueHubY = 4.03;
+        public static final Translation2d kFieldSize = new Translation2d(16.54, 8.07);
 
-            public static final double kRedHubX = 16.54 - kBlueHubX;
-            public static final double kRedHubY = 8.07 - kBlueHubY;
+        // TO DO: FIND REAL COORDINATES OF HUB, APPROXIMATING FROM PATH PLANNER FOR NOW
+        public static final double kBlueHubX = 4.625;
+        public static final double kBlueHubY = 4.03;
 
-            public static final Translation2d kBlueHub = new Translation2d(kBlueHubX, kBlueHubY);
-            public static final Translation2d kRedHub = new Translation2d(kRedHubX, kRedHubY);
-            
-            public static Translation2d getHub() {
-                return (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) ? kBlueHub : kRedHub;
-            }
-            
-            public static final double bluePassPositionX = 0;
-            public static final double bluePassPositionY = 0;
-            public static final double redPassPositionX = 0;
-            public static final double redPassPositionY = 0;
-
-            public static final double kTransitionShiftEnd = 10;       
-            public static final double kShift1End = 35;
-            public static final double kShift2End = 60;
-            public static final double kShift3End = 85;
-            public static final double kShift4End = 110;
-            public static final double kHoldThreshold = 7;
-
-            public static final double bottomLeftCornerX = 1; //can tune this later
-            public static final double bottomLeftCornerY = 1;
-            public static final double bottomRightCornerX = 15; 
-            public static final double bottomRightCornerY = 1;
-            public static final double topLeftCornerX = 1; 
-            public static final double topLeftCornerY = 7;
-            public static final double topRightCornerX = 15; 
-            public static final double topRightCornerY = 7;
+        public static final Translation2d kBlueHub = new Translation2d(kBlueHubX, kBlueHubY);
+        public static final Translation2d kRedHub = kFieldSize.minus(kBlueHub);
+        
+        public static Translation2d getHub() {
+            return (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) ? kBlueHub : kRedHub;
         }
-        public static class HopperConstants{
+        
+        public static final double bluePassPositionX = 0;
+        public static final double bluePassPositionY = 0;
+        public static final double redPassPositionX = 0;
+        public static final double redPassPositionY = 0;
 
+        public static final double kTransitionShiftEnd = 10;       
+        public static final double kShift1End = 35;
+        public static final double kShift2End = 60;
+        public static final double kShift3End = 85;
+        public static final double kShift4End = 110;
+        public static final double kHoldThreshold = 7;
+        
+        public static final class PassingLocations {
+            public static final Translation2d kBlueOutpost = new Translation2d(0.5, 0.5);
+            public static final Translation2d kBlueDepot = new Translation2d(kBlueOutpost.getX(), 8.07 - kBlueOutpost.getY());
+
+            public static final Translation2d kRedOutpost = kFieldSize.minus(kBlueOutpost);
+            public static final Translation2d kRedDepot = kFieldSize.minus(kBlueDepot);
+        }
+    }
+
+    public static class HopperConstants{
         public static final double kGroundIntakeHopperSpeed = 0;
         public static final double kShootHopperSpeed = 0;
         public static final double kOuttakeHopperSpeed = 0;
@@ -244,7 +242,6 @@ public final class Constants {
         public static final double kFeedFlywheelLayupSpeed = 0;
         public static final double kFeedFlywheel = 0;
         public static final double kFeedFlywheelPassSpeed = 0;
-
     }
     public static class IntakeConstants{
 
@@ -297,9 +294,8 @@ public final class Constants {
         // TODO: make
     }
     public static final class ClimberConstants {
-
         public static final int kClimberRetractedPosition = 0;
-        public static final int kClimberDeployedPercentOutput =0;
+        public static final int kClimberDeployedPercentOutput = 0;
         public static final double kClimberDeployedPosition = 0;
     }
     public static final class CameraConstants {
