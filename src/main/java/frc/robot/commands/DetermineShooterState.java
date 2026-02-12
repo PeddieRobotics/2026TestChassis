@@ -48,6 +48,7 @@ public class DetermineShooterState extends Command {
         addRequirements(turret);
         shooterState = ShooterStructureState.HOLD;
         
+        ShooterUtil.initShooterUtils();
         SmartDashboard.putString("Shift", Shifts.determineShift().toString());
         SmartDashboard.putString("ShooterStructure State", shooterState.toString());
     }
