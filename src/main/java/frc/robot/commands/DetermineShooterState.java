@@ -118,14 +118,6 @@ public class DetermineShooterState extends Command {
                 Translation2d robotToHubDist = new Translation2d(ParameterConversion.robotDistanceToHubX(drivetrain.getPose()), 
                 ParameterConversion.robotDistanceToHubY(drivetrain.getPose()));
 
-                // set it every single time
-                // use created drivetrain object in order to calculate robot_vel, distToHub, timeOfRot
-                // use simulation (O(1), constant(s)) to find timeOfRotation (x^3 +x^2y+xy^2+y^3 form), using 2d dist, height diff
-                timeOfRot = ShooterConstants.aTimeInAir * Math.pow(robotToHubDist.getNorm(),3) + 
-                ShooterConstants.bTimeInAir * Math.pow(robotToHubDist.getNorm(),2) * TurretConstants.kTurretToHubHeight + 
-                ShooterConstants.cTimeInAir * robotToHubDist.getNorm() * Math.pow(TurretConstants.kTurretToHubHeight,2) + 
-                Math.pow(TurretConstants.kTurretToHubHeight,3);
-
                 var params = ShooterUtil.getShootingParameters(robotVector, robotToHubDist, timeOfRot);
                 // hood.setHoodAngle(params.pitch());
                 // shooter.setShooterVelocity(params.exitVelocity());
