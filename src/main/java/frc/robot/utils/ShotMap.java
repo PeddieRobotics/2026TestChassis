@@ -43,7 +43,7 @@ public class ShotMap {
         
         for (int i = 0; i < NUM_DIST; i++) {
             for (int j = 0; j < NUM_VR; j++) {
-                // pitch then exit_v then air_time
+                // exit_v then pitch then air_time
                 shotMap[i][j][0] = Float.parseFloat(st.nextToken());
                 shotMap[i][j][1] = Float.parseFloat(st.nextToken());
                 shotMap[i][j][2] = Float.parseFloat(st.nextToken());
