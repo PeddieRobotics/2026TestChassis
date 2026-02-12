@@ -31,6 +31,7 @@ public class RobotContainer {
 
     public RobotContainer() throws IOException {
         ShotMap.initShotMap("shotdata.txt");
+
         SmartDashboard.putBoolean("Test Map?", false);
         SmartDashboard.putNumber("Test Distance", 0);
         SmartDashboard.putNumber("Test Rad. Vel.", 0);
