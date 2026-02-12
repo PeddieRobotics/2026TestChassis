@@ -46,7 +46,7 @@ public class ShotMap {
                 shotMap[i][j][1] = Float.parseFloat(st.nextToken());
                 
                 // TODO: get new shot table with time of flight
-                shotMap[i][j][2] = 0f;
+                shotMap[i][j][2] = 1.0f;
 
                 // shotMap[i][j][2] = Float.parseFloat(st.nextToken());
             }
