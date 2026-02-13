@@ -266,26 +266,6 @@ public final class Constants {
     public static class ShooterConstants{
         // constant velocity and position for passing
         public static final double kPassSpeed = 0.0;
-        /*Physics polynomial coefficients
-        example ax^3+bx^2y+cxy^2+dy^3
-        */
-        //this is for the polynomial for velocity
-        public static final double aVelocity = 0; // the first coefficient for the physics polynomial for shooter velocity
-        public static final double bVelocity = 0;
-        public static final double cVelocity = 0;
-        public static final double dVelocity = 0;
-
-        // this is for the polynomial for pitch angle
-        public static final double aPitch = 0; // the first coefficient for the physics polynomial for pitch angle
-        public static final double bPitch = 0;
-        public static final double cPitch = 0;
-        public static final double dPitch = 0;
-        
-        // coefficients for func to calculate time in air--> integral of distance travelled as time increases (by dx ~ 0.001, from t=0)
-        public static final double aTimeInAir = 0;
-        public static final double bTimeInAir = 0;
-        public static final double cTimeInAir = 0;
-        public static final double dTimeInAir = 0;
         
         public static final double kShooterSpeedS = 0;
         public static final double kShooterSpeedV = 0; 
