@@ -31,8 +31,8 @@ public class Turret extends SubsystemBase {
     private CANcoder encoder1, encoder2;
     
     // rotation adjustment feedforward
-    private double kRs = 0.05;
-    private double kRv = 0.20;
+    private double kRs = 0.00;
+    private double kRv = 0.00;
 
     private double targetAngle;
     
@@ -86,11 +86,11 @@ public class Turret extends SubsystemBase {
         turretMotor.setSupplyCurrentLimit(40);
         // inverted = CW+, gear inverses direction -> CCW+ for turret
 
-        turretMotor.setSensorToMechanismRatio(TurretConstants.kKrakenToTurretRatio);
-        turretMotor.setSoftLimits(true, TurretConstants.kMaxPositionRotations, TurretConstants.kMinPositionRotations);
-        turretMotor.setInverted(true);
-        turretMotor.setPIDValues(TurretConstants.kTurretYawP, TurretConstants.kTurretYawI, TurretConstants.kTurretYawD);
-        turretMotor.setMotionMagicParameters(TurretConstants.kCruiseVelocity,TurretConstants.kMaxAcceleration,0);//no jerk
+        turretMotor.setSensorToMechanismRatio(??);
+        turretMotor.setSoftLimits(??);
+        turretMotor.setInverted(??);
+        turretMotor.setPIDValues(??);
+        turretMotor.setMotionMagicParameters(??);//jerk or no jerk?
 
         turretMotor.setCoast();
         
