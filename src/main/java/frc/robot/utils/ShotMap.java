@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.util.StringTokenizer;
 
 import edu.wpi.first.wpilibj.Filesystem;
+import frc.robot.utils.Constants.FieldConstants;
+import frc.robot.utils.Constants.TurretConstants;
 
 public class ShotMap {
     public static record ShotMapValue(float exit_v, float pitch, float flightTime) {};
@@ -41,14 +43,10 @@ public class ShotMap {
         
         for (int i = 0; i < NUM_DIST; i++) {
             for (int j = 0; j < NUM_VR; j++) {
-                // exit_v then pitch
+                // exit_v then pitch then air_time
                 shotMap[i][j][0] = Float.parseFloat(st.nextToken());
                 shotMap[i][j][1] = Float.parseFloat(st.nextToken());
-                
-                // TODO: get new shot table with time of flight
-                shotMap[i][j][2] = 1.0f;
-
-                // shotMap[i][j][2] = Float.parseFloat(st.nextToken());
+                shotMap[i][j][2] = Float.parseFloat(st.nextToken());
             }
         }
 

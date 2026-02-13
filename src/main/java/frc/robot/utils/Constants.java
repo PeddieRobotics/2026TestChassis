@@ -213,6 +213,8 @@ public final class Constants {
             public static Translation2d getHub() {
                 return (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) ? kBlueHub : kRedHub;
             }
+
+            public static final double kHubHeight = Units.inchesToMeters(72.0);// 6 feet tall
             
             public static final double bluePassPositionX = 0;
             public static final double bluePassPositionY = 0;
