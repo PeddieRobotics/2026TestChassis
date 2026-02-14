@@ -18,9 +18,9 @@ import frc.robot.utils.ShooterUtil.ShootingParameters;
 public class LockOnTurret extends Command {
     private final Turret turret;
     private final Drivetrain drivetrain;
-    
+
     private Translation2d hub;
-    
+
     public LockOnTurret() {
         SmartDashboard.putNumber("best pose x", 0);
         SmartDashboard.putNumber("best pose y", 0);
@@ -31,10 +31,15 @@ public class LockOnTurret extends Command {
         SmartDashboard.putNumber("turret to hub y", 0);
         SmartDashboard.putNumber("turret angle", 0);
         SmartDashboard.putNumber("target yaw", 0);
-
+        SmartDashboard.putNumber("robot center x", 0);
+        SmartDashboard.putNumber("robot center y", 0);
+        SmartDashboard.putNumber("turret center x", 0);
+        SmartDashboard.putNumber("turret center y", 0);
+        SmartDashboard.putNumber("turret hub x", 0);
+        SmartDashboard.putNumber("turret hub y", 0);
         drivetrain = Drivetrain.getInstance();
         turret = Turret.getInstance();
-        
+
         addRequirements(turret);
     }
 
@@ -43,21 +48,30 @@ public class LockOnTurret extends Command {
         hub = FieldConstants.getHub();
     }
 
-    @Override 
+    @Override
     public void execute() {
-        final Translation2d robotCenter = ??
-    
-        final Translation2d turretCenter = ??
+        final Translation2d robotCenter = drivetrain.getPose().getTranslation();
 
-        final Translation2d turretToHub = ??
+        final Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue())));
 
-        final ShootingParameters params = ??
+        final Translation2d turretToHub = hub.minus(turretCenter);
 
-        turret.setAngleFieldRelative(??);
+        final ShootingParameters params = ShooterUtil.getShootingParameters(turretCenter, drivetrain.getCurrentTranslation(), turretToHub);
+
+        turret.setAngleFieldRelative(params.yaw());
+        // turret.setAngleFieldRelative(new Rotation2d(Math.atan2(turretToHub.getY(), turretToHub.getX())));
 
         // put translation2d's on dashboard to debug
+
+        SmartDashboard.putNumber("robot center x", robotCenter.getX());
+        SmartDashboard.putNumber("robot center y", robotCenter.getY());
+        SmartDashboard.putNumber("turret center x", turretCenter.getX());
+        SmartDashboard.putNumber("turret center y", turretCenter.getY());
+        SmartDashboard.putNumber("turret hub x", turretToHub.getX());
+        SmartDashboard.putNumber("turret hub y", turretToHub.getY());
+        SmartDashboard.putNumber("turret hub angle", Math.atan2(turretToHub.getY(), turretToHub.getX()));
     }
-    
+
     @Override
     public void end(boolean interrupted) {
     }
@@ -66,5 +80,5 @@ public class LockOnTurret extends Command {
     public boolean isFinished() {
         return false;
     }
-    
+
 }

@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.Kinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -139,7 +140,8 @@ public class Drivetrain extends SubsystemBase {
     public Translation2d getCurrentTranslation() {
         // return current translation of robot from swerve modules
         // I think the code for that is floating somewhere
-        ??
+        ChassisSpeeds speeds = DriveConstants.kinematics.toChassisSpeeds(swerveModuleState);
+        return new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldOriented, Translation2d centerRotation) {
@@ -226,11 +228,16 @@ public class Drivetrain extends SubsystemBase {
         odometry.resetPosition(pose.getRotation(), swerveModulePosition,pose);
     }
     
+    /**
+     * 
+     * @return returns yaw rate in radians
+     */
     public double getYawRate() {
         // return angular velocity of robot
         // consider: using commanded rotation from drive() method or
         // calculate values from swerve modules
-        ??
+        // return Math.toRadians(drivetrain.getRotationalVelocity()); (slower)
+        return rotation;
     }
 
     /**
