@@ -112,9 +112,6 @@ public class DetermineShooterState extends Command {
 
     @Override
     public void execute() {
-        // ?? What is this ??
-        // turret.lockOnTurret();
-
         SmartDashboard.putString("ShooterStructure State", shooterState.toString());
         SmartDashboard.putString("Shift", Shifts.determineShift().toString());
 
