@@ -45,7 +45,6 @@ public class Drivetrain extends SubsystemBase {
     private double rotation = 0;
     private boolean usingMegaTag;
     private SwerveDrivePoseEstimator odometry;
-    private static Translation2d currentTranslation;
     private final Field2d fusedOdometry;
 
     private Drivetrain() {
@@ -138,13 +137,13 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public Translation2d getCurrentTranslation() {
-        return currentTranslation;
+        // return current translation of robot from swerve modules
+        // I think the code for that is floating somewhere
+        ??
     }
-
 
     public void drive(Translation2d translation, double rotation, boolean fieldOriented, Translation2d centerRotation) {
         this.rotation = rotation;
-        currentTranslation = translation;
 
         ChassisSpeeds fieldRelativeSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
         ChassisSpeeds robotRelativeSpeeds;
@@ -228,7 +227,10 @@ public class Drivetrain extends SubsystemBase {
     }
     
     public double getYawRate() {
-        return rotation;
+        // return angular velocity of robot
+        // consider: using commanded rotation from drive() method or
+        // calculate values from swerve modules
+        ??
     }
 
     /**

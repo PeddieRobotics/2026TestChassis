@@ -16,21 +16,12 @@ import frc.robot.utils.Constants.*;
 import frc.robot.utils.ShooterUtil.ShootingParameters;
 
 public class LockOnTurret extends Command {
-    private final Limelight[] limelights;
-
     private final Turret turret;
     private final Drivetrain drivetrain;
     
     private Translation2d hub;
     
     public LockOnTurret() {
-        limelights = new Limelight[] {
-            LimelightFront.getInstance(),
-            LimelightLeft.getInstance(),
-            LimelightBack.getInstance(),
-            LimelightRight.getInstance()
-        };
-
         SmartDashboard.putNumber("best pose x", 0);
         SmartDashboard.putNumber("best pose y", 0);
         SmartDashboard.putNumber("gyro heading", 0);
@@ -50,61 +41,21 @@ public class LockOnTurret extends Command {
     @Override
     public void initialize() {
         hub = FieldConstants.getHub();
-        ShooterUtil.initShooterUtils();
     }
 
     @Override 
     public void execute() {
-        // find closest limelight
-        // Optional<Pose2d> bestPose = Optional.empty();
-
-        // double bestTagCount = 0;
-        // double bestDistance = 10000;
-
-        // for (Limelight ll : limelights) {
-        //     Optional<Pose2d> pose = ll.getPoseMT2();
-        //     if (pose.isEmpty())
-        //         continue;
-
-        //     double tagCount = ll.getNumberOfTagsSeen();
-        //     double distance = ll.getDistanceEstimatedPose();
-            
-        //     int lastTag = ll.getLastSeenTag();
-        //     boolean isHub = (teamBlue && lastTag >= 18 && lastTag <= 27) || (!teamBlue && lastTag >= 2 && lastTag <= 11);
-            
-        //     if (isHub && tagCount > bestTagCount || (tagCount == bestTagCount && distance < bestDistance)) {
-        //         bestPose = pose;
-        //         bestTagCount = tagCount;
-        //         bestDistance = distance;
-        //     }
-
-        // }
-
-        // if (bestPose.isEmpty())
-        //     bestPose = Optional.of(drivetrain.getPose());
-
-        // Translation2d robotCenter = bestPose.get().getTranslation(); // origin to robot center
-        
-        final Translation2d robotCenter = drivetrain.getPose().getTranslation();
+        final Translation2d robotCenter = ??
     
-        final Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue()))); // origin to turret center
+        final Translation2d turretCenter = ??
 
-        final Translation2d turretToHub = hub.minus(turretCenter);
+        final Translation2d turretToHub = ??
 
-        final ShootingParameters params = ShooterUtil.getShootingParameters(turretCenter, drivetrain.getCurrentTranslation(), turretToHub);
+        final ShootingParameters params = ??
 
-        turret.setAngleFieldRelative(params.yaw());
+        turret.setAngleFieldRelative(??);
 
-        SmartDashboard.putNumber("best pose x", robotCenter.getX());
-        SmartDashboard.putNumber("best pose y", robotCenter.getY());
-        SmartDashboard.putNumber("gyro heading", drivetrain.getHeadingBlue());
-        SmartDashboard.putNumber("turret center x", turretCenter.getX());
-        SmartDashboard.putNumber("turret center y", turretCenter.getY());
-        SmartDashboard.putNumber("turret to hub x", turretToHub.getX());
-        SmartDashboard.putNumber("turret to hub y", turretToHub.getY());
-        SmartDashboard.putNumber("turret angle", turret.getAngle());
-        SmartDashboard.putNumber("target yaw", params.yaw().getDegrees());
-
+        // put translation2d's on dashboard to debug
     }
     
     @Override

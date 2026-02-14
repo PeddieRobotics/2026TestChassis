@@ -157,9 +157,7 @@ public class Turret extends SubsystemBase {
     }
 
     public double setAngleFieldRelative(Rotation2d desiredRotation) {
-        Rotation2d r = desiredRotation.minus(Drivetrain.getInstance().getHeadingRotation2d());
-        setAngle(r);
-        return r.getDegrees();
+        ??
     }
 
     public void setAngle(Rotation2d desiredRotation) {
@@ -206,9 +204,12 @@ public class Turret extends SubsystemBase {
         kRs = SmartDashboard.getNumber("Turret kRs", kRs);
         
         double yawRate = Drivetrain.getInstance().getYawRate();
-        double ff = -kRv * yawRate * 180 / Math.PI - kRs * Math.signum(yawRate);
+        // NOTE: yaw rate returns radians
+        // kRv is velocity feedfoward term, proportional to angular velocity
+        // kRs is static feedforward term with same sign as the robot's angular velocity
+        // add these two, then negate because turret needs to turn opposite direction of drivetrain
+        double ff = -( ?? );
 
-        // turretMotor.setPIDValues(0, 0, 0);
         turretMotor.setPositionMotionMagicTorqueCurrentFOC(optimizedDesiredPositionRotations, ff);
     }
 
@@ -218,39 +219,6 @@ public class Turret extends SubsystemBase {
 
     public double getTargetAngle(){
         return targetAngle;
-    }
-
-    public void lockOnTurret(){
-        limelights = new Limelight[] {
-            LimelightFront.getInstance(),
-            LimelightLeft.getInstance(),
-            LimelightBack.getInstance(),
-            LimelightRight.getInstance()
-        };
-
-        Translation2d hub = FieldConstants.getHub();
-        boolean teamBlue = hub.equals(FieldConstants.kBlueHub);
-
-        Translation2d robotCenter = drivetrain.getPose().getTranslation();
-        
-        Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue()))); // origin to turret center
-
-        Translation2d turretToHub = hub.minus(turretCenter);
-
-        Rotation2d targetYaw = turretToHub.getAngle();
-
-        setAngleFieldRelative(targetYaw);
-
-        SmartDashboard.putNumber("best pose x", robotCenter.getX());
-
-        SmartDashboard.putNumber("best pose y", robotCenter.getY());
-        SmartDashboard.putNumber("gyro heading", drivetrain.getHeadingBlue());
-        SmartDashboard.putNumber("turret center x", turretCenter.getX());
-        SmartDashboard.putNumber("turret center y", turretCenter.getY());
-        SmartDashboard.putNumber("turret to hub x", turretToHub.getX());
-        SmartDashboard.putNumber("turret to hub y", turretToHub.getY());
-        SmartDashboard.putNumber("turret angle", turret.getAngle());
-        SmartDashboard.putNumber("target yaw", targetYaw.getDegrees());
     }
 
     @Override
