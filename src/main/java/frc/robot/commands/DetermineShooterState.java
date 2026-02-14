@@ -27,6 +27,7 @@ public class DetermineShooterState extends Command {
     private ShooterStructureState shooterState;
     private boolean isOperatorOverride;
     private Drivetrain drivetrain;
+
     // private Shooter shooter;
     private Hopper hopper;
     private Timer timer;
@@ -45,12 +46,13 @@ public class DetermineShooterState extends Command {
         turret = Turret.getInstance();
         drivetrain = Drivetrain.getInstance();
 
-        addRequirements(turret);
         shooterState = ShooterStructureState.HOLD;
         
-        ShooterUtil.initShooterUtils();
         SmartDashboard.putString("Shift", Shifts.determineShift().toString());
         SmartDashboard.putString("ShooterStructure State", shooterState.toString());
+
+        addRequirements(turret);
+        // addRequirements(hood);
     }
 
     public void setOperatorOverride(boolean isOperatorOverride) {
@@ -58,30 +60,33 @@ public class DetermineShooterState extends Command {
     }
 
     public ShooterStructureState determineStateTeleop() {
-        if (SmartDashboard.getBoolean("use ShooterStructure Logic",true)){
-            if (Shifts.isHoldThreshold() && isInAllianceZone()) 
-                return ShooterStructureState.HOLD;
-            if (Shifts.isActive() && isInAllianceZone())
-                return ShooterStructureState.SCORE;
-            if (isInNeutralZone() || isInOpponentZone())
-                return ShooterStructureState.PASS;
+        if (!SmartDashboard.getBoolean("use ShooterStructure Logic", true))
             return ShooterStructureState.HOLD;
-        }
+
+        if (Shifts.isHoldThreshold() && isInAllianceZone()) 
+            return ShooterStructureState.HOLD;
+        if (Shifts.isActive() && isInAllianceZone())
+            return ShooterStructureState.SCORE;
+        if (isInNeutralZone() || isInOpponentZone())
+            return ShooterStructureState.PASS;
+
         return ShooterStructureState.HOLD;
     }
 
     private boolean isInAllianceZone() {
         Alliance alliance = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Blue;
+        double x = Drivetrain.getInstance().getPose().getX();
         if (alliance == DriverStation.Alliance.Blue)
-            return Drivetrain.getInstance().getPose().getX() <= Units.inchesToMeters(182.11);
-        return Drivetrain.getInstance().getPose().getX() >= Units.inchesToMeters(651.22 - 182.11); 
+            return x <= Units.inchesToMeters(182.11);
+        return x >= Units.inchesToMeters(651.22 - 182.11); 
     }
 
     private boolean isInOpponentZone() {
         Alliance alliance = DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : Alliance.Blue;
+        double x = Drivetrain.getInstance().getPose().getX();
         if (alliance == DriverStation.Alliance.Red)
-            return Drivetrain.getInstance().getPose().getX() <= Units.inchesToMeters(182.11);
-        return Drivetrain.getInstance().getPose().getX() >= Units.inchesToMeters(651.22 - 182.11); 
+            return x <= Units.inchesToMeters(182.11);
+        return x >= Units.inchesToMeters(651.22 - 182.11); 
     }
 
     private boolean isInNeutralZone() {
@@ -107,7 +112,9 @@ public class DetermineShooterState extends Command {
 
     @Override
     public void execute() {
-        turret.lockOnTurret();
+        // ?? What is this ??
+        // turret.lockOnTurret();
+
         SmartDashboard.putString("ShooterStructure State", shooterState.toString());
         SmartDashboard.putString("Shift", Shifts.determineShift().toString());
 
@@ -115,6 +122,7 @@ public class DetermineShooterState extends Command {
         Translation2d robotCenter = drivetrain.getPose().getTranslation();
         Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue()))); // origin to turret center
 
+        ShootingParameters params;
         switch (shooterState) {
             case HOLD:
                 // hopper.stopHopper();
@@ -122,23 +130,27 @@ public class DetermineShooterState extends Command {
 
             case SCORE:
                 Translation2d turretToHub = hub.minus(turretCenter);
-                ShootingParameters params = ShooterUtil.getShootingParameters(turretCenter, drivetrain.getCurrentTranslation(), turretToHub);
+                params = ShooterUtil.getShootingParameters(
+                    turretCenter, drivetrain.getCurrentTranslation(), turretToHub
+                );
+                turret.setAngleFieldRelative(params.yaw());
                 // hood.setHoodAngle(params.pitch());
                 // shooter.setShooterVelocity(params.exitVelocity());
-                // turret.setTurretAngle(params.yaw());
                 // hopper.runHopperShoot();
                 break;
 
             case PASS:
                 Translation2d turretToPassPos = ShooterUtil.getPassingLocation();
-                params = ShooterUtil.getShootingParameters(turretCenter, drivetrain.getCurrentTranslation(), turretToPassPos);
+                params = ShooterUtil.getShootingParameters(
+                    turretCenter, drivetrain.getCurrentTranslation(), turretToPassPos
+                );
+                turret.setAngleFieldRelative(params.yaw());
                 // hood.setHoodAngle(HoodConstants.kHoodPassingAngle);
                 // shooter.setShooterVelocity(ShooterConstants.kPassSpeed);
-                // turret.setTurretAngle(robotToPassPos.getAngle().getDegrees());
                 // hopper.runHopperShoot();
                 break;
         }
-
+        
         if (!DriverStation.isAutonomous() && !isOperatorOverride)
             shooterState = determineStateTeleop();
     }
