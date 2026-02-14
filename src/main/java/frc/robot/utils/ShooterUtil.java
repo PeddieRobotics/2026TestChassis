@@ -10,6 +10,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.FieldConstants;
 import frc.robot.utils.Constants.TurretConstants;
 import frc.robot.utils.Constants.FieldConstants.PassingLocations;
+import frc.robot.utils.ShotMap.ShotMapValue;
 
 public class ShooterUtil {
     public static record ShootingParameters(double pitch, Rotation2d yaw, double rpm) {};
@@ -35,15 +36,21 @@ public class ShooterUtil {
         final double v_r = R.dot(robotVelocity);
         final double v_t = T.dot(robotVelocity);
 
-        final var mapVal = ShotMap.queryShotMap(turretToHub.getNorm(), v_r);
-        
-        final Translation2d distanceInAir = T.times(v_t * mapVal.flightTime());
+        // iteration 0: actual hub
+        final Translation2d hub0 = FieldConstants.getHub();
+        final Translation2d turretToHub0 = turretToHub;
 
-        final Translation2d effectiveHub = FieldConstants.getHub().minus(distanceInAir);
-        
-        final Translation2d turretToEffectiveHub = effectiveHub.minus(turretPose);
+        // iteration 1
+        final ShotMapValue mapVal0 = ShotMap.queryShotMap(turretToHub0.getNorm(), v_r);
+        final Translation2d distanceInAir0 = T.times(v_t * mapVal0.flightTime());
+        final Translation2d hub1 = hub0.minus(distanceInAir0);
+        final Translation2d turretToHub1 = hub1.minus(turretPose);
 
-        final var effectiveMapVal = ShotMap.queryShotMap(turretToEffectiveHub.getNorm(), v_r);
+        // iteration 2, remove if not necessary (but not mapVal1)
+        final ShotMapValue mapVal1 = ShotMap.queryShotMap(turretToHub1.getNorm(), v_r);
+        final Translation2d distanceInAir1 = T.times(v_t * mapVal1.flightTime());
+        final Translation2d hub2 = hub1.minus(distanceInAir1);
+        final Translation2d turretToHub2 = hub2.minus(turretPose);
         
         // put values on elastic for visual 
         SmartDashboard.putNumber("robot velocity", robotVelocity.getNorm());
@@ -52,12 +59,12 @@ public class ShooterUtil {
         SmartDashboard.putNumber("robot radial velocity", v_r);
         SmartDashboard.putNumber("robot tangential velocity", v_t);
         
-        shooterUtilOdometry.setRobotPose(new Pose2d(effectiveHub, new Rotation2d()));
+        shooterUtilOdometry.setRobotPose(new Pose2d(hub2, new Rotation2d()));
 
         return new ShootingParameters(
-            effectiveMapVal.pitch(),
-            turretToEffectiveHub.getAngle(),
-            getRPM(effectiveMapVal.exit_v())
+            mapVal1.pitch(),
+            turretToHub2.getAngle(),
+            getRPM(mapVal1.exit_v())
         );
     }
     
