@@ -147,11 +147,6 @@ public final class Constants {
     }
 
     public static class DriveConstants {
-        public static final double kBackLeftMagnetOffset =0;
-        public static final double kBackRightMagnetOffset =0;
-        public static final double kFrontLeftMagnetOffset = 0;
-        public static final double kFrontRightMagnetOffset =0;
-
         public static final double kMaxModuleSpeed = 4.4;
         public static final double kSkidThreshold = 0;
 
@@ -179,7 +174,7 @@ public final class Constants {
                 kSwerveModuleLocations[3]
         );
 
-        public static final double trackWidth = 2.0;
+        public static final double trackWidth = 2.0; //TODO: what????
         public static final double wheelBase = 2.0;
         public static final Translation2d[] swerveModuleLocations = {
             new Translation2d(wheelBase / 2, trackWidth / 2),
@@ -212,11 +207,6 @@ public final class Constants {
         public static Translation2d getHub() {
             return (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) ? kBlueHub : kRedHub;
         }
-        
-        public static final double bluePassPositionX = 0;
-        public static final double bluePassPositionY = 0;
-        public static final double redPassPositionX = 0;
-        public static final double redPassPositionY = 0;
 
         public static final double kTransitionShiftEnd = 10;       
         public static final double kShift1End = 35;
@@ -269,9 +259,6 @@ public final class Constants {
         public static final double kShooterSpeedI = 0; 
         public static final double kShooterSpeedD = 0; 
         public static final double kShooterSpeedF = 0;
-    }
-    public static final class ScoreConstants {
-        // TODO: make
     }
     public static final class ClimberConstants {
         public static final int kClimberRetractedPosition = 0;
