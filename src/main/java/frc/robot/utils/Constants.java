@@ -43,9 +43,9 @@ public final class Constants {
         public static final double kTurretYawS = 0;
         public static final double kTurretYawV = 0; 
         public static final double kTurretYawA = 0; 
-        public static final double kTurretYawP = ??; // overcome static friction
+        public static final double kTurretYawP = 250; // overcome static friction
         public static final double kTurretYawI = 0; 
-        public static final double kTurretYawD = ??; 
+        public static final double kTurretYawD = 7; 
         public static final double kTurretYawF = 0; 
         public static final double kCruiseVelocity = 2;
         public static final double kMaxAcceleration = 8; // radians/seconds^2
@@ -70,8 +70,8 @@ public final class Constants {
         // WHEN SETTING THE MAGNET OFFSET, DO NOT MAKE THESE ZERO
         // SET ZEROING_MODE TO TRUE, VALUES HERE DON'T MATTER
         // negative of "raw absolute position", don't add mod amount offset
-        public static final double kEncoder1MagnetOffset = -0.942626953125;
-        public static final double kEncoder2MagnetOffset = -0.96044921875;
+        public static final double kEncoder1MagnetOffset = -0.912109;
+        public static final double kEncoder2MagnetOffset = -0.413818;
 
         // this is the "number of gears moved" (found by CRT)
         // where the turret's position is 0 degrees, aka forward

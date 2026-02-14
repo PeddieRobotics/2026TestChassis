@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants.FieldConstants;
 import frc.robot.utils.Constants.TurretConstants;
-import frc.robot.commands.LockOnTurret;
 import frc.robot.utils.Kraken;
 // import frc.robot.utils.LimelightHelpers;
 // import frc.robot.utils.OI;
@@ -86,11 +86,11 @@ public class Turret extends SubsystemBase {
         turretMotor.setSupplyCurrentLimit(40);
         // inverted = CW+, gear inverses direction -> CCW+ for turret
 
-        turretMotor.setSensorToMechanismRatio(??);
-        turretMotor.setSoftLimits(??);
-        turretMotor.setInverted(??);
-        turretMotor.setPIDValues(??);
-        turretMotor.setMotionMagicParameters(??);//jerk or no jerk?
+        turretMotor.setSensorToMechanismRatio(TurretConstants.kKrakenToTurretRatio);
+        turretMotor.setSoftLimits(true, TurretConstants.kMaxPositionRotations, TurretConstants.kMinPositionRotations);
+        turretMotor.setInverted(true);
+        turretMotor.setPIDValues(TurretConstants.kTurretYawP, TurretConstants.kTurretYawI, TurretConstants.kTurretYawD);
+        turretMotor.setMotionMagicParameters(TurretConstants.kCruiseVelocity, TurretConstants.kMaxAcceleration, 0);//jerk or no jerk?
 
         turretMotor.setCoast();
         
