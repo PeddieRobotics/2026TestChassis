@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -41,6 +42,8 @@ public class Drivetrain extends SubsystemBase {
     // private final LimelightBack backLimelight; 
     // private final LimelightLeft leftLimelight;
     // private final LimelightRight rightLimelight;
+
+    private double currentDrivetrainSpeed = 0;
     
     private double heading;
     private double rotation = 0;
@@ -164,6 +167,71 @@ public class Drivetrain extends SubsystemBase {
             swerveModuleState[i].optimize(new Rotation2d(swerveModule[i].getCANcoderReading()));
 
         setModuleStates(swerveModuleState);
+    }
+
+        public void driveBlue(Translation2d translation, double rotation, boolean fieldOriented, Translation2d centerOfRotation) {
+        // if (fieldOriented)
+        //     currentMovement = translation;
+
+        ChassisSpeeds fieldRelativeSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+
+        ChassisSpeeds robotRelativeSpeeds;
+        if (fieldOriented) {
+            robotRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, new Rotation2d(Math.toRadians(getHeadingBlue())));
+        } else {
+            robotRelativeSpeeds = fieldRelativeSpeeds;
+        }
+
+        currentDrivetrainSpeed = Math.sqrt(Math.pow(robotRelativeSpeeds.vxMetersPerSecond, 2)
+                                + Math.pow(robotRelativeSpeeds.vyMetersPerSecond, 2));
+
+        swerveModuleState = DriveConstants.kKinematics.toSwerveModuleStates(robotRelativeSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleState, DriveConstants.kMaxModuleSpeed);
+        optimizeModuleStates();
+        setModuleStates(swerveModuleState);
+    }
+
+        /**
+     * optimizes the angle in each module state, will turn the closer direction
+     */
+    public void optimizeModuleStates() {
+        for (int i = 0; i < swerveModuleState.length; i++) {
+            swerveModuleState[i].optimize(new Rotation2d(swerveModule[i].getCANcoderReading()));
+        }
+    }
+
+    double currentHeadingDirection = 0;
+
+    public double getRotationOverride() {
+        return 5 * currentHeadingDirection;
+    }
+
+       /**
+     * Only used during autonomous, sets driving strictly to robot relative
+     * 
+     * @param robotRelativeSpeeds
+     */
+    public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
+        // System.err.println("DRIVE ROBOT RELATIVE time " + Timer.getFPGATimestamp() + " " + robotRelativeSpeeds.vxMetersPerSecond + " " + robotRelativeSpeeds.vyMetersPerSecond + " rot " + robotRelativeSpeeds.omegaRadiansPerSecond);
+        // SmartDashboard.putNumber(robotRelativeSpeeds.vxMetersPerSecond
+
+        currentHeadingDirection = Math.atan2(robotRelativeSpeeds.vyMetersPerSecond, robotRelativeSpeeds.vxMetersPerSecond);
+
+        swerveModuleState = DriveConstants.kKinematics.toSwerveModuleStates(robotRelativeSpeeds);
+        setModuleStates(swerveModuleState);
+    }
+
+    /**
+     * @return returns current robot relative chassis speeds by getting the state of each module and 
+     * then converting to chassis speeds
+     */
+    public ChassisSpeeds getRobotRelativeSpeeds() {
+        return DriveConstants.kKinematics.toChassisSpeeds(
+            frontLeftModule.getState(),
+            frontRightModule.getState(),
+            backLeftModule.getState(),
+            backRightModule.getState()
+        );
     }
 
     public double getYaw() {

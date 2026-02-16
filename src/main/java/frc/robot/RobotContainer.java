@@ -28,6 +28,7 @@ public class RobotContainer {
     // private Flywheel flywheel;
     private Turret turret;
     // private Hopper hopper;
+    private Autonomous autonomous;
 
     public RobotContainer() throws IOException {
         ShotMap.initShotMap("shotdata.txt");
@@ -41,6 +42,8 @@ public class RobotContainer {
 
         turret = Turret.getInstance();
         turret.setDefaultCommand(new DetermineShooterState());
+
+        autonomous = Autonomous.getInstance();
 
         // flywheel = Flywheel.getInstance();
         // hopper = Hopper.getInstance();
