@@ -4,10 +4,13 @@
 
 package frc.robot.utils;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.subsystems.Limelight;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -221,6 +224,18 @@ public final class Constants {
 
             public static final Translation2d kRedOutpost = kFieldSize.minus(kBlueOutpost);
             public static final Translation2d kRedDepot = kFieldSize.minus(kBlueDepot);
+        }
+        
+        public static final class TrenchLocations {
+            private static final AprilTagFieldLayout field = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+            private static Translation2d getTagLocation(int tag) {
+                return field.getTagPose(tag).get().getTranslation().toTranslation2d();
+            }
+            public static final Translation2d kBlueLeftCenter = getTagLocation(22).plus(getTagLocation(23)).div(2);
+            public static final Translation2d kBlueRightCenter = getTagLocation(17).plus(getTagLocation(28)).div(2);
+
+            public static final Translation2d kRedLeftCenter = getTagLocation(6).plus(getTagLocation(7)).div(2);
+            public static final Translation2d kRedRightCenter = getTagLocation(1).plus(getTagLocation(12)).div(2);
         }
     }
 

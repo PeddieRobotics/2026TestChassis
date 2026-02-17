@@ -1,5 +1,7 @@
 package frc.robot.utils;
 
+import java.io.IOException;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -15,11 +17,12 @@ import frc.robot.utils.ShotMap.ShotMapValue;
 public class ShooterUtil {
     public static record ShootingParameters(double pitch, Rotation2d yaw, double rpm) {};
 
-    private static Field2d shooterUtilOdometry;
+    private static Field2d virtualTarget;
 
-    public static void initShooterUtils() {
-        shooterUtilOdometry = new Field2d();
-        SmartDashboard.putData("shooter util",shooterUtilOdometry);
+    public static void initShooterUtils(String filename) throws IOException {
+        virtualTarget = new Field2d();
+        SmartDashboard.putData("Virtual target", virtualTarget);
+        ShotMap.initShotMap(filename);
     }
 
     
@@ -59,7 +62,7 @@ public class ShooterUtil {
         SmartDashboard.putNumber("robot radial velocity", v_r);
         SmartDashboard.putNumber("robot tangential velocity", v_t);
         
-        shooterUtilOdometry.setRobotPose(new Pose2d(hub2, new Rotation2d()));
+        virtualTarget.setRobotPose(new Pose2d(hub2, new Rotation2d()));
 
         return new ShootingParameters(
             mapVal1.pitch(),

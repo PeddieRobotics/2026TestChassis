@@ -50,7 +50,6 @@ public class LockOnTurret extends Command {
     @Override
     public void initialize() {
         hub = FieldConstants.getHub();
-        ShooterUtil.initShooterUtils();
     }
 
     @Override 

@@ -21,6 +21,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Turret;
+import frc.robot.utils.ShooterUtil;
 import frc.robot.utils.ShotMap;
 
 public class RobotContainer {
@@ -30,7 +31,7 @@ public class RobotContainer {
     // private Hopper hopper;
 
     public RobotContainer() throws IOException {
-        ShotMap.initShotMap("shotdata.txt");
+        ShooterUtil.initShooterUtils("shotdata.txt");
 
         SmartDashboard.putBoolean("Test Map?", false);
         SmartDashboard.putNumber("Test Distance", 0);
