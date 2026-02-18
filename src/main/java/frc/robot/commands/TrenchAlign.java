@@ -158,7 +158,7 @@ public class TrenchAlign extends Command {
         if (vel.getSquaredNorm() > kMaxSpeed * kMaxSpeed)
             vel = vel.div(vel.getNorm()).times(kMaxSpeed);
 
-        if (Math.abs(yError) < yEpsilon && Math.abs(rotError) < rotEpsilon)
+        if (Math.abs(yError) < yEpsilon && Math.abs(Math.IEEEremainder(rotError, 360)) < rotEpsilon)
             canPassTrench = true;
 
         if (!canPassTrench)

@@ -145,7 +145,6 @@ public class Drivetrain extends SubsystemBase {
         return currentTranslation;
     }
 
-
     public void drive(Translation2d translation, double rotation, boolean fieldOriented, Translation2d centerRotation) {
         this.rotation = rotation;
         currentTranslation = translation;
@@ -154,7 +153,7 @@ public class Drivetrain extends SubsystemBase {
         ChassisSpeeds robotRelativeSpeeds;
 
         if (fieldOriented)
-            robotRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getHeadingRotation2d());
+            robotRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, Rotation2d.fromDegrees(getHeading()));
         else
             robotRelativeSpeeds = fieldRelativeSpeeds;
 
@@ -169,27 +168,30 @@ public class Drivetrain extends SubsystemBase {
         setModuleStates(swerveModuleState);
     }
 
-    public void driveBlue(Translation2d translation, double rotation, boolean fieldOriented, Translation2d centerOfRotation) {
-        // if (fieldOriented)
-        //     currentMovement = translation;
+
+    public void driveBlue(Translation2d translation, double rotation, boolean fieldOriented, Translation2d centerRotation) {
+        this.rotation = rotation;
+        currentTranslation = translation;
 
         ChassisSpeeds fieldRelativeSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
-
         ChassisSpeeds robotRelativeSpeeds;
-        if (fieldOriented) {
-            robotRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, new Rotation2d(Math.toRadians(getHeadingBlue())));
-        } else {
+
+        if (fieldOriented)
+            robotRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, Rotation2d.fromDegrees(getHeadingBlue()));
+        else
             robotRelativeSpeeds = fieldRelativeSpeeds;
-        }
 
-        currentDrivetrainSpeed = Math.sqrt(Math.pow(robotRelativeSpeeds.vxMetersPerSecond, 2)
-                                + Math.pow(robotRelativeSpeeds.vyMetersPerSecond, 2));
+        if (centerRotation == null)
+            swerveModuleState = DriveConstants.kinematics.toSwerveModuleStates(robotRelativeSpeeds);
+        else
+            swerveModuleState = DriveConstants.kinematics.toSwerveModuleStates(robotRelativeSpeeds, centerRotation);
 
-        swerveModuleState = DriveConstants.kKinematics.toSwerveModuleStates(robotRelativeSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleState, DriveConstants.kMaxModuleSpeed);
-        optimizeModuleStates();
+        for (int i = 0; i > swerveModuleState.length; i++)
+            swerveModuleState[i].optimize(new Rotation2d(swerveModule[i].getCANcoderReading()));
+
         setModuleStates(swerveModuleState);
     }
+
 
         /**
      * optimizes the angle in each module state, will turn the closer direction
@@ -274,7 +276,7 @@ public class Drivetrain extends SubsystemBase {
                 ll.fuseEstimatedPose(odometry);
         }
     }
-    public Pose2d getPose(){
+    public Pose2d getPose() {
         return odometry.getEstimatedPosition();
     }
 
