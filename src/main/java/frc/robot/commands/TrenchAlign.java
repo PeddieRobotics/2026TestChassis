@@ -35,8 +35,8 @@ public class TrenchAlign extends Command {
     private PIDController xController, yController, rotController;
     
     private static final double kMaxSpeed = 2.0;
-    private static final double kPx = 2.0, kIx = 0, kDx = 0, kFFx = 0;
-    private static final double kPy = 2.0, kIy = 0, kDy = 0, kFFy = 0;
+    private static final double kPx = 3.5, kIx = 0, kDx = 0, kFFx = 0;
+    private static final double kPy = 3.5, kIy = 0, kDy = 0, kFFy = 0;
     private static final double kPr = 0.04, kIr = 0, kDr = 0, kFFr = 0;
 
     public enum TrenchOption {
@@ -48,9 +48,10 @@ public class TrenchAlign extends Command {
         drivetrain = Drivetrain.getInstance();
         llFront = LimelightFront.getInstance(); 
 
-        epsilon = 0.05; //tune later
+        epsilon = 0.4; // tune later
+        SmartDashboard.putNumber("epsilon",epsilon);
 
-        target = TrenchLocations.kBlueRightCenter.minus(new Translation2d(1.2,0));
+        target = TrenchLocations.kBlueRightCenter.minus(new Translation2d(1.5,0));
 
 
         // Alliance alliance = DriverStation.getAlliance().isEmpty() ? DriverStation.getAlliance().get() : Alliance.Blue;
@@ -104,6 +105,8 @@ public class TrenchAlign extends Command {
         double Ir = SmartDashboard.getNumber("TrenchPass Ir", kIr);
         double Dr = SmartDashboard.getNumber("TrenchPass Dr", kDr);
         double FFr = SmartDashboard.getNumber("TrenchPass FFr", kFFr);
+
+
         
         xController.setPID(Px, Ix, Dx);
         yController.setPID(Py, Iy, Dy);
@@ -115,13 +118,15 @@ public class TrenchAlign extends Command {
         double rotError = drivetrain.getHeading() - rotTarget;
         double rotVel = rotController.calculate(rotError) - Math.signum(rotError) * FFr;
 
-        double xError = odoOptional.get().getX() - target.getX();
+        double xError = odometry.getX() - target.getX();
         double xVel = xController.calculate(xError) - Math.signum(xError) * FFx;
         xVel = Math.min(Math.abs(xVel), kMaxSpeed) * Math.signum(xVel);
         
-        double yError = odoOptional.get().getY() - target.getY();
+        double yError = odometry.getY() - target.getY();
         double yVel = yController.calculate(yError) - Math.signum(yError) * FFy;
         yVel = Math.min(Math.abs(yVel), kMaxSpeed) * Math.signum(yVel);
+
+        epsilon = SmartDashboard.getNumber("epsilon", 0);
 
         if (Math.abs(yError) < epsilon)
             canPassTrench = true;
@@ -139,6 +144,8 @@ public class TrenchAlign extends Command {
 
     @Override
     public boolean isFinished() {
+        if (odometry.equals(new Pose2d()))
+            return false;
         return odometry.getX() > TrenchLocations.kBlueRightCenter.getX();
     }
 }
