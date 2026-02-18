@@ -23,18 +23,20 @@ public class TrenchAlign extends Command {
     private OI oi;
     private Drivetrain drivetrain;
     private Limelight llFront;
-    private double 
-    //yTarget, 
+    private double
+    // yTarget,
     rotTarget;
     private Pose2d odometry;
     private boolean canPassTrench;
-    private double epsilon;
 
     private Translation2d target;
-    
+    private Translation2d endTarget;
+
     private PIDController xController, yController, rotController;
-    
-    private static final double kMaxSpeed = 2.0;
+
+    private static double yEpsilon = 0.4, rotEpsilon = 5;
+    private static double finalMovementSpeed = 2.5;
+    private static double kMaxSpeed = 2.5;
     private static final double kPx = 3.5, kIx = 0, kDx = 0, kFFx = 0;
     private static final double kPy = 3.5, kIy = 0, kDy = 0, kFFy = 0;
     private static final double kPr = 0.04, kIr = 0, kDr = 0, kFFr = 0;
@@ -43,75 +45,97 @@ public class TrenchAlign extends Command {
         LEFT, RIGHT
     };
 
+    private static Translation2d offset = new Translation2d(1.2, 0);
 
     public TrenchAlign(TrenchOption option) {
         drivetrain = Drivetrain.getInstance();
-        llFront = LimelightFront.getInstance(); 
+        llFront = LimelightFront.getInstance();
 
-        epsilon = 0.4; // tune later
-        SmartDashboard.putNumber("epsilon",epsilon);
-
-        target = TrenchLocations.kBlueRightCenter.minus(new Translation2d(1.5,0));
-
-
-        // Alliance alliance = DriverStation.getAlliance().isEmpty() ? DriverStation.getAlliance().get() : Alliance.Blue;
-
-        // right trench
-        // if ((alliance == Alliance.Blue && option == TrenchOption.RIGHT) || (alliance == Alliance.Red && option == TrenchOption.LEFT)) 
-        //     yTarget = Units.inchesToMeters(50.59 - 24.97);
-        // // left trench
-        // else if ((alliance == Alliance.Blue && option == TrenchOption.LEFT) || (alliance == Alliance.Red && option == TrenchOption.RIGHT))
-        //     yTarget = 8.07 - Units.inchesToMeters(50.59 - 24.97);
-
-        // depends on side
-        rotTarget = 0;
-        
         xController = new PIDController(kPx, kIx, kDx);
         yController = new PIDController(kPy, kIy, kDy);
         rotController = new PIDController(kPr, kIr, kDr);
-        
-        SmartDashboard.putNumber("TrenchPass Py", kPy);
-        SmartDashboard.putNumber("TrenchPass Iy", kIy);
-        SmartDashboard.putNumber("TrenchPass Dy", kDy);
-        SmartDashboard.putNumber("TrenchPass FFy", kFFy);
+        rotController.enableContinuousInput(-180, 180);
 
-        SmartDashboard.putNumber("TrenchPass Pr", kPr);
-        SmartDashboard.putNumber("TrenchPass Ir", kIr);
-        SmartDashboard.putNumber("TrenchPass Dr", kDr);
-        SmartDashboard.putNumber("TrenchPass FFr", kFFr);
+        SmartDashboard.putNumber("TrenchAlign yEpsilon", yEpsilon);
+        SmartDashboard.putNumber("TrenchAlign rotEpsilon", rotEpsilon);
+
+        SmartDashboard.putNumber("TrenchAlign Px", kPx);
+        SmartDashboard.putNumber("TrenchAlign Ix", kIx);
+        SmartDashboard.putNumber("TrenchAlign Dx", kDx);
+        SmartDashboard.putNumber("TrenchAlign FFx", kFFx);
+
+        SmartDashboard.putNumber("TrenchAlign Py", kPy);
+        SmartDashboard.putNumber("TrenchAlign Iy", kIy);
+        SmartDashboard.putNumber("TrenchAlign Dy", kDy);
+        SmartDashboard.putNumber("TrenchAlign FFy", kFFy);
+
+        SmartDashboard.putNumber("TrenchAlign Pr", kPr);
+        SmartDashboard.putNumber("TrenchAlign Ir", kIr);
+        SmartDashboard.putNumber("TrenchAlign Dr", kDr);
+        SmartDashboard.putNumber("TrenchAlign FFr", kFFr);
+
+        SmartDashboard.putNumber("TrenchAlign offset", offset.getX());
+        SmartDashboard.putNumber("TrenchAlign max speed", kMaxSpeed);
+        SmartDashboard.putNumber("Robot Movement Speed", finalMovementSpeed);
     }
-    
+
     @Override
     public void initialize() {
-        // TODO: MOVE HOOD DOWN
         oi = OI.getInstance();
         canPassTrench = false;
-        odometry = new Pose2d();
+
+        // get closest trench
+        odometry = drivetrain.getPose();
+
+        Translation2d closestTrench = TrenchLocations.allTrenches[0];
+        double closestDistance = 999999;
+        for (Translation2d trench : TrenchLocations.allTrenches) {
+            double distance = odometry.getTranslation().getSquaredDistance(trench);
+            if (distance < closestDistance) {
+                closestTrench = trench;
+                closestDistance = distance;
+            }
+        }
+
+        offset = new Translation2d(SmartDashboard.getNumber("TrenchAlign offset", 0), 0);
+
+        if (odometry.getX() > closestTrench.getX()) {
+            target = closestTrench.plus(offset);
+            endTarget = closestTrench.minus(offset);
+            rotTarget = 180;
+        } else {
+            target = closestTrench.minus(offset);
+            endTarget = closestTrench.plus(offset);
+            rotTarget = 0;
+        }
     }
 
     @Override
     public void execute() {
-        double Px = SmartDashboard.getNumber("TrenchPass Px", kPx);
-        double Ix = SmartDashboard.getNumber("TrenchPass Ix", kIx);
-        double Dx = SmartDashboard.getNumber("TrenchPass Dx", kDx);
-        double FFx = SmartDashboard.getNumber("TrenchPass FFx", kFFx);
+        double Px = SmartDashboard.getNumber("TrenchAlign Px", kPx);
+        double Ix = SmartDashboard.getNumber("TrenchAlign Ix", kIx);
+        double Dx = SmartDashboard.getNumber("TrenchAlign Dx", kDx);
+        double FFx = SmartDashboard.getNumber("TrenchAlign FFx", kFFx);
 
-        double Py = SmartDashboard.getNumber("TrenchPass Py", kPy);
-        double Iy = SmartDashboard.getNumber("TrenchPass Iy", kIy);
-        double Dy = SmartDashboard.getNumber("TrenchPass Dy", kDy);
-        double FFy = SmartDashboard.getNumber("TrenchPass FFy", kFFy);
+        double Py = SmartDashboard.getNumber("TrenchAlign Py", kPy);
+        double Iy = SmartDashboard.getNumber("TrenchAlign Iy", kIy);
+        double Dy = SmartDashboard.getNumber("TrenchAlign Dy", kDy);
+        double FFy = SmartDashboard.getNumber("TrenchAlign FFy", kFFy);
 
-        double Pr = SmartDashboard.getNumber("TrenchPass Pr", kPr);
-        double Ir = SmartDashboard.getNumber("TrenchPass Ir", kIr);
-        double Dr = SmartDashboard.getNumber("TrenchPass Dr", kDr);
-        double FFr = SmartDashboard.getNumber("TrenchPass FFr", kFFr);
+        double Pr = SmartDashboard.getNumber("TrenchAlign Pr", kPr);
+        double Ir = SmartDashboard.getNumber("TrenchAlign Ir", kIr);
+        double Dr = SmartDashboard.getNumber("TrenchAlign Dr", kDr);
+        double FFr = SmartDashboard.getNumber("TrenchAlign FFr", kFFr);
 
+        yEpsilon = SmartDashboard.getNumber("TrenchAlign yEpsilon", 0);
+        rotEpsilon = SmartDashboard.getNumber("TrenchAlign rotEpsilon", rotEpsilon);
+        kMaxSpeed = SmartDashboard.getNumber("TrenchAlign max speed", kMaxSpeed);
+        double movementSpeed = SmartDashboard.getNumber("Robot Movement Speed", 0);
 
-        
         xController.setPID(Px, Ix, Dx);
         yController.setPID(Py, Iy, Dy);
         rotController.setPID(Pr, Ir, Dr);
-        
+
         Optional<Pose2d> odoOptional = llFront.getPoseMT2();
         odometry = odoOptional.isPresent() ? odoOptional.get() : drivetrain.getPose();
 
@@ -120,21 +144,25 @@ public class TrenchAlign extends Command {
 
         double xError = odometry.getX() - target.getX();
         double xVel = xController.calculate(xError) - Math.signum(xError) * FFx;
-        xVel = Math.min(Math.abs(xVel), kMaxSpeed) * Math.signum(xVel);
-        
+
         double yError = odometry.getY() - target.getY();
         double yVel = yController.calculate(yError) - Math.signum(yError) * FFy;
-        yVel = Math.min(Math.abs(yVel), kMaxSpeed) * Math.signum(yVel);
 
-        epsilon = SmartDashboard.getNumber("epsilon", 0);
+        Translation2d vel = new Translation2d(xVel, yVel);
+        if (vel.getSquaredNorm() > kMaxSpeed * kMaxSpeed)
+            vel = vel.div(vel.getNorm()).times(kMaxSpeed);
 
-        if (Math.abs(yError) < epsilon)
+        if (Math.abs(yError) < yEpsilon && Math.abs(rotError) < rotEpsilon)
             canPassTrench = true;
 
         if (!canPassTrench)
-            drivetrain.drive(new Translation2d(xVel, yVel), rotVel, true, new Translation2d(0, 0));
-        else
-            drivetrain.drive(new Translation2d(1.5, yVel), 0, true, new Translation2d(0,0));
+            drivetrain.drive(vel, rotVel, true, new Translation2d(0, 0));
+        else {
+            drivetrain.drive(
+                new Translation2d(rotTarget == 0 ? movementSpeed : -movementSpeed, yVel),
+                rotVel, true, new Translation2d(0, 0)
+            );
+        }
     }
 
     @Override
@@ -144,8 +172,10 @@ public class TrenchAlign extends Command {
 
     @Override
     public boolean isFinished() {
-        if (odometry.equals(new Pose2d()))
-            return false;
-        return odometry.getX() > TrenchLocations.kBlueRightCenter.getX();
+        // if (odometry.equals(new Pose2d()))
+        // return false;
+        return rotTarget == 0 ?
+            odometry.getX() > endTarget.getX() :
+            odometry.getX() < endTarget.getX();
     }
 }

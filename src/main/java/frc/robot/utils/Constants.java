@@ -236,6 +236,7 @@ public final class Constants {
 
             public static final Translation2d kRedLeftCenter = getTagLocation(6).plus(getTagLocation(7)).div(2);
             public static final Translation2d kRedRightCenter = getTagLocation(1).plus(getTagLocation(12)).div(2);
+            public static final Translation2d[] allTrenches = {kBlueLeftCenter, kBlueRightCenter, kRedLeftCenter, kRedRightCenter};
         }
     }
 
