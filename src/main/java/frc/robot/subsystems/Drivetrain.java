@@ -166,6 +166,30 @@ public class Drivetrain extends SubsystemBase {
         setModuleStates(swerveModuleState);
     }
 
+
+    public void driveBlue(Translation2d translation, double rotation, boolean fieldOriented, Translation2d centerRotation) {
+        this.rotation = rotation;
+        currentTranslation = translation;
+
+        ChassisSpeeds fieldRelativeSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
+        ChassisSpeeds robotRelativeSpeeds;
+
+        if (fieldOriented)
+            robotRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, Rotation2d.fromDegrees(getHeadingBlue()));
+        else
+            robotRelativeSpeeds = fieldRelativeSpeeds;
+
+        if (centerRotation == null)
+            swerveModuleState = DriveConstants.kinematics.toSwerveModuleStates(robotRelativeSpeeds);
+        else
+            swerveModuleState = DriveConstants.kinematics.toSwerveModuleStates(robotRelativeSpeeds, centerRotation);
+
+        for (int i = 0; i > swerveModuleState.length; i++)
+            swerveModuleState[i].optimize(new Rotation2d(swerveModule[i].getCANcoderReading()));
+
+        setModuleStates(swerveModuleState);
+    }
+
     public double getYaw() {
         return gyro.getYaw().getValueAsDouble();
     }

@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import java.util.Optional;
 
+import javax.lang.model.util.ElementScanner14;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,9 +27,10 @@ public class TrenchAlign extends Command {
     private Limelight llFront;
     private double
     // yTarget,
-    rotTarget;
+    rotTargetBlue;
     private Pose2d odometry;
     private boolean canPassTrench;
+    private boolean drivePlus;
 
     private Translation2d target;
     private Translation2d endTarget;
@@ -88,7 +91,7 @@ public class TrenchAlign extends Command {
         odometry = drivetrain.getPose();
 
         Translation2d closestTrench = TrenchLocations.allTrenches[0];
-        double closestDistance = 999999;
+        double closestDistance = 99999999;
         for (Translation2d trench : TrenchLocations.allTrenches) {
             double distance = odometry.getTranslation().getSquaredDistance(trench);
             if (distance < closestDistance) {
@@ -99,15 +102,18 @@ public class TrenchAlign extends Command {
 
         offset = new Translation2d(SmartDashboard.getNumber("TrenchAlign offset", 0), 0);
 
-        if (odometry.getX() > closestTrench.getX()) {
-            target = closestTrench.plus(offset);
-            endTarget = closestTrench.minus(offset);
-            rotTarget = 180;
-        } else {
+        if (odometry.getX() < closestTrench.getX()) {
             target = closestTrench.minus(offset);
             endTarget = closestTrench.plus(offset);
-            rotTarget = 0;
+            drivePlus = true;
+        } else {
+            target = closestTrench.plus(offset);
+            endTarget = closestTrench.minus(offset);
+            drivePlus = false;
         }
+
+        double currentHeading = drivetrain.getHeadingBlue();
+        rotTargetBlue = Math.abs(currentHeading) < 90 ? 0 : 180;
     }
 
     @Override
@@ -139,7 +145,7 @@ public class TrenchAlign extends Command {
         Optional<Pose2d> odoOptional = llFront.getPoseMT2();
         odometry = odoOptional.isPresent() ? odoOptional.get() : drivetrain.getPose();
 
-        double rotError = drivetrain.getHeading() - rotTarget;
+        double rotError = drivetrain.getHeadingBlue() - rotTargetBlue;
         double rotVel = rotController.calculate(rotError) - Math.signum(rotError) * FFr;
 
         double xError = odometry.getX() - target.getX();
@@ -156,12 +162,11 @@ public class TrenchAlign extends Command {
             canPassTrench = true;
 
         if (!canPassTrench)
-            drivetrain.drive(vel, rotVel, true, new Translation2d(0, 0));
+            drivetrain.driveBlue(vel, rotVel, true, new Translation2d(0, 0));
         else {
-            drivetrain.drive(
-                new Translation2d(rotTarget == 0 ? movementSpeed : -movementSpeed, yVel),
-                rotVel, true, new Translation2d(0, 0)
-            );
+            drivetrain.driveBlue(
+                    new Translation2d(drivePlus ? movementSpeed : -movementSpeed, yVel),
+                    rotVel, true, new Translation2d(0, 0));
         }
     }
 
@@ -174,8 +179,6 @@ public class TrenchAlign extends Command {
     public boolean isFinished() {
         // if (odometry.equals(new Pose2d()))
         // return false;
-        return rotTarget == 0 ?
-            odometry.getX() > endTarget.getX() :
-            odometry.getX() < endTarget.getX();
+        return drivePlus ? odometry.getX() > endTarget.getX() : odometry.getX() < endTarget.getX();
     }
 }
