@@ -59,7 +59,7 @@ public class ShooterUtil {
         SmartDashboard.putNumber("robot radial velocity", v_r);
         SmartDashboard.putNumber("robot tangential velocity", v_t);
         
-        shooterUtilOdometry.setRobotPose(new Pose2d(hub2, new Rotation2d()));
+        //shooterUtilOdometry.setRobotPose(new Pose2d(hub2, new Rotation2d()));
 
         return new ShootingParameters(
             mapVal1.pitch(),

@@ -196,6 +196,7 @@ public final class Constants {
 
     public static final class FieldConstants {
         public static final Translation2d kFieldSize = new Translation2d(16.54, 8.07);
+        public static final double kFieldTowerAutoOffset = 1.5;
 
         // TO DO: FIND REAL COORDINATES OF HUB, APPROXIMATING FROM PATH PLANNER FOR NOW
         public static final double kBlueHubX = 4.625;

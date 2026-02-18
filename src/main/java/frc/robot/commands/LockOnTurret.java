@@ -44,13 +44,14 @@ public class LockOnTurret extends Command {
         drivetrain = Drivetrain.getInstance();
         turret = Turret.getInstance();
         
+        ShooterUtil.initShooterUtils();
+
         addRequirements(turret);
     }
 
     @Override
     public void initialize() {
         hub = FieldConstants.getHub();
-        ShooterUtil.initShooterUtils();
     }
 
     @Override 
