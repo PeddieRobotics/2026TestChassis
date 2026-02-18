@@ -173,7 +173,7 @@ public class Autonomous {
                 ),
                 new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
                 new IdealStartingState(0, Rotation2d.fromDegrees(180)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new GoalEndState(0, Rotation2d.fromDegrees(180))
             ),
             
             new WaitCommand(2),
@@ -198,8 +198,8 @@ public class Autonomous {
                     new Pose2d(1.063, 4.688, Rotation2d.fromDegrees(-74.055))
                 ),
                 new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(0, Rotation2d.fromDegrees(-74.055))
             )
 
         );
@@ -218,7 +218,7 @@ public class Autonomous {
                 ),
                 new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
                 new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new GoalEndState(0, Rotation2d.fromDegrees(180))
             ),
 
             new WaitCommand(2),
@@ -229,8 +229,8 @@ public class Autonomous {
                     new Pose2d(1.048, 3.048, Rotation2d.fromDegrees(114.544))
                 ),
                 new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
+                new GoalEndState(0, Rotation2d.fromDegrees(114.544))
             )
         );
 
@@ -248,7 +248,7 @@ public class Autonomous {
                 ),
                 new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
                 new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new GoalEndState(0, Rotation2d.fromDegrees(-71.147))
             ),
             //TODO: add turn 180 command!!
             new AutoDriveCommand(
@@ -263,8 +263,8 @@ public class Autonomous {
                     
                 ), 
                 new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new IdealStartingState(0, Rotation2d.fromDegrees(117.255)),
+                new GoalEndState(0, Rotation2d.fromDegrees(-112.380))
             )
         );
 
@@ -283,7 +283,7 @@ public class Autonomous {
                 new PathConstraints(1, 1, Math.PI, Math.PI),
                 //new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
                 new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new GoalEndState(0, Rotation2d.fromDegrees(71.147))
             ),
             //TODO: add turn 180 command?
             new AutoDriveCommand(
@@ -299,8 +299,8 @@ public class Autonomous {
                 ), 
                 new PathConstraints(1, 1, Math.PI, Math.PI),
                 //new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new IdealStartingState(0, Rotation2d.fromDegrees(-117.255)),
+                new GoalEndState(0, Rotation2d.fromDegrees(112.380))
             )
         );
 
@@ -315,11 +315,11 @@ public class Autonomous {
                     new Pose2d(3.560, 5.853, Rotation2d.fromDegrees(180)),
                     new Pose2d(1.400, 5.950, Rotation2d.fromDegrees(0))
                 ),
-                new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
 
                 //new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
                 new IdealStartingState(0, Rotation2d.fromDegrees(180)),
-                new GoalEndState(0, Rotation2d.fromDegrees(180))
+                new GoalEndState(0, Rotation2d.fromDegrees(0))
             ),
             new WaitCommand(0.5),
 
@@ -327,10 +327,10 @@ public class Autonomous {
                 List.of(
                     new Pose2d(1.400, 5.950, Rotation2d.fromDegrees(0)),
                     new Pose2d(1.801, 3.071, Rotation2d.fromDegrees(-100.222)),
-                    new Pose2d(0.95, 0.613, Rotation2d.fromDegrees(92.651))
+                    new Pose2d(0.95, 0.613, Rotation2d.fromDegrees(180))
                     
                 ),
-                new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
 
                 //new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
                 new IdealStartingState(0, Rotation2d.fromDegrees(180)),
@@ -340,15 +340,36 @@ public class Autonomous {
 
             new AutoDriveCommand(
                 List.of(
-                    new Pose2d(0.95, 0.613, Rotation2d.fromDegrees(92.651)),
-                    new Pose2d(1.063, 2.748, Rotation2d.fromDegrees(95.631))
+                    new Pose2d(0.95, 0.613, Rotation2d.fromDegrees(180)),
+                    new Pose2d(1.063, 2.748, Rotation2d.fromDegrees(105.255))  
+                ),
+
+                List.of(
+                    new RotationTarget(3.5, Rotation2d.fromDegrees(180))
+                ),
+                
+                List.of(
+                    new EventMarker("", 0.0)
+                ), 
+                
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+
+                new IdealStartingState(0, Rotation2d.fromDegrees(92.651)),
+                new GoalEndState(0, Rotation2d.fromDegrees(105.255))
+
+            ),
+
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(0.95, 0.613, Rotation2d.fromDegrees(180)),
+                    new Pose2d(1.063, 2.748, Rotation2d.fromDegrees(105.255))
                     
                 ),
                 new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
 
                 //new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
-                new GoalEndState(0, Rotation2d.fromDegrees(180))
+                new IdealStartingState(0, Rotation2d.fromDegrees(92.651)),
+                new GoalEndState(0, Rotation2d.fromDegrees(105.255))
             )
             );
 
@@ -358,7 +379,7 @@ public class Autonomous {
             }),
             new AutoDriveCommand(
                 List.of(
-                    new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(124.306)), 
+                    new Pose2d(3.599, 0.664, Rotation2d.fromDegrees(180)), 
                     new Pose2d(2.034, 2.541, Rotation2d.fromDegrees(91.449)),
                     new Pose2d(2.771, 3.912, Rotation2d.fromDegrees(81.251)),
                     new Pose2d(2.304, 5.297, Rotation2d.fromDegrees(77.259))
@@ -368,7 +389,7 @@ public class Autonomous {
                 ),
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
                 new GoalEndState(0, Rotation2d.fromDegrees(-90))
             )
 
@@ -381,7 +402,7 @@ public class Autonomous {
             }),
             new AutoDriveCommand(
                 List.of(
-                    new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(0)), 
+                    new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(180)), 
                     new Pose2d(7.752, 1.816, Rotation2d.fromDegrees(91.273)),
                     new Pose2d(7.196, 6.862, Rotation2d.fromDegrees(154.898)),
                     new Pose2d(4.453, 7.496, Rotation2d.fromDegrees(179.246)),
@@ -392,8 +413,8 @@ public class Autonomous {
                 ),
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
+                new GoalEndState(0, Rotation2d.fromDegrees(-117.714))
             )
 
         );
@@ -416,7 +437,7 @@ public class Autonomous {
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
                 new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new GoalEndState(0, Rotation2d.fromDegrees(-174.806))
             )
 
         );
@@ -433,8 +454,8 @@ public class Autonomous {
                 ),
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
+                new GoalEndState(0, Rotation2d.fromDegrees(180))
             ),
             new WaitCommand(0.5),
             new AutoDriveCommand(
@@ -450,8 +471,8 @@ public class Autonomous {
                 ), 
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new IdealStartingState(0, Rotation2d.fromDegrees(-33.944)),
+                new GoalEndState(0, Rotation2d.fromDegrees(138.674))
             ),
             new WaitCommand(2),
             new AutoDriveCommand(
@@ -462,8 +483,8 @@ public class Autonomous {
 
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new IdealStartingState(0, Rotation2d.fromDegrees(138.674)),
+                new GoalEndState(0, Rotation2d.fromDegrees(-150.593))
             )
             );
             
@@ -488,7 +509,7 @@ public class Autonomous {
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
                 new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new GoalEndState(0, Rotation2d.fromDegrees(-163.009))
             )
         );
             
@@ -507,8 +528,8 @@ public class Autonomous {
                 ),
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
+                new GoalEndState(0, Rotation2d.fromDegrees(180))
             ),
             new WaitCommand(0.5),
             new AutoDriveCommand(
@@ -526,8 +547,8 @@ public class Autonomous {
                 ),
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new IdealStartingState(0, Rotation2d.fromDegrees(45.556)),
+                new GoalEndState(0, Rotation2d.fromDegrees(-107.966))
             )
         );
 
@@ -546,8 +567,8 @@ public class Autonomous {
                 ),
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
+                new GoalEndState(0, Rotation2d.fromDegrees(180))
             ),
             new WaitCommand(2),
             new AutoDriveCommand(
@@ -564,8 +585,8 @@ public class Autonomous {
                 ),
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new IdealStartingState(0, Rotation2d.fromDegrees(18.187)),
+                new GoalEndState(0, Rotation2d.fromDegrees(83.387))
             )
         );
 
@@ -583,8 +604,8 @@ public class Autonomous {
                 ),
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(0))
+                new IdealStartingState(0, Rotation2d.fromDegrees(-90)),
+                new GoalEndState(0, Rotation2d.fromDegrees(-112.380))
             )
 
         );
@@ -619,8 +640,8 @@ public class Autonomous {
                 ),
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(180))
+                new IdealStartingState(0, Rotation2d.fromDegrees(16.928)),
+                new GoalEndState(0, Rotation2d.fromDegrees(-129.174))
             )
         );
 
@@ -654,8 +675,8 @@ public class Autonomous {
                 ),
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-                new GoalEndState(0, Rotation2d.fromDegrees(-180))
+                new IdealStartingState(0, Rotation2d.fromDegrees(-16.928)),
+                new GoalEndState(0, Rotation2d.fromDegrees(129.174))
             )
         );
 
