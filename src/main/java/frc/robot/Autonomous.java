@@ -326,14 +326,14 @@ public class Autonomous {
             new AutoDriveCommand(
                 List.of(
                     new Pose2d(1.400, 5.950, Rotation2d.fromDegrees(0)),
-                    new Pose2d(1.801, 3.071, Rotation2d.fromDegrees(-100.222)),
+                    new Pose2d(2, 3.071, Rotation2d.fromDegrees(-100.222)),
                     new Pose2d(0.95, 0.613, Rotation2d.fromDegrees(180))
                     
                 ),
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
 
                 //new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
                 new GoalEndState(0, Rotation2d.fromDegrees(180))
             ),
             new WaitCommand(2),
@@ -354,7 +354,7 @@ public class Autonomous {
                 
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
 
-                new IdealStartingState(0, Rotation2d.fromDegrees(92.651)),
+                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
                 new GoalEndState(0, Rotation2d.fromDegrees(105.255))
 
             ),
