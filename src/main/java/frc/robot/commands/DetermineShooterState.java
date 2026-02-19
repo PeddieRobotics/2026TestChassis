@@ -111,7 +111,7 @@ public class DetermineShooterState extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute() {        
         SmartDashboard.putString("ShooterStructure State", shooterState.toString());
         SmartDashboard.putString("Shift", Shifts.determineShift().toString());
 
@@ -123,7 +123,7 @@ public class DetermineShooterState extends Command {
         switch (shooterState) {
             case HOLD:
                 // hopper.stopHopper();
-                break;
+                //break;
 
             case SCORE:
                 Translation2d turretToHub = hub.minus(turretCenter);
