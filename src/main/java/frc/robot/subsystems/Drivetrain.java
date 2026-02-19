@@ -143,14 +143,10 @@ public class Drivetrain extends SubsystemBase {
 
     public void drive(Translation2d translation, double rotation, boolean fieldOriented, Translation2d centerRotation) {
         this.rotation = rotation;
-        // currentTranslation = translation;
-
-        if (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == DriverStation.Alliance.Blue){
+        if (DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
             currentTranslation = translation;
-        }else{
-            currentTranslation = translation.rotateBy(new Rotation2d(Math.PI));
-        }
-
+        else
+            currentTranslation = translation.rotateBy(Rotation2d.fromDegrees(180));
 
         ChassisSpeeds fieldRelativeSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
         ChassisSpeeds robotRelativeSpeeds;

@@ -17,14 +17,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LimelightBack;
 import frc.robot.subsystems.LimelightFront;
+import frc.robot.utils.Constants.TrenchAlignConstants;
 import frc.robot.utils.Constants.FieldConstants.TrenchLocations;
 import frc.robot.utils.OI;
 
 public class TrenchAlign extends Command {
     private OI oi;
     private Drivetrain drivetrain;
-    private Limelight llFront;
+
+    private Limelight llFront, llBack;
+    private Limelight theLimelight;
+
     private double
     // yTarget,
     rotTargetBlue;
@@ -37,53 +42,53 @@ public class TrenchAlign extends Command {
 
     private PIDController xController, yController, rotController;
 
-    private static double yEpsilon = 0.4, rotEpsilon = 5;
-    private static double finalMovementSpeed = 2.5;
-    private static double kMaxSpeed = 2.5;
-    private static final double kPx = 3.5, kIx = 0, kDx = 0, kFFx = 0;
-    private static final double kPy = 3.5, kIy = 0, kDy = 0, kFFy = 0;
-    private static final double kPr = 0.04, kIr = 0, kDr = 0, kFFr = 0;
-
     public enum TrenchOption {
         LEFT, RIGHT
     };
 
-    private static Translation2d offset = new Translation2d(1.2, 0);
+    private static Translation2d offset = new Translation2d(2, 0);
+    private static Translation2d closeOffset = new Translation2d(1.0, 0); //when we are in the "bad" rectangle
+    private static Translation2d driveOverTrenchOffset = new Translation2d(1.2, 0); //when we are in the "bad" rectangle
 
     public TrenchAlign(TrenchOption option) {
         drivetrain = Drivetrain.getInstance();
         llFront = LimelightFront.getInstance();
+        llBack = LimelightBack.getInstance();
 
-        xController = new PIDController(kPx, kIx, kDx);
-        yController = new PIDController(kPy, kIy, kDy);
-        rotController = new PIDController(kPr, kIr, kDr);
+        xController = new PIDController(TrenchAlignConstants.kPx, TrenchAlignConstants.kIx, TrenchAlignConstants.kDx);
+        yController = new PIDController(TrenchAlignConstants.kPy, TrenchAlignConstants.kIy, TrenchAlignConstants.kDy);
+        rotController = new PIDController(TrenchAlignConstants.kPr, TrenchAlignConstants.kIr, TrenchAlignConstants.kDr);
         rotController.enableContinuousInput(-180, 180);
 
-        SmartDashboard.putNumber("TrenchAlign yEpsilon", yEpsilon);
-        SmartDashboard.putNumber("TrenchAlign rotEpsilon", rotEpsilon);
+        SmartDashboard.putNumber("TrenchAlign yEpsilon", TrenchAlignConstants.kEpsilonY);
+        SmartDashboard.putNumber("TrenchAlign rotEpsilon", TrenchAlignConstants.kEpsilonRot);
 
-        SmartDashboard.putNumber("TrenchAlign Px", kPx);
-        SmartDashboard.putNumber("TrenchAlign Ix", kIx);
-        SmartDashboard.putNumber("TrenchAlign Dx", kDx);
-        SmartDashboard.putNumber("TrenchAlign FFx", kFFx);
+        SmartDashboard.putNumber("TrenchAlign Px", TrenchAlignConstants.kPx);
+        SmartDashboard.putNumber("TrenchAlign Ix", TrenchAlignConstants.kIx);
+        SmartDashboard.putNumber("TrenchAlign Dx", TrenchAlignConstants.kDx);
+        SmartDashboard.putNumber("TrenchAlign FFx", TrenchAlignConstants.kFFx);
 
-        SmartDashboard.putNumber("TrenchAlign Py", kPy);
-        SmartDashboard.putNumber("TrenchAlign Iy", kIy);
-        SmartDashboard.putNumber("TrenchAlign Dy", kDy);
-        SmartDashboard.putNumber("TrenchAlign FFy", kFFy);
+        SmartDashboard.putNumber("TrenchAlign Py", TrenchAlignConstants.kPy);
+        SmartDashboard.putNumber("TrenchAlign Iy", TrenchAlignConstants.kIy);
+        SmartDashboard.putNumber("TrenchAlign Dy", TrenchAlignConstants.kDy);
+        SmartDashboard.putNumber("TrenchAlign FFy", TrenchAlignConstants.kFFy);
 
-        SmartDashboard.putNumber("TrenchAlign Pr", kPr);
-        SmartDashboard.putNumber("TrenchAlign Ir", kIr);
-        SmartDashboard.putNumber("TrenchAlign Dr", kDr);
-        SmartDashboard.putNumber("TrenchAlign FFr", kFFr);
+        SmartDashboard.putNumber("TrenchAlign Pr", TrenchAlignConstants.kPr);
+        SmartDashboard.putNumber("TrenchAlign Ir", TrenchAlignConstants.kIr);
+        SmartDashboard.putNumber("TrenchAlign Dr", TrenchAlignConstants.kDr);
+        SmartDashboard.putNumber("TrenchAlign FFr", TrenchAlignConstants.kFFr);
 
         SmartDashboard.putNumber("TrenchAlign offset", offset.getX());
-        SmartDashboard.putNumber("TrenchAlign max speed", kMaxSpeed);
-        SmartDashboard.putNumber("Robot Movement Speed", finalMovementSpeed);
+        SmartDashboard.putNumber("TrenchAlign closeOffset", closeOffset.getX());
+        SmartDashboard.putNumber("TrenchAlign speed stage 1", TrenchAlignConstants.kStage1Speed);
+        SmartDashboard.putNumber("TrenchAlign speed stage 2", TrenchAlignConstants.kStage2Speed);
     }
 
     @Override
     public void initialize() {
+        offset = new Translation2d(SmartDashboard.getNumber("TrenchAlign offset", 0), 0);        
+        closeOffset = new Translation2d(SmartDashboard.getNumber("TrenchAlign closeOffset", 0), 0);
+
         oi = OI.getInstance();
         canPassTrench = false;
 
@@ -100,50 +105,72 @@ public class TrenchAlign extends Command {
             }
         }
 
-        offset = new Translation2d(SmartDashboard.getNumber("TrenchAlign offset", 0), 0);
-
-        if (odometry.getX() < closestTrench.getX()) {
-            target = closestTrench.minus(offset);
-            endTarget = closestTrench.plus(offset);
-            drivePlus = true;
-        } else {
-            target = closestTrench.plus(offset);
-            endTarget = closestTrench.minus(offset);
-            drivePlus = false;
-        }
-
         double currentHeading = drivetrain.getHeadingBlue();
         rotTargetBlue = Math.abs(currentHeading) < 90 ? 0 : 180;
+        double absRotError = Math.abs(Math.IEEEremainder(currentHeading - rotTargetBlue, 360));
+
+        boolean blue = DriverStation.getAlliance().isEmpty() || DriverStation.getAlliance().get() == Alliance.Blue;
+        double rotTarget = blue ? rotTargetBlue : (rotTargetBlue + 180) % 360;
+
+        // driving forward (plus direction)
+        if (odometry.getX() < closestTrench.getX()) {
+            Translation2d farTarget = closestTrench.minus(offset);
+            endTarget = closestTrench.plus(driveOverTrenchOffset);
+            drivePlus = true;
+
+            theLimelight = rotTarget == 0 ? llFront : llBack;
+
+            // "behind" the far target
+            if (odometry.getX() < farTarget.getX() && absRotError < 40)
+                target = closestTrench.minus(closeOffset);
+            else
+                target = farTarget;
+        }
+        // driving backward (minus direction)
+        else {
+            Translation2d farTarget = closestTrench.plus(offset);
+            endTarget = closestTrench.minus(driveOverTrenchOffset);
+            drivePlus = false;
+
+            theLimelight = rotTarget == 0 ? llBack : llFront;
+
+            // "ahead of" the far target
+            if (odometry.getX() > farTarget.getX() && absRotError < 40)
+                target = closestTrench.plus(closeOffset);
+            else
+                target = farTarget;
+        }
     }
 
     @Override
     public void execute() {
-        double Px = SmartDashboard.getNumber("TrenchAlign Px", kPx);
-        double Ix = SmartDashboard.getNumber("TrenchAlign Ix", kIx);
-        double Dx = SmartDashboard.getNumber("TrenchAlign Dx", kDx);
-        double FFx = SmartDashboard.getNumber("TrenchAlign FFx", kFFx);
+        double Px = SmartDashboard.getNumber("TrenchAlign Px", 0);
+        double Ix = SmartDashboard.getNumber("TrenchAlign Ix", 0);
+        double Dx = SmartDashboard.getNumber("TrenchAlign Dx", 0);
+        double FFx = SmartDashboard.getNumber("TrenchAlign FFx", 0);
 
-        double Py = SmartDashboard.getNumber("TrenchAlign Py", kPy);
-        double Iy = SmartDashboard.getNumber("TrenchAlign Iy", kIy);
-        double Dy = SmartDashboard.getNumber("TrenchAlign Dy", kDy);
-        double FFy = SmartDashboard.getNumber("TrenchAlign FFy", kFFy);
+        double Py = SmartDashboard.getNumber("TrenchAlign Py", 0);
+        double Iy = SmartDashboard.getNumber("TrenchAlign Iy", 0);
+        double Dy = SmartDashboard.getNumber("TrenchAlign Dy", 0);
+        double FFy = SmartDashboard.getNumber("TrenchAlign FFy", 0);
 
-        double Pr = SmartDashboard.getNumber("TrenchAlign Pr", kPr);
-        double Ir = SmartDashboard.getNumber("TrenchAlign Ir", kIr);
-        double Dr = SmartDashboard.getNumber("TrenchAlign Dr", kDr);
-        double FFr = SmartDashboard.getNumber("TrenchAlign FFr", kFFr);
+        double Pr = SmartDashboard.getNumber("TrenchAlign Pr", 0);
+        double Ir = SmartDashboard.getNumber("TrenchAlign Ir", 0);
+        double Dr = SmartDashboard.getNumber("TrenchAlign Dr", 0);
+        double FFr = SmartDashboard.getNumber("TrenchAlign FFr", 0);
 
-        yEpsilon = SmartDashboard.getNumber("TrenchAlign yEpsilon", 0);
-        rotEpsilon = SmartDashboard.getNumber("TrenchAlign rotEpsilon", rotEpsilon);
-        kMaxSpeed = SmartDashboard.getNumber("TrenchAlign max speed", kMaxSpeed);
-        double movementSpeed = SmartDashboard.getNumber("Robot Movement Speed", 0);
+        double stage1speed = SmartDashboard.getNumber("TrenchAlign speed stage 1", 0);
+        double stage2speed = SmartDashboard.getNumber("TrenchAlign speed stage 2", 0);
+        
+        double yEpsilon = SmartDashboard.getNumber("TrenchAlign yEpsilon", 0);
+        double rotEpsilon = SmartDashboard.getNumber("TrenchAlign rotEpsilon", 0);
 
         xController.setPID(Px, Ix, Dx);
         yController.setPID(Py, Iy, Dy);
         rotController.setPID(Pr, Ir, Dr);
 
-        Optional<Pose2d> odoOptional = llFront.getPoseMT2();
-        odometry = odoOptional.isPresent() ? odoOptional.get() : drivetrain.getPose();
+        Optional<Pose2d> llOdometry = theLimelight.getPoseMT2();
+        odometry = llOdometry.isPresent() ? llOdometry.get() : drivetrain.getPose();
 
         double rotError = drivetrain.getHeadingBlue() - rotTargetBlue;
         double rotVel = rotController.calculate(rotError) - Math.signum(rotError) * FFr;
@@ -155,8 +182,8 @@ public class TrenchAlign extends Command {
         double yVel = yController.calculate(yError) - Math.signum(yError) * FFy;
 
         Translation2d vel = new Translation2d(xVel, yVel);
-        if (vel.getSquaredNorm() > kMaxSpeed * kMaxSpeed)
-            vel = vel.div(vel.getNorm()).times(kMaxSpeed);
+        if (vel.getSquaredNorm() > stage1speed * stage1speed)
+            vel = vel.div(vel.getNorm()).times(stage1speed);
 
         if (Math.abs(yError) < yEpsilon && Math.abs(Math.IEEEremainder(rotError, 360)) < rotEpsilon)
             canPassTrench = true;
@@ -165,8 +192,9 @@ public class TrenchAlign extends Command {
             drivetrain.driveBlue(vel, rotVel, true, new Translation2d(0, 0));
         else {
             drivetrain.driveBlue(
-                    new Translation2d(drivePlus ? movementSpeed : -movementSpeed, yVel),
-                    rotVel, true, new Translation2d(0, 0));
+                new Translation2d(drivePlus ? stage2speed : -stage2speed, yVel),
+                rotVel, true, new Translation2d(0, 0)
+            );
         }
     }
 

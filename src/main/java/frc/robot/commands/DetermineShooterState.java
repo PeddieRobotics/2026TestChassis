@@ -123,7 +123,7 @@ public class DetermineShooterState extends Command {
         switch (shooterState) {
             case HOLD:
                 // hopper.stopHopper();
-                //break;
+                // break;
 
             case SCORE:
                 Translation2d turretToHub = hub.minus(turretCenter);
