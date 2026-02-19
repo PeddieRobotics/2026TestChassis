@@ -89,7 +89,7 @@ public class ShooterUtil {
         }
         
         Translation2d robotCenter = Drivetrain.getInstance().getPose().getTranslation();
-        Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(Drivetrain.getInstance().getHeadingBlue())));
+        Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Drivetrain.getInstance().getHeadingBlueRotation2d()));
 
         double turretY = turretCenter.getY();
 

@@ -86,7 +86,7 @@ public class LockOnTurret extends Command {
         
         final Translation2d robotCenter = drivetrain.getPose().getTranslation();
     
-        final Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue()))); // origin to turret center
+        final Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(drivetrain.getHeadingBlueRotation2d())); // origin to turret center
 
         final Translation2d turretToHub = hub.minus(turretCenter);
 

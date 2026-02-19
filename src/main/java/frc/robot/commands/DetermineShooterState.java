@@ -117,7 +117,7 @@ public class DetermineShooterState extends Command {
 
         Translation2d hub = FieldConstants.getHub();
         Translation2d robotCenter = drivetrain.getPose().getTranslation();
-        Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue()))); // origin to turret center
+        Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(drivetrain.getHeadingBlueRotation2d())); // origin to turret center
 
         ShootingParameters params;
         switch (shooterState) {

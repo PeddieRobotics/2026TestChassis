@@ -157,7 +157,7 @@ public class Turret extends SubsystemBase {
     }
 
     public double setAngleFieldRelative(Rotation2d desiredRotation) {
-        Rotation2d r = desiredRotation.minus(Drivetrain.getInstance().getHeadingRotation2d());
+        Rotation2d r = desiredRotation.minus(Drivetrain.getInstance().getHeadingBlueRotation2d());
         setAngle(r);
         return r.getDegrees();
     }
@@ -219,40 +219,6 @@ public class Turret extends SubsystemBase {
     public double getTargetAngle(){
         return targetAngle;
     }
-
-    // What?
-    // public void lockOnTurret(){
-    //     limelights = new Limelight[] {
-    //         LimelightFront.getInstance(),
-    //         LimelightLeft.getInstance(),
-    //         LimelightBack.getInstance(),
-    //         LimelightRight.getInstance()
-    //     };
-
-    //     Translation2d hub = FieldConstants.getHub();
-    //     boolean teamBlue = hub.equals(FieldConstants.kBlueHub);
-
-    //     Translation2d robotCenter = drivetrain.getPose().getTranslation();
-        
-    //     Translation2d turretCenter = robotCenter.plus(TurretConstants.kRobotCenterToTurretCenter.rotateBy(Rotation2d.fromDegrees(drivetrain.getHeadingBlue()))); // origin to turret center
-
-    //     Translation2d turretToHub = hub.minus(turretCenter);
-
-    //     Rotation2d targetYaw = turretToHub.getAngle();
-
-    //     setAngleFieldRelative(targetYaw);
-
-    //     SmartDashboard.putNumber("best pose x", robotCenter.getX());
-
-    //     SmartDashboard.putNumber("best pose y", robotCenter.getY());
-    //     SmartDashboard.putNumber("gyro heading", drivetrain.getHeadingBlue());
-    //     SmartDashboard.putNumber("turret center x", turretCenter.getX());
-    //     SmartDashboard.putNumber("turret center y", turretCenter.getY());
-    //     SmartDashboard.putNumber("turret to hub x", turretToHub.getX());
-    //     SmartDashboard.putNumber("turret to hub y", turretToHub.getY());
-    //     SmartDashboard.putNumber("turret angle", turret.getAngle());
-    //     SmartDashboard.putNumber("target yaw", targetYaw.getDegrees());
-    // }
 
     @Override
     public void periodic() {
