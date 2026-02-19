@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants.FieldConstants;
 import frc.robot.utils.Constants.TurretConstants;
-import frc.robot.commands.LockOnTurret;
 import frc.robot.utils.Kraken;
 // import frc.robot.utils.LimelightHelpers;
 // import frc.robot.utils.OI;

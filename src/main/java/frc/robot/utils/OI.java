@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.LockDrivetrain;
-import frc.robot.commands.LockOnTurret;
 import frc.robot.commands.TrenchAlign;
 import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.commands.TrenchAlign.TrenchOption;

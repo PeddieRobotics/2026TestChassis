@@ -31,6 +31,9 @@ public class ShooterUtil {
         Translation2d robotVelocity,
         Translation2d turretToHub
     ) {
+        if (robotVelocity == null)
+            robotVelocity = new Translation2d(0, 0);
+            
         final double turretToHubAngle = turretToHub.getAngle().getRadians();
 
         final Translation2d R = new Translation2d( Math.cos(turretToHubAngle), Math.sin(turretToHubAngle));
