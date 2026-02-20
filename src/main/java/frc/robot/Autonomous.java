@@ -159,6 +159,38 @@ public class Autonomous {
         );
 
 
+        Command rightOutMid1ClimbRAuto = new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                Drivetrain.getInstance().setStartingPose(new Pose2d(4.467, 0.669, Rotation2d.fromDegrees(180)));
+                startSnakeDrive();
+            }),
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(4.467, 0.669, Rotation2d.fromDegrees(180)),
+                    new Pose2d(0.763, 0.669, Rotation2d.fromDegrees(0))
+                ),
+                new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
+                new GoalEndState(0, Rotation2d.fromDegrees(180))
+            ),
+
+            new WaitCommand(2),
+
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(0.763, 0.669, Rotation2d.fromDegrees(0)),
+                    new Pose2d(4.467, 0.669, Rotation2d.fromDegrees(48.244)),
+                    new Pose2d(7.625, 2.964, Rotation2d.fromDegrees(-102.426)),
+                    new Pose2d(6.270, 0.822, Rotation2d.fromDegrees(-155.574)),
+                    new Pose2d(2.904, 0.822, Rotation2d.fromDegrees(161.342)),
+                    new Pose2d(1.080, 2.669, Rotation2d.fromDegrees(127.606))
+                ),
+                new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
+                new GoalEndState(0, Rotation2d.fromDegrees(180))
+            )
+        );
+
         //TODO CHECK START AND END STATES
 
         Command rightOutDepClimbLAuto = new SequentialCommandGroup(
@@ -783,6 +815,7 @@ public class Autonomous {
 
 
         autoChooser.addOption("1AutoCommand", autoCommand);
+        autoChooser.addOption("R - Outpost/1Mid/Right Climb Auto", rightOutMid1ClimbRAuto);
         autoChooser.addOption("R - Outpost/Deport/Left Climb Auto", rightOutDepClimbAuto);
         autoChooser.addOption("R - Basic Outpost Auto", basicRightOutpostAuto);
         autoChooser.addOption("R - Outpost/Depot/Left Climb Auto", rightOutDepClimbLAuto);
