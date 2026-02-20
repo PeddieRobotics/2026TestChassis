@@ -287,10 +287,14 @@ public class Drivetrain extends SubsystemBase {
         }
     }
     public Pose2d getPose() {
-        return odometry.getEstimatedPosition();
+        return new Pose2d(
+            odometry.getEstimatedPosition().getTranslation(),
+            getHeadingBlueRotation2d()
+        );
     }
 
     public void setPose(Pose2d pose){
+        System.out.println("PATHPLANNER SET POSE!!!");
         gyro.reset();
         odometry.resetPosition(getHeadingBlueRotation2d(), swerveModulePosition,pose);
     }

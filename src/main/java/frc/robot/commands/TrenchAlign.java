@@ -42,15 +42,11 @@ public class TrenchAlign extends Command {
 
     private PIDController xController, yController, rotController;
 
-    public enum TrenchOption {
-        LEFT, RIGHT
-    };
-
     private static Translation2d offset = new Translation2d(2, 0);
     private static Translation2d closeOffset = new Translation2d(1.0, 0); //when we are in the "bad" rectangle
     private static Translation2d driveOverTrenchOffset = new Translation2d(1.2, 0); //when we are in the "bad" rectangle
 
-    public TrenchAlign(TrenchOption option) {
+    public TrenchAlign() {
         drivetrain = Drivetrain.getInstance();
         llFront = LimelightFront.getInstance();
         llBack = LimelightBack.getInstance();

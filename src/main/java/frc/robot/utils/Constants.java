@@ -238,6 +238,10 @@ public final class Constants {
             public static final Translation2d kRedLeftCenter = getTagLocation(6).plus(getTagLocation(7)).div(2);
             public static final Translation2d kRedRightCenter = getTagLocation(1).plus(getTagLocation(12)).div(2);
             public static final Translation2d[] allTrenches = {kBlueLeftCenter, kBlueRightCenter, kRedLeftCenter, kRedRightCenter};
+
+            public static final Translation2d kOffset = new Translation2d(2, 0);
+            public static final Translation2d kCloseOffset = new Translation2d(1.0, 0); //when we are in the "bad" rectangle
+            public static final Translation2d kDriveOverTrenchOffset = new Translation2d(1.2, 0); //when we are in the "bad" rectangle
         }
     }
 
@@ -295,8 +299,8 @@ public final class Constants {
         public static final double kEpsilonY = 0.25;
         public static final double kEpsilonRot = 8;
 
-        public static final double kStage1Speed = 3.0;
-        public static final double kStage2Speed = 3.5;
+        public static final double kStage1Speed = 1.0;
+        public static final double kStage2Speed = 1.5;
 
         public static final double kPx = 3.5, kIx = 0, kDx = 0, kFFx = 0;
         public static final double kPy = 3.5, kIy = 0, kDy = 0, kFFy = 0;
