@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.networktables.TopicInfo;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,8 +34,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoCommand;
 import frc.robot.commands.AutoDriveCommand;
+import frc.robot.commands.TrenchAlign;
+import frc.robot.commands.TrenchAlign.TrenchOption;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.FieldConstants;
+import frc.robot.utils.Constants.TrenchAlignConstants;
+import frc.robot.utils.Constants.FieldConstants.TrenchLocations;
 
 
 public class Autonomous {
@@ -384,26 +389,30 @@ public class Autonomous {
 
             Command rightMidLeftClimbAuto = new SequentialCommandGroup(
             new InstantCommand(() -> {
-                Drivetrain.getInstance().setStartingPose(new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(180)));
+                Drivetrain.getInstance().setStartingPose(new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(0)));
                 startSnakeDrive();
             }),
             new AutoDriveCommand(
                 List.of(
-                    new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(180)), 
-                    new Pose2d(7.752, 1.816, Rotation2d.fromDegrees(91.273)),
-                    new Pose2d(7.196, 6.862, Rotation2d.fromDegrees(154.898)),
-                    new Pose2d(4.453, 7.496, Rotation2d.fromDegrees(179.246)),
-                    new Pose2d(1.000, 4.637, Rotation2d.fromDegrees(-117.714))
-                ),
-                List.of(
-                    new EventMarker("Stop Snake Drive", 3.15, new InstantCommand(() -> stopSnakeDrive()) )
+                    new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(0)), 
+                    new Pose2d(7.856, 1.764, Rotation2d.fromDegrees(87.207)),
+                    new Pose2d(7.532, 6.590, Rotation2d.fromDegrees(136.668)),
+                    new Pose2d(6.342, 7.315, Rotation2d.fromDegrees(173.723))
                 ),
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
-                // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(180)),
-                new GoalEndState(0, Rotation2d.fromDegrees(-117.714))
-            )
-
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(0.5, Rotation2d.fromDegrees(180))
+            ),
+            new TrenchAlign(TrenchOption.LEFT)
+            // new AutoDriveCommand(
+            //     List.of(
+            //         new Pose2d(TrenchLocations.kBlueLeftCenter.minus(TrenchAlignConstants.kOutOffset), Rotation2d.fromDegrees(-167.074)),
+            //         new Pose2d(1.180, 4.870, Rotation2d.fromDegrees(-135.999))
+            //     ),
+            //     new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+            //     new IdealStartingState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(180)),
+            //     new GoalEndState(0, Rotation2d.fromDegrees(0))
+            // )
         );
 
             Command leftMidStoreDepotAuto = new SequentialCommandGroup(
@@ -645,38 +654,38 @@ public class Autonomous {
 
         Command rightChoateAuto = new SequentialCommandGroup(
             new InstantCommand(() -> {
-                Drivetrain.getInstance().setStartingPose(new Pose2d(4.505, FieldConstants.kFieldSize.getY() - 7.587, Rotation2d.fromDegrees(0)));
+                Drivetrain.getInstance().setStartingPose(new Pose2d(4.466, FieldConstants.kFieldSize.getY() - 7.406, Rotation2d.fromDegrees(-10.284)));
             }),
             new AutoDriveCommand(
                 List.of(
-                    new Pose2d(4.505, FieldConstants.kFieldSize.getY() - 7.587, Rotation2d.fromDegrees(0)), 
-                    new Pose2d(8.019, FieldConstants.kFieldSize.getY() - 6.057, Rotation2d.fromDegrees(-122.095)),
-                    new Pose2d(4.893, FieldConstants.kFieldSize.getY() - 7.406, Rotation2d.fromDegrees(178.493)),
-                    new Pose2d(3.470, FieldConstants.kFieldSize.getY() - 7.406, Rotation2d.fromDegrees(4.764)),
-                    new Pose2d(6.762, FieldConstants.kFieldSize.getY() - 7.270, Rotation2d.fromDegrees(6.116)),
-                    new Pose2d(7.833, FieldConstants.kFieldSize.getY() - 5.15, Rotation2d.fromDegrees(69.395)),
-                    new Pose2d(5.636, FieldConstants.kFieldSize.getY() - 7.406, Rotation2d.fromDegrees(-174.336)),
-                    new Pose2d(2.926, FieldConstants.kFieldSize.getY() - 7.056, Rotation2d.fromDegrees(143.276)),
-                    new Pose2d(1.620, FieldConstants.kFieldSize.getY() - 5.878, Rotation2d.fromDegrees(129.174))
+                    new Pose2d(4.466, FieldConstants.kFieldSize.getY() - 7.406, Rotation2d.fromDegrees(-10.284)), 
+                    new Pose2d(7.975, FieldConstants.kFieldSize.getY() - 6.264, Rotation2d.fromDegrees(133.132)),
+                    new Pose2d(6.329, FieldConstants.kFieldSize.getY() - 7.108, Rotation2d.fromDegrees(-148.512))
                 ),
+
                 List.of(
-                    new RotationTarget(1.87, Rotation2d.fromDegrees(90)),
-                    new RotationTarget(2.3, Rotation2d.fromDegrees(90)),
-                    new RotationTarget (3.61, Rotation2d.fromDegrees(90)),
-                    new RotationTarget(5.9, Rotation2d.fromDegrees(90)),
-                    new RotationTarget(6.66, Rotation2d.fromDegrees(90))
-                ),
-                List.of(
-                    // new EventMarker("Stop Snake Drive", 0.94),
-                    // new EventMarker("Start Snake Drive", 4.17),
-                    // new EventMarker("Stop Snake Drive", 5.23)
+                    new EventMarker("Stop Snake Drive", 1, new InstantCommand(() -> stopSnakeDrive()))
                 ),
                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                new IdealStartingState(0, Rotation2d.fromDegrees(0
-                )),
-                new GoalEndState(0, Rotation2d.fromDegrees(90))
-            )
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0))
+            ),
+            new TrenchAlign(TrenchOption.RIGHT),
+            new WaitCommand(1), //!!TODO: change after the wrenchers are ready
+            new TrenchAlign(TrenchOption.RIGHT),
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(TrenchLocations.kRedRightCenter.plus(TrenchAlignConstants.kOutOffset), Rotation2d.fromDegrees(180)), 
+                    new Pose2d(7.778, FieldConstants.kFieldSize.getY() - 5.452, Rotation2d.fromDegrees(69.395)),
+                    new Pose2d(6.187, FieldConstants.kFieldSize.getY() - 7.108, Rotation2d.fromDegrees(-156.938))
+                ),
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+                // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0))
+            ),
+            new TrenchAlign(TrenchOption.RIGHT)
         );
 
         Command rightOutDepClimbAuto = new SequentialCommandGroup(

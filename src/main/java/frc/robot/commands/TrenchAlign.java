@@ -42,13 +42,13 @@ public class TrenchAlign extends Command {
 
     private PIDController xController, yController, rotController;
 
+    private Translation2d inFarOffset = TrenchAlignConstants.kInFarOffset;
+    private Translation2d inCloseOffset = TrenchAlignConstants.kInCloseOffset;
+    private Translation2d outOffset = TrenchAlignConstants.kOutOffset;
+
     public enum TrenchOption {
         LEFT, RIGHT
     };
-
-    private static Translation2d offset = new Translation2d(2, 0);
-    private static Translation2d closeOffset = new Translation2d(1.0, 0); //when we are in the "bad" rectangle
-    private static Translation2d driveOverTrenchOffset = new Translation2d(1.2, 0); //when we are in the "bad" rectangle
 
     public TrenchAlign(TrenchOption option) {
         drivetrain = Drivetrain.getInstance();
@@ -78,16 +78,16 @@ public class TrenchAlign extends Command {
         SmartDashboard.putNumber("TrenchAlign Dr", TrenchAlignConstants.kDr);
         SmartDashboard.putNumber("TrenchAlign FFr", TrenchAlignConstants.kFFr);
 
-        SmartDashboard.putNumber("TrenchAlign offset", offset.getX());
-        SmartDashboard.putNumber("TrenchAlign closeOffset", closeOffset.getX());
+        SmartDashboard.putNumber("TrenchAlign offset", inFarOffset.getX());
+        SmartDashboard.putNumber("TrenchAlign closeOffset", inCloseOffset.getX());
         SmartDashboard.putNumber("TrenchAlign speed stage 1", TrenchAlignConstants.kStage1Speed);
         SmartDashboard.putNumber("TrenchAlign speed stage 2", TrenchAlignConstants.kStage2Speed);
     }
 
     @Override
     public void initialize() {
-        offset = new Translation2d(SmartDashboard.getNumber("TrenchAlign offset", 0), 0);        
-        closeOffset = new Translation2d(SmartDashboard.getNumber("TrenchAlign closeOffset", 0), 0);
+        inFarOffset = new Translation2d(SmartDashboard.getNumber("TrenchAlign offset", 0), 0);        
+        inCloseOffset = new Translation2d(SmartDashboard.getNumber("TrenchAlign closeOffset", 0), 0);
 
         oi = OI.getInstance();
         canPassTrench = false;
@@ -114,29 +114,29 @@ public class TrenchAlign extends Command {
 
         // driving forward (plus direction)
         if (odometry.getX() < closestTrench.getX()) {
-            Translation2d farTarget = closestTrench.minus(offset);
-            endTarget = closestTrench.plus(driveOverTrenchOffset);
+            Translation2d farTarget = closestTrench.minus(inFarOffset);
+            endTarget = closestTrench.plus(outOffset);
             drivePlus = true;
 
             theLimelight = rotTarget == 0 ? llFront : llBack;
 
             // "behind" the far target
             if (odometry.getX() < farTarget.getX() && absRotError < 40)
-                target = closestTrench.minus(closeOffset);
+                target = closestTrench.minus(inCloseOffset);
             else
                 target = farTarget;
         }
         // driving backward (minus direction)
         else {
-            Translation2d farTarget = closestTrench.plus(offset);
-            endTarget = closestTrench.minus(driveOverTrenchOffset);
+            Translation2d farTarget = closestTrench.plus(inFarOffset);
+            endTarget = closestTrench.minus(outOffset);
             drivePlus = false;
 
             theLimelight = rotTarget == 0 ? llBack : llFront;
 
             // "ahead of" the far target
             if (odometry.getX() > farTarget.getX() && absRotError < 40)
-                target = closestTrench.plus(closeOffset);
+                target = closestTrench.plus(inCloseOffset);
             else
                 target = farTarget;
         }
