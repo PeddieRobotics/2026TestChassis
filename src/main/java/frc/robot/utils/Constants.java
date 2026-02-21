@@ -143,10 +143,10 @@ public final class Constants {
         public static final double kSteerD = 7.0;
         public static final double kSteerFF = 0.0;
 
-        public static final double kFrontLeftModuleOffset = -0.651367;
-        public static final double kFrontRightModuleOffset = 0.145996;
-        public static final double kBackLeftModuleOffset = 0.020508;
-        public static final double kBackRightModuleOffset = -0.222900;
+        public static final double kFrontLeftMagnetOffset = -0.651367;
+        public static final double kFrontRightMagnetOffset = 0.145996;
+        public static final double kBackLeftMagnetOffset = 0.020508;
+        public static final double kBackRightMagnetOffset = -0.222900;
     }
 
     public static class DriveConstants {

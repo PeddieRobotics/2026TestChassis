@@ -128,7 +128,7 @@ public class DetermineShooterState extends Command {
             case SCORE:
                 Translation2d turretToHub = hub.minus(turretCenter);
                 params = ShooterUtil.getShootingParameters(
-                    turretCenter, drivetrain.getCurrentTranslation(), turretToHub
+                    turretCenter, drivetrain.getCurrentTranslationBlue(), turretToHub
                 );
                 turret.setAngleFieldRelative(params.yaw());
                 // hood.setHoodAngle(params.pitch());
@@ -139,7 +139,7 @@ public class DetermineShooterState extends Command {
             case PASS:
                 Translation2d turretToPassPos = ShooterUtil.getPassingLocation();
                 params = ShooterUtil.getShootingParameters(
-                    turretCenter, drivetrain.getCurrentTranslation(), turretToPassPos
+                    turretCenter, drivetrain.getCurrentTranslationBlue(), turretToPassPos
                 );
                 turret.setAngleFieldRelative(params.yaw());
                 // hood.setHoodAngle(HoodConstants.kHoodPassingAngle);
