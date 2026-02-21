@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.LockDrivetrain;
 import frc.robot.commands.TrenchAlign;
+import frc.robot.commands.TrenchAlignAutonomous;
 import frc.robot.commands.WheelRadiusCharacterization;
 //import frc.robot.commands.TrenchAlign.TrenchOption;
 import frc.robot.subsystems.Drivetrain;
@@ -40,7 +41,7 @@ public class OI {
         }));
 
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        //circleButton.whileTrue(new TrenchAlign(TrenchOption.RIGHT));
+        circleButton.whileTrue(new TrenchAlign());
 
 
         Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);

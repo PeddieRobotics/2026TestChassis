@@ -296,10 +296,10 @@ public final class Constants {
     }
 
     public static final class TrenchAlignConstants {
-        public static final double kEpsilonY = 0.25;
+        public static final double kEpsilonY = 0.1;
         public static final double kEpsilonRot = 8;
 
-        public static final double kStage1Speed = 1.0;
+        public static final double kStage1Speed = 1;
         public static final double kStage2Speed = 1.5;
 
         public static final Translation2d kInFarOffset = new Translation2d(2, 0);
