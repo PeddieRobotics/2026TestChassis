@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utils.ShotMap;
 import frc.robot.utils.Constants.CameraConstants;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.LimelightHelpers;
 import frc.robot.utils.ShotMap.ShotMapValue;
 
@@ -40,6 +41,9 @@ public class Robot extends TimedRobot {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        
+        SmartDashboard.putNumber("Set gyro yaw", 0);
+        SmartDashboard.putBoolean("Click to set gyro yaw", false);
     }
 
     /**
@@ -69,7 +73,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-
+        if (SmartDashboard.getBoolean("Click to set gyro yaw", false)) {
+            double yaw = SmartDashboard.getNumber("Set gyro yaw", 0);
+            Drivetrain.getInstance().setGyro(yaw);
+            SmartDashboard.putBoolean("Click to set gyro yaw", false);
+        }
     }
 
     /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
