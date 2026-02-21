@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.networktables.TopicInfo;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,6 +41,12 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.FieldConstants;
 import frc.robot.utils.Constants.FieldConstants.TrenchLocations;
 import frc.robot.utils.Constants.TrenchAlignConstants;
+import frc.robot.commands.TrenchAlign.TrenchOption;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.utils.Constants.FieldConstants;
+import frc.robot.utils.Constants.TrenchAlignConstants;
+import frc.robot.utils.Constants.FieldConstants.TrenchLocations;
+
 
 public class Autonomous {
 
@@ -418,26 +425,53 @@ public class Autonomous {
 
         );
 
-        Command rightMidLeftClimbAuto = new SequentialCommandGroup(
-                new InstantCommand(() -> {
-                    Drivetrain.getInstance().setStartingPose(new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(180)));
-                    startSnakeDrive();
-                }),
-                new AutoDriveCommand(
-                        List.of(
-                                new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(180)),
-                                new Pose2d(7.752, 1.816, Rotation2d.fromDegrees(91.273)),
-                                new Pose2d(7.196, 6.862, Rotation2d.fromDegrees(154.898)),
-                                new Pose2d(4.453, 7.496, Rotation2d.fromDegrees(179.246)),
-                                new Pose2d(1.000, 4.637, Rotation2d.fromDegrees(-117.714))),
-                        List.of(
-                                new EventMarker("Stop Snake Drive", 3.15, new InstantCommand(() -> stopSnakeDrive()))),
-                        new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
-                        // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-                        new IdealStartingState(0, Rotation2d.fromDegrees(180)),
-                        new GoalEndState(0, Rotation2d.fromDegrees(-117.714)))
+        // TODO: fix
+        // Command rightMidLeftClimbAuto = new SequentialCommandGroup(
+        //         new InstantCommand(() -> {
+        //             Drivetrain.getInstance().setStartingPose(new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(180)));
+        //             startSnakeDrive();
+        //         }),
+        //         new AutoDriveCommand(
+        //                 List.of(
+        //                         new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(180)),
+        //                         new Pose2d(7.752, 1.816, Rotation2d.fromDegrees(91.273)),
+        //                         new Pose2d(7.196, 6.862, Rotation2d.fromDegrees(154.898)),
+        //                         new Pose2d(4.453, 7.496, Rotation2d.fromDegrees(179.246)),
+        //                         new Pose2d(1.000, 4.637, Rotation2d.fromDegrees(-117.714))),
+        //                 List.of(
+        //                         new EventMarker("Stop Snake Drive", 3.15, new InstantCommand(() -> stopSnakeDrive()))),
+        //                 new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+        //                 // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+        //                 new IdealStartingState(0, Rotation2d.fromDegrees(180)),
+        //                 new GoalEndState(0, Rotation2d.fromDegrees(-117.714)))
 
-        );
+        //     Command rightMidLeftClimbAuto = new SequentialCommandGroup(
+        //     new InstantCommand(() -> {
+        //         Drivetrain.getInstance().setStartingPose(new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(0)));
+        //         startSnakeDrive();
+        //     }),
+        //     new AutoDriveCommand(
+        //         List.of(
+        //             new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(0)), 
+        //             new Pose2d(7.856, 1.764, Rotation2d.fromDegrees(87.207)),
+        //             new Pose2d(7.532, 6.590, Rotation2d.fromDegrees(136.668)),
+        //             new Pose2d(6.342, 7.315, Rotation2d.fromDegrees(173.723))
+        //         ),
+        //         new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+        //         new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+        //         new GoalEndState(0.5, Rotation2d.fromDegrees(180))
+        //     ),
+        //     new TrenchAlign(TrenchOption.LEFT)
+        //     // new AutoDriveCommand(
+        //     //     List.of(
+        //     //         new Pose2d(TrenchLocations.kBlueLeftCenter.minus(TrenchAlignConstants.kOutOffset), Rotation2d.fromDegrees(-167.074)),
+        //     //         new Pose2d(1.180, 4.870, Rotation2d.fromDegrees(-135.999))
+        //     //     ),
+        //     //     new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+        //     //     new IdealStartingState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(180)),
+        //     //     new GoalEndState(0, Rotation2d.fromDegrees(0))
+        //     // )
+        // );
 
         Command leftMidStoreDepotAuto = new SequentialCommandGroup(
                 new InstantCommand(() -> {
@@ -642,6 +676,7 @@ public class Autonomous {
         // )
         // );
 
+        // TODO: resolve these
         Command rightChoateAuto = new SequentialCommandGroup(
                 new InstantCommand(() -> {
                     Drivetrain.getInstance().setStartingPose(
@@ -681,6 +716,41 @@ public class Autonomous {
                         // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
                         new IdealStartingState(0, Rotation2d.fromDegrees(0)),
                         new GoalEndState(0, Rotation2d.fromDegrees(90))));
+        Command rightChoateAuto2 = new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                Drivetrain.getInstance().setStartingPose(new Pose2d(4.466, FieldConstants.kFieldSize.getY() - 7.406, Rotation2d.fromDegrees(-10.284)));
+            }),
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(4.466, FieldConstants.kFieldSize.getY() - 7.406, Rotation2d.fromDegrees(-10.284)), 
+                    new Pose2d(7.975, FieldConstants.kFieldSize.getY() - 6.264, Rotation2d.fromDegrees(133.132)),
+                    new Pose2d(6.329, FieldConstants.kFieldSize.getY() - 7.108, Rotation2d.fromDegrees(-148.512))
+                ),
+
+                List.of(
+                    new EventMarker("Stop Snake Drive", 1, new InstantCommand(() -> stopSnakeDrive()))
+                ),
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+                // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0))
+            ),
+            new TrenchAlign(TrenchOption.RIGHT),
+            new WaitCommand(1), //!!TODO: change after the wrenchers are ready
+            new TrenchAlign(TrenchOption.RIGHT),
+            new AutoDriveCommand(
+                List.of(
+                    new Pose2d(TrenchLocations.kRedRightCenter.plus(TrenchAlignConstants.kOutOffset), Rotation2d.fromDegrees(180)), 
+                    new Pose2d(7.778, FieldConstants.kFieldSize.getY() - 5.452, Rotation2d.fromDegrees(69.395)),
+                    new Pose2d(6.187, FieldConstants.kFieldSize.getY() - 7.108, Rotation2d.fromDegrees(-156.938))
+                ),
+                new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+                // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+                new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+                new GoalEndState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0))
+            ),
+            new TrenchAlign(TrenchOption.RIGHT)
+        );
 
         Command rightOutDepClimbAuto = new SequentialCommandGroup(
                 new InstantCommand(() -> {
