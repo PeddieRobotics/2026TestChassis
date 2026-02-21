@@ -40,7 +40,7 @@ public class TrenchTestAuto {
             new IdealStartingState(0, Rotation2d.fromDegrees(-90)),
             new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(-180))
         ),
-        new TrenchAlign(),
+        new TrenchAlign(true),
         new AutoDriveCommand(
             List.of(
                 new Pose2d(

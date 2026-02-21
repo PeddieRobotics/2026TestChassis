@@ -50,7 +50,7 @@ public class TrenchAlign extends Command {
         LEFT, RIGHT
     };
 
-    public TrenchAlign() {
+    public TrenchAlign(boolean isAuto) {
         drivetrain = Drivetrain.getInstance();
         llFront = LimelightFront.getInstance();
         llBack = LimelightBack.getInstance();
@@ -59,6 +59,10 @@ public class TrenchAlign extends Command {
         yController = new PIDController(TrenchAlignConstants.kPy, TrenchAlignConstants.kIy, TrenchAlignConstants.kDy);
         rotController = new PIDController(TrenchAlignConstants.kPr, TrenchAlignConstants.kIr, TrenchAlignConstants.kDr);
         rotController.enableContinuousInput(-180, 180);
+
+        if (isAuto){
+            outOffset = TrenchLocations.kAutoOffset;
+        }
 
         SmartDashboard.putNumber("TrenchAlign yEpsilon", TrenchAlignConstants.kEpsilonY);
         SmartDashboard.putNumber("TrenchAlign rotEpsilon", TrenchAlignConstants.kEpsilonRot);
@@ -86,8 +90,8 @@ public class TrenchAlign extends Command {
 
     @Override
     public void initialize() {
-        inFarOffset = new Translation2d(SmartDashboard.getNumber("TrenchAlign offset", 0), 0);        
-        inCloseOffset = new Translation2d(SmartDashboard.getNumber("TrenchAlign closeOffset", 0), 0);
+        // inFarOffset = new Translation2d(SmartDashboard.getNumber("TrenchAlign offset", 0), 0);        
+        // inCloseOffset = new Translation2d(SmartDashboard.getNumber("TrenchAlign closeOffset", 0), 0);
 
         oi = OI.getInstance();
         canPassTrench = false;

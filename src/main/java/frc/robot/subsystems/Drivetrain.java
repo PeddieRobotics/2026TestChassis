@@ -378,6 +378,8 @@ public class Drivetrain extends SubsystemBase {
         fusedOdometry.setRobotPose(odometry.getEstimatedPosition());
         
         SmartDashboard.putNumber("Yaw rate", getYawRate());
+        SmartDashboard.putNumber("Heading", getHeading());
+        SmartDashboard.putNumber("Blue Heading", getHeadingBlue());
         usingMegaTag = SmartDashboard.getBoolean("using mega tag", false);
         if (SmartDashboard.getBoolean("Test Map?", false)) {
             double distance = SmartDashboard.getNumber("Test Distance", 0);

@@ -62,7 +62,7 @@ public class MidOutpostAuto {
             new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(180))
         ),
 
-        new TrenchAlign(),
+        new TrenchAlign(true),
 
         new AutoDriveCommand(
             List.of(

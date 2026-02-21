@@ -38,11 +38,11 @@ public class RightMidLeftClimbAuto {
                 new Pose2d(7.532, 6.590, Rotation2d.fromDegrees(136.668)),
                 new Pose2d(6.342, 7.315, Rotation2d.fromDegrees(173.723))
             ),
-            new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+            new PathConstraints(1, 1, 3 * Math.PI, 4 * Math.PI),
             new IdealStartingState(0, Rotation2d.fromDegrees(0)),
             new GoalEndState(0.5, Rotation2d.fromDegrees(180))
         ),
-        new TrenchAlign()
+        new TrenchAlign(true)
     // new AutoDriveCommand(
     // List.of(
     // new
