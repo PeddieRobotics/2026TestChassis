@@ -50,7 +50,7 @@ public class TrenchAlign extends Command {
         LEFT, RIGHT
     };
 
-    public TrenchAlign(TrenchOption option) {
+    public TrenchAlign() {
         drivetrain = Drivetrain.getInstance();
         llFront = LimelightFront.getInstance();
         llBack = LimelightBack.getInstance();
