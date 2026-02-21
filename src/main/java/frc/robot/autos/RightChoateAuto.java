@@ -32,6 +32,7 @@ public class RightChoateAuto {
                 4.466, FieldConstants.kFieldSize.getY() - 7.406,
                 Rotation2d.fromDegrees(-10.284)
             ));
+            Autonomous.startSnakeDrive();
         }),
         new AutoDriveCommand(
             List.of(
@@ -51,8 +52,7 @@ public class RightChoateAuto {
             List.of(
                 new EventMarker("Stop Snake Drive", 1, new InstantCommand(() -> Autonomous.stopSnakeDrive()))
             ),
-            new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
-            // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
+            new PathConstraints(1, 1, 3 * Math.PI, 4 * Math.PI),
             new IdealStartingState(0, Rotation2d.fromDegrees(0)),
             new GoalEndState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0))
         ),
@@ -74,7 +74,7 @@ public class RightChoateAuto {
                     Rotation2d.fromDegrees(-156.938)
                 )
             ),
-            new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
+            new PathConstraints(1, 1, 3 * Math.PI, 4 * Math.PI),
             // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
             new IdealStartingState(0, Rotation2d.fromDegrees(0)),
             new GoalEndState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0))
