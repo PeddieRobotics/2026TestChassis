@@ -55,7 +55,7 @@ public class RightChoateAuto {
             ),
             new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
             new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-            new GoalEndState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0))
+            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(0))
         ),
         new TrenchAlign(true),
         new InstantCommand(() -> Drivetrain.getInstance().drive(new Translation2d(0, 0), 0, true, new Translation2d(0, 0))),
@@ -79,7 +79,7 @@ public class RightChoateAuto {
             new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
             // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
             new IdealStartingState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0)),
-            new GoalEndState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0))
+            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(0))
         ),
         new TrenchAlign(true)
     );

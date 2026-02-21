@@ -40,7 +40,7 @@ public class OI {
         }));
 
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        //circleButton.whileTrue(new TrenchAlign(TrenchOption.RIGHT));
+        circleButton.whileTrue(new TrenchAlign(false));
 
 
         Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);

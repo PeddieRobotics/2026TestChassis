@@ -25,35 +25,30 @@ import frc.robot.utils.Constants.FieldConstants;
 import frc.robot.utils.Constants.FieldConstants.TrenchLocations;
 import frc.robot.utils.Constants.TrenchAlignConstants;
 
-public class RightMidLeftClimbAuto {
+public class LeftSnowballerAuto {
     public static final Command auto = new SequentialCommandGroup(
         new InstantCommand(() -> {
-            Drivetrain.getInstance().setStartingPose(new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(0)));
-            Autonomous.startSnakeDrive();
+            Drivetrain.getInstance().setStartingPose(new Pose2d(4.466, 7.367, Rotation2d.fromDegrees(0)));
+            //Autonomous.startSnakeDrive();
+            Autonomous.startPassDrive();
         }),
         new AutoDriveCommand(
             List.of(
-                new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(0)),
-                new Pose2d(7.856, 1.764, Rotation2d.fromDegrees(87.207)),
-                new Pose2d(7.532, 6.590, Rotation2d.fromDegrees(136.668)),
-                new Pose2d(6.342, 7.315, Rotation2d.fromDegrees(173.723))
+                new Pose2d(4.466, 7.367, Rotation2d.fromDegrees(0)),
+                new Pose2d(7.478, 6.385, Rotation2d.fromDegrees(-66.501)),
+                new Pose2d(7.478, 1.400, Rotation2d.fromDegrees(96.802)),
+                new Pose2d(7.59, 6.418, Rotation2d.fromDegrees(-57.195)),
+                new Pose2d(7.311, 1.400, Rotation2d.fromDegrees(107.882)),
+                new Pose2d(7.478, 6.418, Rotation2d.fromDegrees(61.366)),
+                new Pose2d(7.286, 2.128, Rotation2d.fromDegrees(-102.907))
+            ),
+            List.of(
+                new EventMarker("Stop Passing", 5.67)
             ),
             new PathConstraints(1, 1, 3 * Math.PI, 4 * Math.PI),
             new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-            new GoalEndState(0.5, Rotation2d.fromDegrees(180))
+            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(180))
         ),
         new TrenchAlign(true)
-    // new AutoDriveCommand(
-    // List.of(
-    // new
-    // Pose2d(TrenchLocations.kBlueLeftCenter.minus(TrenchAlignConstants.kOutOffset),
-    // Rotation2d.fromDegrees(-167.074)),
-    // new Pose2d(1.180, 4.870, Rotation2d.fromDegrees(-135.999))
-    // ),
-    // new PathConstraints(0.5, 0.5, 3 * Math.PI, 4 * Math.PI),
-    // new IdealStartingState(TrenchAlignConstants.kStage2Speed,
-    // Rotation2d.fromDegrees(180)),
-    // new GoalEndState(0, Rotation2d.fromDegrees(0))
-    // )
     );
 }
