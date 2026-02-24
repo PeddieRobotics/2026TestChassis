@@ -1,5 +1,6 @@
 package frc.robot.utils;
 
+import java.security.cert.PKIXCertPathValidatorResult;
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.LockDrivetrain;
+import frc.robot.commands.OutpostAlign;
 import frc.robot.commands.TrenchAlign;
 import frc.robot.commands.TrenchAlignAutonomous;
 import frc.robot.commands.WheelRadiusCharacterization;
@@ -42,6 +44,9 @@ public class OI {
 
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
         circleButton.whileTrue(new TrenchAlign());
+
+        Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
+        squareButton.whileTrue(new OutpostAlign());
 
 
         Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);

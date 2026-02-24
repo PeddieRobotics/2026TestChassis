@@ -281,7 +281,7 @@ public class Drivetrain extends SubsystemBase {
 
     public void updateOdometry(){
         odometry.update(getHeadingBlueRotation2d(), swerveModulePosition);
-        if (!DriverStation.isAutonomous() && usingMegaTag) {
+        if (usingMegaTag) {
             for (Limelight ll : limelights)
                 ll.fuseEstimatedPose(odometry);
         }

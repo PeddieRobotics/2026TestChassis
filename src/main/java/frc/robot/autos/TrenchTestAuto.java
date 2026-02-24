@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AutoDriveCommand;
+import frc.robot.commands.OutpostAlign;
 import frc.robot.commands.TrenchAlign;
 import frc.robot.commands.TrenchAlignAutonomous;
 import frc.robot.subsystems.Drivetrain;
@@ -39,17 +40,18 @@ public class TrenchTestAuto {
         //     new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(-180))
         // ),
         new TrenchAlignAutonomous(),
-        new AutoDriveCommand(
-            List.of(
-                new Pose2d(
-                    TrenchLocations.kBlueRightCenter.getX() - TrenchLocations.kDriveOverTrenchOffset.getX(),
-                    TrenchLocations.kBlueRightCenter.getY(), Rotation2d.fromDegrees(-180)
-                ),
-                new Pose2d(0.686, TrenchLocations.kBlueRightCenter.getY(), Rotation2d.fromDegrees(0))
-            ),
-            new PathConstraints(2, 1, 3 * Math.PI, 4 * Math.PI),
-            new IdealStartingState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(180)),
-            new GoalEndState(0, Rotation2d.fromDegrees(-180))
-        )
+        // new AutoDriveCommand(
+        //     List.of(
+        //         new Pose2d(
+        //             TrenchLocations.kBlueRightCenter.getX() - TrenchLocations.kDriveOverTrenchOffset.getX(),
+        //             TrenchLocations.kBlueRightCenter.getY(), Rotation2d.fromDegrees(-180)
+        //         ),
+        //         new Pose2d(0.686, TrenchLocations.kBlueRightCenter.getY(), Rotation2d.fromDegrees(0))
+        //     ),
+        //     new PathConstraints(2, 1, 3 * Math.PI, 4 * Math.PI),
+        //     new IdealStartingState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(180)),
+        //     new GoalEndState(0, Rotation2d.fromDegrees(-180))
+        // )
+        new OutpostAlign()
     );
 }

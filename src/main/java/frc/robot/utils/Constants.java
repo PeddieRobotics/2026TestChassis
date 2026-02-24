@@ -310,4 +310,17 @@ public final class Constants {
         public static final double kPy = 3.5, kIy = 0, kDy = 0, kFFy = 0;
         public static final double kPr = 0.03, kIr = 0, kDr = 0, kFFr = 0;
     }
+
+    public static final class 
+    OutpostAlignConstants{
+        public static final double kPx = 3, kIx = 0, kDx = 0, kFFx = 0;
+        public static final double kPy = 3, kIy = 0, kDy = 0, kFFy = 0;
+        public static final double kPr = 0.1, kIr = 0, kDr = 0, kFFr = 0;
+        public static final double kLowerPr = 0.001;
+        public static final Translation2d kOutpostOffset = new Translation2d(0.508, 0);
+        public static final double kXEpsilon = 0.1;
+        public static final double kYEpsilon = 0.1;
+        public static final double kRotEpsilon = 1;
+        public static final double kRLowerPThreshold = 2.5;
+    }
 }
