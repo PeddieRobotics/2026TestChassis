@@ -61,7 +61,7 @@ public class TrenchAlign extends Command {
         rotController.enableContinuousInput(-180, 180);
 
         if (isAuto){
-            outOffset = TrenchLocations.kAutoOffset;
+            outOffset = TrenchLocations.kAutoInOffset;
         }
 
         SmartDashboard.putNumber("TrenchAlign yEpsilon", TrenchAlignConstants.kEpsilonY);

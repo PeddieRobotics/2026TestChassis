@@ -26,7 +26,7 @@ import frc.robot.utils.Constants.FieldConstants;
 import frc.robot.utils.Constants.FieldConstants.TrenchLocations;
 import frc.robot.utils.Constants.TrenchAlignConstants;
 
-public class RightChoateAuto {
+public class Right2MidOutpostOrbitAuto {
     public static final Command auto = new SequentialCommandGroup(
         new InstantCommand(() -> {
             Drivetrain.getInstance().setStartingPose(new Pose2d(
@@ -53,14 +53,14 @@ public class RightChoateAuto {
             List.of(
                 //new EventMarker("Stop Snake Drive", 1, new InstantCommand(() -> Autonomous.stopSnakeDrive()))
             ),
-            new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
+            new PathConstraints(1, 1, 3 * Math.PI, 4 * Math.PI),
             new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(0))
+            new GoalEndState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0))
         ),
         new TrenchAlign(true),
         new InstantCommand(() -> Drivetrain.getInstance().drive(new Translation2d(0, 0), 0, true, new Translation2d(0, 0))),
         new WaitCommand(1), // !!TODO: change after the wrenchers are ready
-        new TrenchAlign(true),
+        new TrenchAlign(false),
         new AutoDriveCommand(
             List.of(
                 new Pose2d(
@@ -76,11 +76,12 @@ public class RightChoateAuto {
                 //     Rotation2d.fromDegrees(-156.938)
                 // )
             ),
-            new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
+            new PathConstraints(1, 1, 3 * Math.PI, 4 * Math.PI),
             // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-            new IdealStartingState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0)),
-            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(0))
+            new IdealStartingState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(0)),
+            new GoalEndState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0))
         ),
         new TrenchAlign(true)
+        //implement align to outpost
     );
 }
