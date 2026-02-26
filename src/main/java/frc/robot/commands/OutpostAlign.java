@@ -55,32 +55,32 @@ public class OutpostAlign extends Command {
           rotEpsilon = OutpostAlignConstants.kRotEpsilon;
           rotLowerPThreshold = OutpostAlignConstants.kRLowerPThreshold;
 
-          SmartDashboard.putNumber("OutpostAlign Rot Lower P Threshold",
-          OutpostAlignConstants.kRLowerPThreshold);
+          // SmartDashboard.putNumber("OutpostAlign Rot Lower P Threshold",
+          // OutpostAlignConstants.kRLowerPThreshold);
 
-          SmartDashboard.putNumber("OutpostAlign xEpsilon",
-          OutpostAlignConstants.kXEpsilon);
-          SmartDashboard.putNumber("OutpostAlign yEpsilon",
-          OutpostAlignConstants.kYEpsilon);
-          SmartDashboard.putNumber("OutpostAlign rotEpsilon",
-          OutpostAlignConstants.kRotEpsilon);
+          // SmartDashboard.putNumber("OutpostAlign xEpsilon",
+          // OutpostAlignConstants.kXEpsilon);
+          // SmartDashboard.putNumber("OutpostAlign yEpsilon",
+          // OutpostAlignConstants.kYEpsilon);
+          // SmartDashboard.putNumber("OutpostAlign rotEpsilon",
+          // OutpostAlignConstants.kRotEpsilon);
 
-          SmartDashboard.putNumber("OutpostAlign Px", OutpostAlignConstants.kPx);
-          SmartDashboard.putNumber("OutpostAlign Ix", OutpostAlignConstants.kIx);
-          SmartDashboard.putNumber("OutpostAlign Dx", OutpostAlignConstants.kDx);
-          SmartDashboard.putNumber("OutpostAlign FFx", OutpostAlignConstants.kFFx);
+          // SmartDashboard.putNumber("OutpostAlign Px", OutpostAlignConstants.kPx);
+          // SmartDashboard.putNumber("OutpostAlign Ix", OutpostAlignConstants.kIx);
+          // SmartDashboard.putNumber("OutpostAlign Dx", OutpostAlignConstants.kDx);
+          // SmartDashboard.putNumber("OutpostAlign FFx", OutpostAlignConstants.kFFx);
 
-          SmartDashboard.putNumber("OutpostAlign Py", OutpostAlignConstants.kPy);
-          SmartDashboard.putNumber("OutpostAlign Iy", OutpostAlignConstants.kIy);
-          SmartDashboard.putNumber("OutpostAlign Dy", OutpostAlignConstants.kDy);
-          SmartDashboard.putNumber("OutpostAlign FFy", OutpostAlignConstants.kFFy);
+          // SmartDashboard.putNumber("OutpostAlign Py", OutpostAlignConstants.kPy);
+          // SmartDashboard.putNumber("OutpostAlign Iy", OutpostAlignConstants.kIy);
+          // SmartDashboard.putNumber("OutpostAlign Dy", OutpostAlignConstants.kDy);
+          // SmartDashboard.putNumber("OutpostAlign FFy", OutpostAlignConstants.kFFy);
 
-          SmartDashboard.putNumber("OutpostAlign Pr", OutpostAlignConstants.kPr);
-          SmartDashboard.putNumber("OutpostAlign Ir", OutpostAlignConstants.kIr);
-          SmartDashboard.putNumber("OutpostAlign Dr", OutpostAlignConstants.kDr);
-          SmartDashboard.putNumber("OutpostAlign LowerPr",
-          OutpostAlignConstants.kLowerPr);
-          SmartDashboard.putNumber("OutpostAlign FFr", OutpostAlignConstants.kFFr);
+          // SmartDashboard.putNumber("OutpostAlign Pr", OutpostAlignConstants.kPr);
+          // SmartDashboard.putNumber("OutpostAlign Ir", OutpostAlignConstants.kIr);
+          // SmartDashboard.putNumber("OutpostAlign Dr", OutpostAlignConstants.kDr);
+          // SmartDashboard.putNumber("OutpostAlign LowerPr",
+          // OutpostAlignConstants.kLowerPr);
+          // SmartDashboard.putNumber("OutpostAlign FFr", OutpostAlignConstants.kFFr);
 
      }
 
@@ -101,45 +101,45 @@ public class OutpostAlign extends Command {
 
      @Override
      public void execute() {
-          double Px = SmartDashboard.getNumber("OutpostAlign Px",
-          OutpostAlignConstants.kPx);
-          double Ix = SmartDashboard.getNumber("OutpostAlign Ix",
-          OutpostAlignConstants.kIx);
-          double Dx = SmartDashboard.getNumber("OutpostAlign Dx",
-          OutpostAlignConstants.kDx);
-          double FFx = SmartDashboard.getNumber("OutpostAlign FFx",
-          OutpostAlignConstants.kFFx);
-          xController.setPID(Px, Ix, Dx);
+          // double Px = SmartDashboard.getNumber("OutpostAlign Px",
+          // OutpostAlignConstants.kPx);
+          // double Ix = SmartDashboard.getNumber("OutpostAlign Ix",
+          // OutpostAlignConstants.kIx);
+          // double Dx = SmartDashboard.getNumber("OutpostAlign Dx",
+          // OutpostAlignConstants.kDx);
+          // double FFx = SmartDashboard.getNumber("OutpostAlign FFx",
+          // OutpostAlignConstants.kFFx);
+          // xController.setPID(Px, Ix, Dx);
 
-          double Py = SmartDashboard.getNumber("OutpostAlign Py",
-          OutpostAlignConstants.kPy);
-          double Iy = SmartDashboard.getNumber("OutpostAlign Iy",
-          OutpostAlignConstants.kIy);
-          double Dy = SmartDashboard.getNumber("OutpostAlign Dy",
-          OutpostAlignConstants.kDy);
-          double FFy = SmartDashboard.getNumber("OutpostAlign FFy",
-          OutpostAlignConstants.kFFy);
-          yController.setPID(Py, Iy, Dy);
+          // double Py = SmartDashboard.getNumber("OutpostAlign Py",
+          // OutpostAlignConstants.kPy);
+          // double Iy = SmartDashboard.getNumber("OutpostAlign Iy",
+          // OutpostAlignConstants.kIy);
+          // double Dy = SmartDashboard.getNumber("OutpostAlign Dy",
+          // OutpostAlignConstants.kDy);
+          // double FFy = SmartDashboard.getNumber("OutpostAlign FFy",
+          // OutpostAlignConstants.kFFy);
+          // yController.setPID(Py, Iy, Dy);
 
-          double Pr = SmartDashboard.getNumber("OutpostAlign Pr",
-          OutpostAlignConstants.kPr);
-          double LowerPr = SmartDashboard.getNumber("OutpostAlign LowerPr",
-          OutpostAlignConstants.kLowerPr);
-          double Ir = SmartDashboard.getNumber("OutpostAlign Ir",
-          OutpostAlignConstants.kIr);
-          double Dr = SmartDashboard.getNumber("OutpostAlign Dr",
-          OutpostAlignConstants.kDr);
-          double FFr = SmartDashboard.getNumber("OutpostAlign FFr",
-          OutpostAlignConstants.kFFr);
-          rotController.setPID(Pr, Ir, Dr);
+          // double Pr = SmartDashboard.getNumber("OutpostAlign Pr",
+          // OutpostAlignConstants.kPr);
+          // double LowerPr = SmartDashboard.getNumber("OutpostAlign LowerPr",
+          // OutpostAlignConstants.kLowerPr);
+          // double Ir = SmartDashboard.getNumber("OutpostAlign Ir",
+          // OutpostAlignConstants.kIr);
+          // double Dr = SmartDashboard.getNumber("OutpostAlign Dr",
+          // OutpostAlignConstants.kDr);
+          // double FFr = SmartDashboard.getNumber("OutpostAlign FFr",
+          // OutpostAlignConstants.kFFr);
+          // rotController.setPID(Pr, Ir, Dr);
 
-          double xEpsilon = SmartDashboard.getNumber("OutpostAlign xEpsilon",
-          OutpostAlignConstants.kXEpsilon);
-          double yEpsilon = SmartDashboard.getNumber("OutpostAlign yEpsilon",
-          OutpostAlignConstants.kYEpsilon);
-          double rotEpsilon = SmartDashboard.getNumber("OutpostAlign rotEpsilon",
-          OutpostAlignConstants.kRotEpsilon);
-          double rotLowerPThreshold = SmartDashboard.getNumber("OutpostAlign Rot Lower P Threshold", OutpostAlignConstants.kRLowerPThreshold);
+          // double xEpsilon = SmartDashboard.getNumber("OutpostAlign xEpsilon",
+          // OutpostAlignConstants.kXEpsilon);
+          // double yEpsilon = SmartDashboard.getNumber("OutpostAlign yEpsilon",
+          // OutpostAlignConstants.kYEpsilon);
+          // double rotEpsilon = SmartDashboard.getNumber("OutpostAlign rotEpsilon",
+          // OutpostAlignConstants.kRotEpsilon);
+          // double rotLowerPThreshold = SmartDashboard.getNumber("OutpostAlign Rot Lower P Threshold", OutpostAlignConstants.kRLowerPThreshold);
 
 
           Optional<Pose2d> llOdometry = llFront.getPoseMT2();
@@ -152,11 +152,9 @@ public class OutpostAlign extends Command {
           else 
                rotController.setP(Pr);
 
-          System.out.println("ROTATIONAL ERROR" + rotError);
           double rotVel = 0;
           if (Math.abs(rotError) > rotEpsilon)
                rotVel = rotController.calculate(rotError) + Math.signum(rotError) * FFr;
-          System.out.println("ROTATIONAL VEL"+rotVel);
           double xVel = 0;
           if (Math.abs(xError) > xEpsilon)
                xVel = xController.calculate(xError) + Math.signum(xError) * FFx;

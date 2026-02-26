@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -75,6 +76,7 @@ public class TrenchAlignAutonomous extends Command {
 
     @Override
     public void initialize() {
+        addRequirements(drivetrain);
         inFarOffset = new Translation2d(inFarOffset.getX(), 0);        
         inCloseOffset = new Translation2d(inCloseOffset.getX(), 0);
 
