@@ -17,13 +17,16 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoDriveCommand;
+import frc.robot.commands.OutpostAlign;
 import frc.robot.commands.TrenchAlign;
+import frc.robot.commands.TrenchAlignAutonomous;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.FieldConstants.TrenchLocations;
 import frc.robot.utils.Constants.TrenchAlignConstants;
 
-public class TrenchTestAuto {
+public class TrenchTestAuto { //doesn't work at the moment (for some reason you need an autodrivecommand??)
     public static final Command auto = new SequentialCommandGroup(
         new InstantCommand(() -> {
             Drivetrain.getInstance().setStartingPose(new Pose2d(7.855, 2.92, Rotation2d.fromDegrees(-90)));

@@ -297,11 +297,11 @@ public final class Constants {
     }
 
     public static final class TrenchAlignConstants {
-        public static final double kEpsilonY = 0.25;
+        public static final double kEpsilonY = 0.1;
         public static final double kEpsilonRot = 8;
 
-        public static final double kStage1Speed = 1.0;
-        public static final double kStage2Speed = 1.5;
+        public static final double kStage1Speed = 3;
+        public static final double kStage2Speed = 3.5;
 
         public static final Translation2d kInFarOffset = new Translation2d(2, 0);
         public static final Translation2d kInCloseOffset = new Translation2d(1.0, 0); //when we are in the "bad" rectangle
@@ -310,5 +310,18 @@ public final class Constants {
         public static final double kPx = 3.5, kIx = 0, kDx = 0, kFFx = 0;
         public static final double kPy = 3.5, kIy = 0, kDy = 0, kFFy = 0;
         public static final double kPr = 0.03, kIr = 0, kDr = 0, kFFr = 0;
+    }
+
+    public static final class 
+    OutpostAlignConstants{
+        public static final double kPx = 2.3, kIx = 0, kDx = 0, kFFx = 0;
+        public static final double kPy = 2, kIy = 0, kDy = 0, kFFy = 0;
+        public static final double kPr = 0.05, kIr = 0, kDr = 0, kFFr = 0;
+        public static final double kLowerPr = 0.001;
+        public static final Translation2d kOutpostOffset = new Translation2d(0.508, 0);
+        public static final double kXEpsilon = 0.1;
+        public static final double kYEpsilon = 0.1;
+        public static final double kRotEpsilon = 1;
+        public static final double kRLowerPThreshold = 2.5;
     }
 }
