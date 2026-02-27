@@ -45,6 +45,10 @@ public class Right3MidOrbitAuto {
                     7.975, FieldConstants.kFieldSize.getY() - 6.264,
                     Rotation2d.fromDegrees(71.274)
                 )
+                // new Pose2d(
+                //     6.329, FieldConstants.kFieldSize.getY() - 7.108,
+                //     Rotation2d.fromDegrees(-148.512)
+                // )
             ),
             List.of(
                 new RotationTarget(0.8, Rotation2d.fromDegrees(90))
@@ -52,9 +56,9 @@ public class Right3MidOrbitAuto {
             List.of(
                 // new EventMarker("Face LEFT", 0.65, new InstantCommand(() -> Rotation2d.fromDegrees(90)))
             ),
-            new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
+            new PathConstraints(2, 2, 3 * Math.PI, 4 * Math.PI),
             new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-            new GoalEndState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(90))
+            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(0.89))
         ),
         new TrenchAlign(true),
         new InstantCommand(() -> Drivetrain.getInstance().drive(new Translation2d(0, 0), 0, true, new Translation2d(0, 0))),
@@ -81,10 +85,10 @@ public class Right3MidOrbitAuto {
             List.of(
                 // new EventMarker("Face LEFT", 0.92, new InstantCommand(() -> Rotation2d.fromDegrees(90)))
             ),
-            new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
+            new PathConstraints(2, 2, 3 * Math.PI, 4 * Math.PI),
             // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-            new IdealStartingState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0)),
-            new GoalEndState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(89))
+            new IdealStartingState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(0)),
+            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(0))
         ),
         new TrenchAlign(true),
         new InstantCommand(() -> Drivetrain.getInstance().drive(new Translation2d(0, 0), 0, true, new Translation2d(0, 0))),
@@ -102,15 +106,15 @@ public class Right3MidOrbitAuto {
                 )
             ),
             List.of(
-                new RotationTarget(0.88, Rotation2d.fromDegrees(90))
+                new RotationTarget(0.99, Rotation2d.fromDegrees(90))
             ),
             List.of(
                 // new EventMarker("Face LEFT", 0.99, new InstantCommand(() -> Rotation2d.fromDegrees(90)))
             ),
-            new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
+            new PathConstraints(2, 2, 3 * Math.PI, 4 * Math.PI),
             // new PathConstraints(1, 1, 3 * Math.PI, 4* Math.PI),
-            new IdealStartingState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0)),
-            new GoalEndState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(89))
+            new IdealStartingState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(0)),
+            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(0))
         ),
         new TrenchAlign(true)
     );
