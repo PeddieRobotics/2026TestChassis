@@ -44,7 +44,7 @@ public class LeftSnowblowerAuto {
                 new Pose2d(6.611, 1.400, Rotation2d.fromDegrees(107.882)),
                 new Pose2d(6.778, 6.418, Rotation2d.fromDegrees(61.366)),
                 new Pose2d(7.086, 2.128, Rotation2d.fromDegrees(-102.907)),
-                new Pose2d(6.778, 0.949, Rotation2d.fromDegrees(-128.776))
+                new Pose2d(6.778, 0.949, Rotation2d.fromDegrees(-105.089))
             ),
             List.of(
                 // new RotationTarget(1.1, Rotation2d.fromDegrees(-90)),

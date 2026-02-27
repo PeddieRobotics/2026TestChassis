@@ -29,13 +29,16 @@ public class RightMidPassScoreAuto {
     public static final Command auto = new SequentialCommandGroup(
         new InstantCommand(() -> {
             Drivetrain.getInstance().setStartingPose(new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(0)));
-            //Autonomous.startSnakeDrive();
+            Autonomous.startPassDrive();
         }),
         new AutoDriveCommand(
             List.of(
                 new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(0)),
                 new Pose2d(7.356, 1.764, Rotation2d.fromDegrees(87.207)),
-                new Pose2d(6.873, 6.746, Rotation2d.fromDegrees(136.668))
+                new Pose2d(7.136, 6.57, Rotation2d.fromDegrees(136.668))
+            ),
+            List.of(
+                new EventMarker("Stop Pass", 1.51, new InstantCommand(() -> Autonomous.stopPassDrive()))
             ),
             new PathConstraints(1, 1, 3 * Math.PI, 4 * Math.PI),
             new IdealStartingState(0, Rotation2d.fromDegrees(0)),
