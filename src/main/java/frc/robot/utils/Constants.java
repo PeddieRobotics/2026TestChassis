@@ -240,7 +240,7 @@ public final class Constants {
             public static final Translation2d[] allTrenches = {kBlueLeftCenter, kBlueRightCenter, kRedLeftCenter, kRedRightCenter};
 
             public static final Translation2d kOffset = new Translation2d(2, 0);
-            public static final Translation2d kAutoInOffset = new Translation2d(0.5,0);
+            public static final Translation2d kAutoInOffset = new Translation2d(0,0);
             public static final Translation2d kCloseOffset = new Translation2d(1.0, 0); //when we are in the "bad" rectangle
             public static final Translation2d kDriveOverTrenchOffset = new Translation2d(1.2, 0); //when we are in the "bad" rectangle
         }

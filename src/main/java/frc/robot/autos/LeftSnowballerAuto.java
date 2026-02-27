@@ -1,7 +1,5 @@
 package frc.robot.autos;
 
-import static edu.wpi.first.units.Units.Rotation;
-
 import java.util.List;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -12,7 +10,6 @@ import com.pathplanner.lib.path.EventMarker;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.IdealStartingState;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.RotationTarget;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,37 +25,29 @@ import frc.robot.utils.Constants.FieldConstants;
 import frc.robot.utils.Constants.FieldConstants.TrenchLocations;
 import frc.robot.utils.Constants.TrenchAlignConstants;
 
-public class LeftSnowblowerAuto {
+public class LeftSnowballerAuto {
     public static final Command auto = new SequentialCommandGroup(
         new InstantCommand(() -> {
             Drivetrain.getInstance().setStartingPose(new Pose2d(4.466, 7.367, Rotation2d.fromDegrees(0)));
-            Autonomous.startSnakeDrive();
+            //Autonomous.startSnakeDrive();
             Autonomous.startPassDrive();
         }),
         new AutoDriveCommand(
             List.of(
                 new Pose2d(4.466, 7.367, Rotation2d.fromDegrees(0)),
-                new Pose2d(6.778, 6.385, Rotation2d.fromDegrees(-66.501)),
-                new Pose2d(6.778, 1.400, Rotation2d.fromDegrees(96.802)),
-                new Pose2d(6.89, 6.418, Rotation2d.fromDegrees(-57.195)),
-                new Pose2d(6.611, 1.400, Rotation2d.fromDegrees(107.882)),
-                new Pose2d(6.778, 6.418, Rotation2d.fromDegrees(61.366)),
-                new Pose2d(7.086, 2.128, Rotation2d.fromDegrees(-102.907)),
-                new Pose2d(6.778, 0.949, Rotation2d.fromDegrees(-128.776))
+                new Pose2d(7.478, 6.385, Rotation2d.fromDegrees(-66.501)),
+                new Pose2d(7.478, 1.400, Rotation2d.fromDegrees(96.802)),
+                new Pose2d(7.59, 6.418, Rotation2d.fromDegrees(-57.195)),
+                new Pose2d(7.311, 1.400, Rotation2d.fromDegrees(107.882)),
+                new Pose2d(7.478, 6.418, Rotation2d.fromDegrees(61.366)),
+                new Pose2d(7.286, 2.128, Rotation2d.fromDegrees(-102.907))
             ),
             List.of(
-                // new RotationTarget(1.1, Rotation2d.fromDegrees(-90)),
-                // new RotationTarget(3.37, Rotation2d.fromDegrees(90)),
-                // new RotationTarget(5.43, Rotation2d.fromDegrees(-90)),
-                // new RotationTarget(7.76, Rotation2d.fromDegrees(90)),
-                // new RotationTarget(9.75, Rotation2d.fromDegrees(-90))
+                new EventMarker("Stop Passing", 5.67)
             ),
-            List.of(
-                //new EventMarker("Stop Passing", 5.67)
-            ),
-            new PathConstraints(2, 1.5, 4 * Math.PI, 5 * Math.PI),
+            new PathConstraints(1, 1, 3 * Math.PI, 4 * Math.PI),
             new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(-91))
+            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(180))
         ),
         new TrenchAlign(true)
     );
