@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.LockDrivetrain;
 import frc.robot.commands.OutpostAlign;
 import frc.robot.commands.TrenchAlign;
-import frc.robot.commands.TrenchAlignAutonomous;
+import frc.robot.commands.TrenchAlignIntakeFirst;
 import frc.robot.commands.WheelRadiusCharacterization;
 //import frc.robot.commands.TrenchAlign.TrenchOption;
 import frc.robot.subsystems.Drivetrain;
@@ -43,7 +43,9 @@ public class OI {
         }));
 
         Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        circleButton.whileTrue(new TrenchAlign(false));
+        circleButton.whileTrue(new TrenchAlign(true));
+        Trigger xTrigger = new JoystickButton(controller, PS4Controller.Button.kCross.value);
+        xTrigger.whileTrue(new TrenchAlignIntakeFirst());
         Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
         squareButton.whileTrue(new OutpostAlign());
 

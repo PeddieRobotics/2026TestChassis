@@ -204,7 +204,7 @@ public class TrenchAlign extends Command {
 
     @Override
     public void end(boolean interrupted) {
-
+        Drivetrain.getInstance().drive(new Translation2d(0, 0), 0, true, null);
     }
 
     @Override
