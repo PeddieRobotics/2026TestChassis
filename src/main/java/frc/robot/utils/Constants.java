@@ -300,7 +300,7 @@ public final class Constants {
         public static final double kEpsilonY = 0.1;
         public static final double kEpsilonRot = 8;
 
-        public static final double kStage1Speed = 3;
+        public static final double kStage1Speed = 2;
         public static final double kStage2Speed = 3.5;
 
         public static final Translation2d kInFarOffset = new Translation2d(2, 0);
