@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Autonomous;
 import frc.robot.commands.AutoDriveCommand;
-import frc.robot.commands.OutpostAlign;
 import frc.robot.commands.TrenchAlign;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.FieldConstants;
@@ -82,7 +81,7 @@ public class Right2MidOutpostOrbitAuto {
             new IdealStartingState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(0)),
             new GoalEndState(TrenchAlignConstants.kStage2Speed, Rotation2d.fromDegrees(0))
         ),
-        new TrenchAlign(true),
-        new OutpostAlign()  
-);
+        new TrenchAlign(true)
+        //implement align to outpost
+    );
 }
