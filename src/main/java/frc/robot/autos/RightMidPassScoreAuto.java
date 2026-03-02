@@ -34,14 +34,22 @@ public class RightMidPassScoreAuto {
         new AutoDriveCommand(
             List.of(
                 new Pose2d(4.453, 0.664, Rotation2d.fromDegrees(0)),
+                new Pose2d(7.356, 1.764, Rotation2d.fromDegrees(87.207))
+            ),
+            new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
+            new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(90))
+        ),
+        new AutoDriveCommand(
+            List.of(
                 new Pose2d(7.356, 1.764, Rotation2d.fromDegrees(87.207)),
                 new Pose2d(7.136, 6.57, Rotation2d.fromDegrees(136.668))
             ),
             List.of(
-                new EventMarker("Stop Pass", 1.51, new InstantCommand(() -> Autonomous.stopPassDrive()))
+                new EventMarker("Stop Pass", 1.50, new InstantCommand(() -> Autonomous.stopPassDrive()))
             ),
-            new PathConstraints(1, 1, 3 * Math.PI, 4 * Math.PI),
-            new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+            new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
+            new IdealStartingState(0, Rotation2d.fromDegrees(90)),
             new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(180))
         ),
         new TrenchAlign(true)

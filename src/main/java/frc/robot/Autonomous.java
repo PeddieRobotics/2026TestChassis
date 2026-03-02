@@ -14,6 +14,7 @@ import frc.robot.autos.MidOutpostAuto;
 import frc.robot.autos.Right2MidOutpostOrbitAuto;
 import frc.robot.autos.Right3MidOrbitAuto;
 import frc.robot.autos.RightMidPassScoreAuto;
+import frc.robot.autos.SimpleRight3MidOrbitAuto;
 import frc.robot.autos.TrenchTestAuto;
 import frc.robot.subsystems.Drivetrain;
 
@@ -95,6 +96,7 @@ public class Autonomous {
         autoChooser.addOption("Left Trench Test Auto", TrenchTestAuto.auto);
         autoChooser.addOption("Left Snowballer Auto", LeftSnowblowerAuto.auto);
         autoChooser.addOption("Right 2 Mid Outpost Orbit Auto", Right2MidOutpostOrbitAuto.auto);
+        autoChooser.addOption("Simple Orbit Mid 2", SimpleRight3MidOrbitAuto.auto);
 
         SmartDashboard.putData("Auto Routines", autoChooser);
 
