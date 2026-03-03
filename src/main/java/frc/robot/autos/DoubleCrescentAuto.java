@@ -30,8 +30,8 @@ import frc.robot.utils.Constants.FieldConstants.TrenchLocations;
 import frc.robot.utils.Constants.TrenchAlignConstants;
 
 public class DoubleCrescentAuto {
-    private static final double maxSpeed = 1;
-    private static final double maxAcceleration = 1;
+    private static final double maxSpeed = 2.75;
+    private static final double maxAcceleration = 2.75;
     public static final Command auto = new SequentialCommandGroup(
         new InstantCommand(() -> {
             Drivetrain.getInstance().setStartingPose(new Pose2d(4.453, FieldConstants.kFieldSize.getY() - 7.522, Rotation2d.fromDegrees(0)));
@@ -48,7 +48,7 @@ public class DoubleCrescentAuto {
         new AutoDriveCommand(
             List.of(
                 new Pose2d(5.8, FieldConstants.kFieldSize.getY() - 7.522, Rotation2d.fromDegrees(0)),
-                new Pose2d(7.5, FieldConstants.kFieldSize.getY() - 6.720, Rotation2d.fromDegrees(90))
+                new Pose2d(7.5, FieldConstants.kFieldSize.getY() - 6.370, Rotation2d.fromDegrees(65))
             ),
             new PathConstraints(maxSpeed, maxAcceleration, 3 * Math.PI, 4 * Math.PI),
             new IdealStartingState(1, Rotation2d.fromDegrees(0)),
@@ -56,25 +56,16 @@ public class DoubleCrescentAuto {
         ),
         new AutoDriveCommand(
             List.of(
-                new Pose2d(7.5, FieldConstants.kFieldSize.getY() - 6.720, Rotation2d.fromDegrees(90)),
-                new Pose2d(7.5, FieldConstants.kFieldSize.getY() - 6.025, Rotation2d.fromDegrees(90))
+                new Pose2d(7.5, FieldConstants.kFieldSize.getY() - 6.370, Rotation2d.fromDegrees(90)),
+                new Pose2d(7.5, FieldConstants.kFieldSize.getY() - 2.3, Rotation2d.fromDegrees(90))
             ),
-            new PathConstraints(maxSpeed, maxAcceleration, 3 * Math.PI, 4 * Math.PI),
-            new IdealStartingState(1, Rotation2d.fromDegrees(90)),
-            new GoalEndState(1, Rotation2d.fromDegrees(90))
-            ),
-        new AutoDriveCommand(
-            List.of(
-                new Pose2d(7.5, FieldConstants.kFieldSize.getY() - 6.025, Rotation2d.fromDegrees(90)),
-                new Pose2d(7.5, FieldConstants.kFieldSize.getY() - 1.524, Rotation2d.fromDegrees(90))
-            ),
-            new PathConstraints(maxSpeed, maxAcceleration, 3 * Math.PI, 4 * Math.PI),
-            new IdealStartingState(1, Rotation2d.fromDegrees(90)),
+            new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
+            new IdealStartingState(2, Rotation2d.fromDegrees(90)),
             new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(90))
         ),
 
         new TrenchAlign(true),
-        new WaitCommand(2),
+        new WaitCommand(3.5),
         new TrenchAlign(true),
 
         new AutoDriveCommand(
@@ -83,39 +74,39 @@ public class DoubleCrescentAuto {
                 new Pose2d(5.9, TrenchLocations.kBlueLeftCenter.getY(), Rotation2d.fromDegrees(0))
             ),
             new PathConstraints(maxSpeed, maxAcceleration, 3 * Math.PI, 4 * Math.PI),
-            new IdealStartingState(1, Rotation2d.fromDegrees(0)),
-            new GoalEndState(1, Rotation2d.fromDegrees(0))
+            new IdealStartingState(2, Rotation2d.fromDegrees(0)),
+            new GoalEndState(2, Rotation2d.fromDegrees(0))
             ),
         new AutoDriveCommand(
             List.of(
                 new Pose2d(5.9, TrenchLocations.kBlueLeftCenter.getY(), Rotation2d.fromDegrees(0)),
-                new Pose2d(6.25, 6.720, Rotation2d.fromDegrees(-90))
+                new Pose2d(6.25, 6.720, Rotation2d.fromDegrees(-65))
             ),
             new PathConstraints(maxSpeed, maxAcceleration, 3 * Math.PI, 4 * Math.PI),
-            new IdealStartingState(1, Rotation2d.fromDegrees(0)),
-            new GoalEndState(1, Rotation2d.fromDegrees(-90))
+            new IdealStartingState(2, Rotation2d.fromDegrees(0)),
+            new GoalEndState(2, Rotation2d.fromDegrees(-90))
         ),
         new AutoDriveCommand(
             List.of(
                 new Pose2d(6.25, 6.720, Rotation2d.fromDegrees(-90)),
-                new Pose2d(6.25, 6.025, Rotation2d.fromDegrees(-90))
+                new Pose2d(6.25, 3, Rotation2d.fromDegrees(-90))
             ),
-            new PathConstraints(maxSpeed, maxAcceleration, 3 * Math.PI, 4 * Math.PI),
-            new IdealStartingState(1, Rotation2d.fromDegrees(-90)),
-            new GoalEndState(1, Rotation2d.fromDegrees(-90))
-            ),
+            new PathConstraints(1.5, 2, 3 * Math.PI, 4 * Math.PI),
+            new IdealStartingState(1.5, Rotation2d.fromDegrees(-90)),
+            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(-90))
+        ),
         new AutoDriveCommand(
             List.of(
-                new Pose2d(6.25, 6.025, Rotation2d.fromDegrees(-90)),
-                new Pose2d(6.25, 1.524, Rotation2d.fromDegrees(-90))
+                new Pose2d(6.25, 3, Rotation2d.fromDegrees(-90)),
+                new Pose2d(6.25, 1.997, Rotation2d.fromDegrees(-90))
             ),
-            new PathConstraints(maxSpeed, maxAcceleration, 3 * Math.PI, 4 * Math.PI),
-            new IdealStartingState(1, Rotation2d.fromDegrees(-90)),
-            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(-90))
+            new PathConstraints(2, 2, 3 * Math.PI, 4 * Math.PI),
+            new IdealStartingState(2, Rotation2d.fromDegrees(-90)),
+            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(-150))
         ),
         
         new TrenchAlign(true),
-        new WaitCommand(2.0) //may remove and just shoot all at the outpost
+        new WaitCommand(3.5) //may remove and just shoot all at the outpost
         // new OutpostAlign()
     );
 }
