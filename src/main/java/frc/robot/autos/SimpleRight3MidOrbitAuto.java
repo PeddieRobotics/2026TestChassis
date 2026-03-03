@@ -110,7 +110,7 @@ public class SimpleRight3MidOrbitAuto {
                 ),
                 new Pose2d(
                     6.778, FieldConstants.kFieldSize.getY() - 4.452,
-                    Rotation2d.fromDegrees(90)
+                    Rotation2d.fromDegrees(-90)
                 ),
                 new Pose2d(
                     6.778, FieldConstants.kFieldSize.getY() - 5.452,
