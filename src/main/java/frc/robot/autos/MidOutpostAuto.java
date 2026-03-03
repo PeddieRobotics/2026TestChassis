@@ -22,7 +22,7 @@ import frc.robot.Autonomous;
 import frc.robot.commands.AutoDriveCommand;
 import frc.robot.commands.OutpostAlign;
 import frc.robot.commands.TrenchAlign;
-import frc.robot.commands.TrenchAlignAutonomous;
+import frc.robot.commands.TrenchAlignIntakeFirst;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.FieldConstants;
 import frc.robot.utils.Constants.FieldConstants.TrenchLocations;
@@ -72,7 +72,7 @@ public class MidOutpostAuto {
             new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(-90))
         ),
 
-        new TrenchAlignAutonomous(),
+        new TrenchAlignIntakeFirst(),
 
         new OutpostAlign()
     );

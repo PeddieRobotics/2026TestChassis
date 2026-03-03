@@ -24,7 +24,7 @@ import frc.robot.utils.Constants.TrenchAlignConstants;
 import frc.robot.utils.Constants.FieldConstants.TrenchLocations;
 import frc.robot.utils.OI;
 
-public class TrenchAlignAutonomous extends Command {
+public class TrenchAlignIntakeFirst extends Command {
     private Drivetrain drivetrain;
 
     private Limelight llFront;
@@ -64,7 +64,7 @@ public class TrenchAlignAutonomous extends Command {
     private double yEpsilon = TrenchAlignConstants.kEpsilonY;
     private double rotEpsilon = TrenchAlignConstants.kEpsilonRot;
 
-    public TrenchAlignAutonomous() {
+    public TrenchAlignIntakeFirst() {
         drivetrain = Drivetrain.getInstance();
         llFront = LimelightFront.getInstance();
 
