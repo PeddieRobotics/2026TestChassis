@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.autos.LeftSnowblowerAuto;
+// import frc.robot.autos.LeftSnowblowerAuto;
 import frc.robot.autos.DoubleCrescentAuto;
-import frc.robot.autos.LeftSnowballerAuto;
+// import frc.robot.autos.LeftSnowballerAuto;
 import frc.robot.autos.MidOutpostAuto;
 import frc.robot.autos.Right2MidOutpostOrbitAuto;
 import frc.robot.autos.Right3MidOrbitAuto;
@@ -95,7 +95,7 @@ public class Autonomous {
         autoChooser.addOption("Right Mid x3 Orbit Auto", Right3MidOrbitAuto.auto);
         autoChooser.addOption("Left Mid Outpost Auto", MidOutpostAuto.auto);
         autoChooser.addOption("Left Trench Test Auto", TrenchTestAuto.auto);
-        autoChooser.addOption("Left Snowballer Auto", LeftSnowblowerAuto.auto);
+        // autoChooser.addOption("Left Snowballer Auto", LeftSnowblowerAuto.auto);
         autoChooser.addOption("Right 2 Mid Outpost Orbit Auto", Right2MidOutpostOrbitAuto.auto);
         autoChooser.addOption("Right Double Crescent Auto", DoubleCrescentAuto.auto);
 
