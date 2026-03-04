@@ -32,6 +32,7 @@ import frc.robot.utils.Constants.TrenchAlignConstants;
 public class MidOutpostAuto {
     private static final double maxSpeed = 3;
     private static final double maxAcceleration = 3;
+    private static final double intakeSpeed = .75;
     public static final Command auto = new SequentialCommandGroup(
         new InstantCommand(() -> {
             Drivetrain.getInstance().setStartingPose(new Pose2d(4.453, 7.522, Rotation2d.fromDegrees(0)));
@@ -43,7 +44,7 @@ public class MidOutpostAuto {
             ),
             new PathConstraints(maxSpeed, maxAcceleration, 3 * Math.PI, 4 * Math.PI),
             new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-            new GoalEndState(3, Rotation2d.fromDegrees(0))
+            new GoalEndState(maxSpeed, Rotation2d.fromDegrees(0))
             ),
         new AutoDriveCommand(
             List.of(
@@ -51,26 +52,26 @@ public class MidOutpostAuto {
                 new Pose2d(7.093, 6.720, Rotation2d.fromDegrees(-90))
             ),
             new PathConstraints(maxSpeed, maxAcceleration, 3 * Math.PI, 4 * Math.PI),
-            new IdealStartingState(3, Rotation2d.fromDegrees(0)),
-            new GoalEndState(3, Rotation2d.fromDegrees(-90))
+            new IdealStartingState(maxSpeed, Rotation2d.fromDegrees(0)),
+            new GoalEndState(intakeSpeed, Rotation2d.fromDegrees(-90))
         ),
         new AutoDriveCommand(
             List.of(
                 new Pose2d(7.093, 6.720, Rotation2d.fromDegrees(-90)),
                 new Pose2d(7.093, 3.025, Rotation2d.fromDegrees(-90))
             ),
-            new PathConstraints(0.75, 1, 3 * Math.PI, 4 * Math.PI),
-            new IdealStartingState(3, Rotation2d.fromDegrees(-90)),
-            new GoalEndState(3, Rotation2d.fromDegrees(-90))
+            new PathConstraints(intakeSpeed, maxAcceleration, 3 * Math.PI, 4 * Math.PI),
+            new IdealStartingState(intakeSpeed, Rotation2d.fromDegrees(-90)),
+            new GoalEndState(intakeSpeed, Rotation2d.fromDegrees(-90))
             ),
         new AutoDriveCommand(
             List.of(
                 new Pose2d(7.093, 3.025, Rotation2d.fromDegrees(-90)),
                 new Pose2d(7.093, 1.524, Rotation2d.fromDegrees(-90))
             ),
-            new PathConstraints(0.75, 1, 3 * Math.PI, 4 * Math.PI),
-            new IdealStartingState(3, Rotation2d.fromDegrees(-90)),
-            new GoalEndState(1.5, Rotation2d.fromDegrees(-145))
+            new PathConstraints(maxSpeed, maxAcceleration, 3 * Math.PI, 4 * Math.PI),
+            new IdealStartingState(intakeSpeed, Rotation2d.fromDegrees(-90)),
+            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(-150))
         ),
 
         new TrenchAlignAutonomous(180, true)
