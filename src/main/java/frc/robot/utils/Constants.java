@@ -315,8 +315,7 @@ public final class Constants {
         public static final double kUseCloseOffsetThreshold = 0.4; //meters
     }
 
-    public static final class 
-    OutpostAlignConstants{
+    public static final class OutpostAlignConstants{
         public static final double kPx = 2.3, kIx = 0, kDx = 0, kFFx = 0;
         public static final double kPy = 2, kIy = 0, kDy = 0, kFFy = 0;
         public static final double kPr = 0.05, kIr = 0, kDr = 0, kFFr = 0;

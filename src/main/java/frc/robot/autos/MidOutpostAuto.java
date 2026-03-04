@@ -26,6 +26,7 @@ import frc.robot.commands.TrenchAlignAutonomous;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.FieldConstants;
 import frc.robot.utils.Constants.FieldConstants.TrenchLocations;
+import frc.robot.utils.Constants.OutpostAlignConstants;
 import frc.robot.utils.Constants.TrenchAlignConstants;
 
 public class MidOutpostAuto {
@@ -56,24 +57,31 @@ public class MidOutpostAuto {
         new AutoDriveCommand(
             List.of(
                 new Pose2d(7.093, 6.720, Rotation2d.fromDegrees(-90)),
-                new Pose2d(7.093, 6.025, Rotation2d.fromDegrees(-90))
+                new Pose2d(7.093, 3.025, Rotation2d.fromDegrees(-90))
             ),
-            new PathConstraints(maxSpeed, maxAcceleration, 3 * Math.PI, 4 * Math.PI),
+            new PathConstraints(0.75, 1, 3 * Math.PI, 4 * Math.PI),
             new IdealStartingState(3, Rotation2d.fromDegrees(-90)),
             new GoalEndState(3, Rotation2d.fromDegrees(-90))
             ),
         new AutoDriveCommand(
             List.of(
-                new Pose2d(7.093, 6.025, Rotation2d.fromDegrees(-90)),
+                new Pose2d(7.093, 3.025, Rotation2d.fromDegrees(-90)),
                 new Pose2d(7.093, 1.524, Rotation2d.fromDegrees(-90))
             ),
-            new PathConstraints(maxSpeed, maxAcceleration, 3 * Math.PI, 4 * Math.PI),
+            new PathConstraints(0.75, 1, 3 * Math.PI, 4 * Math.PI),
             new IdealStartingState(3, Rotation2d.fromDegrees(-90)),
-            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(-90))
+            new GoalEndState(1.5, Rotation2d.fromDegrees(-145))
         ),
 
-       // new TrenchAlignAutonomous(0.0),
-
-        new OutpostAlign()
+        new TrenchAlignAutonomous(180, true)
+        // new AutoDriveCommand(
+        //     List.of(
+        //         new Pose2d(TrenchLocations.kBlueRightCenter.getX() - TrenchAlignConstants.kSuperCloseOffset.getX(), TrenchLocations.kBlueRightCenter.getY(), Rotation2d.fromDegrees(180)),
+        //         new Pose2d(OutpostAlignConstants.kOutpostOffset.getX(), TrenchLocations.kBlueRightCenter.getY(), Rotation2d.fromDegrees(180))
+        //     ),
+        //     new PathConstraints(1, 1, 3 * Math.PI, 4 * Math.PI),
+        //     new IdealStartingState(1, Rotation2d.fromDegrees(180)),
+        //     new GoalEndState(1, Rotation2d.fromDegrees(180))
+        // )
     );
 }
