@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoDriveCommand;
 import frc.robot.commands.OutpostAlign;
 import frc.robot.commands.TrenchAlign;
-import frc.robot.commands.TrenchAlignAutonomous;
+import frc.robot.commands.TrenchAlignIntakeFirst;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Constants.FieldConstants.TrenchLocations;
 import frc.robot.utils.Constants.TrenchAlignConstants;
