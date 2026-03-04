@@ -304,12 +304,15 @@ public final class Constants {
         public static final double kStage2Speed = 3.15;
 
         public static final Translation2d kInFarOffset = new Translation2d(1.6, 0);
-        public static final Translation2d kInCloseOffset = new Translation2d(1.0, 0); //when we are in the "bad" rectangle
-        public static final Translation2d kOutOffset = new Translation2d(1.2, 0); //when we are in the "bad" rectangle
+        public static final Translation2d kInCloseOffset = new Translation2d(1.0, 0);
+        public static final Translation2d kOutOffset = new Translation2d(1.2, 0);
+        public static final Translation2d kSuperCloseOffset = new Translation2d(0.4, 0); //for autos
 
         public static final double kPx = 3.5, kIx = 0, kDx = 0, kFFx = 0;
         public static final double kPy = 3.5, kIy = 0, kDy = 0, kFFy = 0;
         public static final double kPr = 0.07, kIr = 0, kDr = 0, kFFr = 0;
+
+        public static final double kUseCloseOffsetThreshold = 0.4; //meters
     }
 
     public static final class 

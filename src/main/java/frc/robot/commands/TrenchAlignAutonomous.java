@@ -129,8 +129,8 @@ public class TrenchAlignAutonomous extends Command {
             theLimelight = rotTarget == 0 ? llFront : llBack;
 
             if (absRotError < 40){
-                if(inAuto)
-                    target = closestTrench.minus(outOffset);
+                if(odometry.getTranslation().minus(closestTrench).getSquaredNorm() < TrenchAlignConstants.kUseCloseOffsetThreshold)
+                    target = closestTrench.minus(TrenchAlignConstants.kSuperCloseOffset);
                 else
                     target = closestTrench.minus(inCloseOffset);
             }
@@ -138,6 +138,7 @@ public class TrenchAlignAutonomous extends Command {
                 target = farTarget;
         }
         // driving backward (minus direction)
+
         else {
             Translation2d farTarget = closestTrench.plus(inFarOffset);
             endTarget = closestTrench.minus(outOffset);
@@ -145,8 +146,12 @@ public class TrenchAlignAutonomous extends Command {
 
             theLimelight = rotTarget == 0 ? llBack : llFront;
 
-            if (absRotError < 40)
+            if (absRotError < 40){
+                if(odometry.getTranslation().minus(closestTrench).getSquaredNorm() < TrenchAlignConstants.kUseCloseOffsetThreshold)
+                    target = closestTrench.plus(TrenchAlignConstants.kSuperCloseOffset);
+                else
                     target = closestTrench.plus(inCloseOffset);
+            }
             else
                 target = farTarget;
         }
