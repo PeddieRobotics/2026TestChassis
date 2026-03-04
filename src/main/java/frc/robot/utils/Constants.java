@@ -301,7 +301,7 @@ public final class Constants {
         public static final double kEpsilonRot = 8;
 
         public static final double kStage1Speed = 2;
-        public static final double kStage2Speed = 3.5;
+        public static final double kStage2Speed = 2.5;
 
         public static final Translation2d kInFarOffset = new Translation2d(1.6, 0);
         public static final Translation2d kInCloseOffset = new Translation2d(1.0, 0); //when we are in the "bad" rectangle

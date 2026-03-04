@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autos.LeftSnowblowerAuto;
 import frc.robot.autos.DoubleCrescentAuto;
-import frc.robot.autos.LeftSnowballerAuto;
+import frc.robot.autos.LeftSnowblowerAuto;
 import frc.robot.autos.MidOutpostAuto;
 import frc.robot.autos.Right2MidOutpostOrbitAuto;
 import frc.robot.autos.Right3MidOrbitAuto;

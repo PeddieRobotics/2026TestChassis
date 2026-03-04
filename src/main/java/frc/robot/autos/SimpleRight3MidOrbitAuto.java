@@ -45,7 +45,7 @@ public class SimpleRight3MidOrbitAuto {
                     Rotation2d.fromDegrees(0)
                 ),
                 new Pose2d(
-                    5.570, FieldConstants.kFieldSize.getY() - 7.406,
+                    5.820, FieldConstants.kFieldSize.getY() - 7.406,
                     Rotation2d.fromDegrees(0)
                 )
             ),
@@ -61,11 +61,30 @@ public class SimpleRight3MidOrbitAuto {
                 ),
                 new Pose2d(
                     7.475, FieldConstants.kFieldSize.getY() - 6.264,
-                    Rotation2d.fromDegrees(-150.217)
+                    Rotation2d.fromDegrees(90)
                 )
             ),
             new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
             new IdealStartingState(0, Rotation2d.fromDegrees(0)),
+            new GoalEndState(1.5, Rotation2d.fromDegrees(90))
+        ),
+        new AutoDriveCommand(
+            List.of(
+                new Pose2d(
+                    7.475, FieldConstants.kFieldSize.getY() - 6.264,
+                    Rotation2d.fromDegrees(90)
+                ),
+                new Pose2d(
+                    7.475, FieldConstants.kFieldSize.getY() - 4.264,
+                    Rotation2d.fromDegrees(90)
+                ),
+                new Pose2d(
+                    7.475, FieldConstants.kFieldSize.getY() - 6.264,
+                    Rotation2d.fromDegrees(-90)
+                )
+            ),
+            new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
+            new IdealStartingState(1.5, Rotation2d.fromDegrees(90)),
             new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(85))
         ),
         new TrenchAlign(true),
@@ -75,7 +94,7 @@ public class SimpleRight3MidOrbitAuto {
         new AutoDriveCommand(
             List.of(
                 new Pose2d(
-                    TrenchLocations.kBlueRightCenter.plus(TrenchLocations.kOffset),
+                    TrenchLocations.kBlueRightCenter.plus(TrenchAlignConstants.kOutOffset),
                     Rotation2d.fromDegrees(0)
                 ),
                 new Pose2d(
@@ -106,21 +125,6 @@ public class SimpleRight3MidOrbitAuto {
             new IdealStartingState(1.5, Rotation2d.fromDegrees(90)),
             new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(85))
         ),
-        // new AutoDriveCommand(
-        //     List.of(
-        //         new Pose2d(
-        //             6.778, FieldConstants.kFieldSize.getY() - 5.452,
-        //             Rotation2d.fromDegrees(-104.687)
-        //         ),
-        //         new Pose2d(
-        //             6.363, FieldConstants.kFieldSize.getY() - 7.406,
-        //             Rotation2d.fromDegrees(-111.800)
-        //         )
-        //     ),
-        //     new PathConstraints(1.5, 1.5, 3 * Math.PI, 4 * Math.PI),
-        //     new IdealStartingState(1.5, Rotation2d.fromDegrees(90)),
-        //     new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(0))
-        // ),
         new TrenchAlign(true),
         new InstantCommand(() -> Drivetrain.getInstance().drive(new Translation2d(0, 0), 0, true, new Translation2d(0, 0))),
         new WaitCommand(3),
