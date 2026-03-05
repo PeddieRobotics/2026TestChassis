@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autos.LeftSnowblowerAuto;
+import frc.robot.autos.Complement316Auto;
 import frc.robot.autos.DoubleCrescentAuto;
 import frc.robot.autos.LeftSnowblowerAuto;
 import frc.robot.autos.MidOutpostAuto;
@@ -101,6 +102,8 @@ public class Autonomous {
         autoChooser.addOption("Right 2 Mid Outpost Orbit Auto", Right2MidOutpostOrbitAuto.auto);
         autoChooser.addOption("Simple Orbit Mid 2", SimpleRight3MidOrbitAuto.auto);
         autoChooser.addOption("Snake Orbit Mid 2", SnakeRight3MidOrbitAuto.auto);
+        autoChooser.addOption("316 Complement", Complement316Auto.auto);
+
 
         autoChooser.addOption("Right Double Crescent Auto", DoubleCrescentAuto.auto);
 
