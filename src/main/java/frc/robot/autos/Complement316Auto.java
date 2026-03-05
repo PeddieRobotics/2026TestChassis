@@ -62,8 +62,8 @@ public class Complement316Auto {
                 )
             ),
             new PathConstraints(1, 2, 3 * Math.PI, 4 * Math.PI),
-            new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-            new GoalEndState(1, Rotation2d.fromDegrees(90))
+            new IdealStartingState(1.5, Rotation2d.fromDegrees(0)),
+            new GoalEndState(0.5, Rotation2d.fromDegrees(90))
         ),
         new AutoDriveCommand(
             List.of(
@@ -77,7 +77,7 @@ public class Complement316Auto {
                 )
             ),
             new PathConstraints(1, 2, 3 * Math.PI, 4 * Math.PI),
-            new IdealStartingState(1, Rotation2d.fromDegrees(90)),
+            new IdealStartingState(0.5, Rotation2d.fromDegrees(90)),
             new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(92))
         ),
         new TrenchAlign(true)

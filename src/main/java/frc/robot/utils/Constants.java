@@ -309,7 +309,7 @@ public final class Constants {
 
         public static final double kPx = 3.5, kIx = 0, kDx = 0, kFFx = 0;
         public static final double kPy = 3.5, kIy = 0, kDy = 0, kFFy = 0;
-        public static final double kPr = 0.03, kIr = 0, kDr = 0, kFFr = 0;
+        public static final double kPr = 0.07, kIr = 0, kDr = 0, kFFr = 0;
     }
 
     public static final class 
