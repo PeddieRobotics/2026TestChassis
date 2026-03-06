@@ -47,19 +47,20 @@ public class LeftSnowblowerx3Auto {
                 new Pose2d(6.778, 0.949, Rotation2d.fromDegrees(-105.089))
             ),
             List.of(
-                // new RotationTarget(1.4, Rotation2d.fromDegrees(-90)),
-                // new RotationTarget(2.4, Rotation2d.fromDegrees(90)),
-                // new RotationTarget(3.4, Rotation2d.fromDegrees(-90)),
-                // new RotationTarget(4.4, Rotation2d.fromDegrees(90)),
-                // new RotationTarget(5.4, Rotation2d.fromDegrees(-90))
+                new RotationTarget(1.4, Rotation2d.fromDegrees(-90)),
+                new RotationTarget(2.4, Rotation2d.fromDegrees(90)),
+                new RotationTarget(3.4, Rotation2d.fromDegrees(-90)),
+                new RotationTarget(4.4, Rotation2d.fromDegrees(90)),
+                new RotationTarget(5.4, Rotation2d.fromDegrees(-90))
             ),
             List.of(
                 //new EventMarker("Stop Passing", 5.67)
             ),
             new PathConstraints(0.5, 3, 4 * Math.PI, 5 * Math.PI),
             new IdealStartingState(0, Rotation2d.fromDegrees(0)),
-            new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(-91))
-        ),
-        new TrenchAlign(true)
+            new GoalEndState(0, Rotation2d.fromDegrees(-91))
+            // new GoalEndState(TrenchAlignConstants.kStage1Speed, Rotation2d.fromDegrees(-91))
+        )
+        // new TrenchAlign(true)
     );
 }
