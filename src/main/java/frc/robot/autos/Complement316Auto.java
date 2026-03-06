@@ -42,7 +42,7 @@ public class Complement316Auto {
                     Rotation2d.fromDegrees(0)
                 ),
                 new Pose2d(
-                    5.820, FieldConstants.kFieldSize.getY() - 7.406,
+                    6.320, FieldConstants.kFieldSize.getY() - 7.406,
                     Rotation2d.fromDegrees(0)
                 )
             ),
@@ -53,11 +53,11 @@ public class Complement316Auto {
         new AutoDriveCommand(
             List.of(
                 new Pose2d(
-                    5.820, FieldConstants.kFieldSize.getY() - 7.406,
+                    6.320, FieldConstants.kFieldSize.getY() - 7.406,
                     Rotation2d.fromDegrees(0)
                 ),
                 new Pose2d(
-                    6.064, 1.953, 
+                    6.564, 1.953, 
                     Rotation2d.fromDegrees(91.469)
                 )
             ),
@@ -68,11 +68,11 @@ public class Complement316Auto {
         new AutoDriveCommand(
             List.of(
                 new Pose2d(
-                    6.064, 1.953, 
+                    6.564, 1.953, 
                     Rotation2d.fromDegrees(91.469)
                 ),
                 new Pose2d(
-                    6.064, 6.086, 
+                    6.564, 6.086, 
                     Rotation2d.fromDegrees(90)
                 )
             ),
