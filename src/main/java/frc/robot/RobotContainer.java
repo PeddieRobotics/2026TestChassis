@@ -19,6 +19,7 @@ import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Hopper;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Turret;
 import frc.robot.utils.ShooterUtil;
 import frc.robot.utils.ShotMap;
@@ -29,21 +30,24 @@ public class RobotContainer {
     private Turret turret;
     // private Hopper hopper;
     private Autonomous autonomous;
+    private Intake intake;
 
     public RobotContainer() throws IOException {
-        ShooterUtil.initShooterUtils("shotdata.txt");
+        // ShooterUtil.initShooterUtils("shotdata.txt");
 
-        SmartDashboard.putBoolean("Test Map?", false);
-        SmartDashboard.putNumber("Test Distance", 0);
-        SmartDashboard.putNumber("Test Rad. Vel.", 0);
+        // SmartDashboard.putBoolean("Test Map?", false);
+        // SmartDashboard.putNumber("Test Distance", 0);
+        // SmartDashboard.putNumber("Test Rad. Vel.", 0);
 
         drivetrain = Drivetrain.getInstance();
         drivetrain.setDefaultCommand(new SwerveDriveCommand());
 
-        turret = Turret.getInstance();
-        turret.setDefaultCommand(new DetermineShooterState());
+        intake = Intake.getInstance();
 
-        autonomous = Autonomous.getInstance();
+        // turret = Turret.getInstance();
+        // turret.setDefaultCommand(new DetermineShooterState());
+
+        // autonomous = Autonomous.getInstance();
 
         // flywheel = Flywheel.getInstance();
         // hopper = Hopper.getInstance();
