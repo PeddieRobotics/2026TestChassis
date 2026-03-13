@@ -19,15 +19,18 @@ import frc.robot.commands.TrenchAlignIntakeFirst;
 import frc.robot.commands.WheelRadiusCharacterization;
 //import frc.robot.commands.TrenchAlign.TrenchOption;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LimelightFront;
 import frc.robot.utils.Constants.DriveConstants;
 
 public class OI {
     private static OI oi;
     private PS4Controller controller;
+    private Intake intake;
 
     public OI() {
         controller = new PS4Controller(0);
+        intake = Intake.getInstance();
 
         Trigger psButton = new JoystickButton(controller, PS4Controller.Button.kPS.value);
         psButton.onTrue(new InstantCommand(() -> Drivetrain.getInstance().setGyro(0)));
@@ -35,28 +38,36 @@ public class OI {
         Trigger R1Bumper = new JoystickButton(controller, PS4Controller.Button.kR1.value);
         R1Bumper.whileTrue(new LockDrivetrain());
         
-        Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
-        triangleButton.onTrue(new InstantCommand(() -> {
-            Optional<Pose2d> pose = LimelightFront.getInstance().getPoseMT2();
-            if(pose.isPresent())
-                Drivetrain.getInstance().resetTranslation(pose.get().getTranslation());
-        }));
+        // Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
+        // triangleButton.onTrue(new InstantCommand(() -> {
+        //     Optional<Pose2d> pose = LimelightFront.getInstance().getPoseMT2();
+        //     if(pose.isPresent())
+        //         Drivetrain.getInstance().resetTranslation(pose.get().getTranslation());
+        // }));
 
-        Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-        circleButton.whileTrue(new TrenchAlign(true));
-        Trigger xTrigger = new JoystickButton(controller, PS4Controller.Button.kCross.value);
-        xTrigger.whileTrue(new TrenchAlignIntakeFirst());
-        Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
-        squareButton.whileTrue(new OutpostAlign());
+        // Trigger circleButton = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
+        // circleButton.whileTrue(new TrenchAlign(true));
+        // Trigger xTrigger = new JoystickButton(controller, PS4Controller.Button.kCross.value);
+        // xTrigger.whileTrue(new TrenchAlignIntakeFirst());
+        // Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
+        // squareButton.whileTrue(new OutpostAlign());
 
+        // Trigger squareButton = new JoystickButton(controller, PS4Controller.Button.kSquare.value);
+        // squareButton.whileTrue(new InstantCommand(() -> {
+        //     intake.runIntake();
+        // }));
+        // Trigger xTrigger = new JoystickButton(controller, PS4Controller.Button.kCross.value);
+        // xTrigger.whileTrue(new InstantCommand(() -> {
+        //     intake.stopIntake();
+        // }));
 
-        Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);
-        L1Bumper.whileTrue(new WheelRadiusCharacterization());
+        // Trigger L1Bumper = new JoystickButton(controller, PS4Controller.Button.kL1.value);
+        // L1Bumper.whileTrue(new WheelRadiusCharacterization());
 
         //Trigger triangleButton = new JoystickButton(controller, PS4Controller.Button.kTriangle.value);
         //triangleButton.whileTrue(new LockOnTurret());
 
-        SmartDashboard.putNumber("Drive: cardinal scale", 0.5);
+        SmartDashboard.putNumber("Drive: cardinal speed", 1);
     }
 
     public enum DPadDirection {
@@ -153,19 +164,20 @@ public class OI {
     }
 
     public Translation2d getCardinalDirection() {
-        double cardinal = SmartDashboard.getNumber("Drive: cardinal scale", 0.0);
+        double cardinal = SmartDashboard.getNumber("Drive: cardinal speed", 1);
+
         switch (getDriverDPadInput()) {
             case FORWARDS:
-                return new Translation2d(cardinal * DriveConstants.kMaxFloorSpeed,
+                return new Translation2d(cardinal ,
                         0.0);
             case RIGHT:
                 return new Translation2d(0.0,
-                        -cardinal * DriveConstants.kMaxFloorSpeed);
+                        -cardinal );
             case LEFT:
                 return new Translation2d(0.0,
-                        cardinal * DriveConstants.kMaxFloorSpeed);
+                        cardinal );
             case BACKWARDS:
-                return new Translation2d(-cardinal * DriveConstants.kMaxFloorSpeed,
+                return new Translation2d(-cardinal ,
                         0.0);
             default:
                 return new Translation2d(0.0, 0.0);

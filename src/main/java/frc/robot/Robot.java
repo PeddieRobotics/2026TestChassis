@@ -65,10 +65,10 @@ public class Robot extends TimedRobot {
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {
-        LimelightHelpers.SetThrottle(CameraConstants.kBackCamName, 200);
-        LimelightHelpers.SetThrottle(CameraConstants.kRightCamName, 200);
-        LimelightHelpers.SetThrottle(CameraConstants.kLeftCamName, 200);
-        LimelightHelpers.SetThrottle(CameraConstants.kFrontCamName, 200);
+        // LimelightHelpers.SetThrottle(CameraConstants.kBackCamName, 200);
+        // LimelightHelpers.SetThrottle(CameraConstants.kRightCamName, 200);
+        // LimelightHelpers.SetThrottle(CameraConstants.kLeftCamName, 200);
+        // LimelightHelpers.SetThrottle(CameraConstants.kFrontCamName, 200);
     }
 
     @Override
@@ -110,10 +110,10 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.cancel();
         }
 
-        LimelightHelpers.SetThrottle(CameraConstants.kBackCamName, 0);
-        LimelightHelpers.SetThrottle(CameraConstants.kRightCamName, 0);
-        LimelightHelpers.SetThrottle(CameraConstants.kLeftCamName, 0);
-        LimelightHelpers.SetThrottle(CameraConstants.kFrontCamName, 0);
+        // LimelightHelpers.SetThrottle(CameraConstants.kBackCamName, 0);
+        // LimelightHelpers.SetThrottle(CameraConstants.kRightCamName, 0);
+        // LimelightHelpers.SetThrottle(CameraConstants.kLeftCamName, 0);
+        // LimelightHelpers.SetThrottle(CameraConstants.kFrontCamName, 0);
         
         SmartDashboard.putNumber("Test Distance", 0);
     }
